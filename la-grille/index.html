@@ -82,7 +82,7 @@
         }
 
         /* Les intitulés ne s'affichent qu'au-dessus de la première ligne (restent lus par les lecteurs d'écran) */
-        .color-input-group:not(:first-child) label,
+        .color-input-group:not(:first-child) label:not(.hasard),
         .color-input-group > label:first-child {
             position: absolute;
             width: 1px;
@@ -98,6 +98,55 @@
         .color-input-group > :nth-child(4) { grid-column: 3; grid-row: 2; }
         .color-input-group > :nth-child(5) { grid-column: 2; grid-row: 1; }
         .color-input-group > :nth-child(6) { grid-column: 2; grid-row: 2; }
+        .color-input-group > :nth-child(7) { grid-column: 3; grid-row: 3; }
+
+        /* Case « Catégorie au hasard », sous le thème */
+        .color-input-group .hasard {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin-top: 0.35rem;
+            font-size: 0.8rem;
+            letter-spacing: 0;
+            text-transform: none;
+            color: var(--encre);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .hasard input {
+            appearance: none;
+            flex-shrink: 0;
+            width: 1.25rem;
+            height: 1.25rem;
+            margin: 0;
+            background: #FFFDF7;
+            border: var(--trait-fin) solid var(--encre);
+            border-radius: var(--rayon);
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            transition: transform 0.12s cubic-bezier(.3, 1.6, .5, 1);
+        }
+
+        .hasard input::after {
+            content: '';
+            width: 0.55rem;
+            height: 0.55rem;
+            background: var(--encre);
+            transform: scale(0);
+            transition: transform 0.12s cubic-bezier(.3, 1.6, .5, 1);
+        }
+
+        .hasard input:checked { background: var(--ocre); transform: rotate(-8deg); }
+        .hasard input:checked::after { transform: scale(1); }
+        .hasard input:focus-visible { outline: 4px solid var(--ocre); outline-offset: 2px; }
+
+        .color-input-group input[type="text"]:disabled {
+            color: var(--encre-douce);
+            background: repeating-linear-gradient(-45deg, #EFE6CF 0 6px, #F7F0DE 6px 12px);
+            border-style: dashed;
+        }
 
         .color-input-group input[type="color"] {
             width: 100%;
@@ -187,6 +236,161 @@
 
         @media (max-width: 900px) {
             .config-grille { grid-template-columns: minmax(0, 1fr); }
+        }
+
+        /* ===================== Roue des catégories ===================== */
+
+        #roulettePanel {
+            padding: clamp(1.2rem, 3vw, 2rem);
+        }
+
+        .roulette {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(18rem, 30rem);
+            gap: 2rem 3rem;
+            align-items: center;
+        }
+
+        .roue-zone {
+            position: relative;
+            width: min(100%, 34rem, 64vh);
+            aspect-ratio: 1;
+            margin: 0 auto;
+            padding-top: 0.8rem;
+        }
+
+        #roue {
+            display: block;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(8px 8px 0 var(--encre));
+        }
+
+        .roue-pointeur {
+            position: absolute;
+            top: -0.9rem;
+            left: 50%;
+            z-index: 2;
+            width: 2.4rem;
+            margin-left: -1.2rem;
+            transform-origin: 50% 15%;
+        }
+
+        .roue-pointeur.tic { animation: tic 0.12s ease-out; }
+
+        @keyframes tic {
+            30% { transform: rotate(-22deg); }
+            100% { transform: rotate(0); }
+        }
+
+        .roue-resultat {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 3;
+            max-width: 88%;
+            font-size: clamp(1.1rem, 2.2vw, 1.7rem);
+            line-height: 1.1;
+            text-align: center;
+            pointer-events: none;
+            transform: translate(-50%, -50%) rotate(-6deg);
+            animation: tamponne 0.45s cubic-bezier(.2, 1.6, .4, 1);
+        }
+
+        @keyframes tamponne {
+            0% { transform: translate(-50%, -50%) rotate(-20deg) scale(2.6); opacity: 0; }
+            60% { opacity: 1; }
+            100% { transform: translate(-50%, -50%) rotate(-6deg) scale(1); opacity: 1; }
+        }
+
+        .roulette-cote {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .roulette-cote h2 { margin-bottom: 0; }
+
+        .roulette-joueur {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            padding: 0.7rem 0.9rem;
+            background: #FFFDF7;
+            border: var(--trait-fin) solid var(--encre);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .roulette-joueur.actif {
+            background: var(--carton);
+            border-width: var(--trait);
+            box-shadow: var(--ombre);
+            transform: translate(-3px, -3px);
+        }
+
+        .roulette-ligne {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-weight: 900;
+            font-size: 1.2rem;
+        }
+
+        .roulette-statut {
+            margin-left: auto;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--encre-douce);
+        }
+
+        .roulette-joueur.actif .roulette-statut { color: var(--tomate); font-weight: 900; }
+
+        .categorie-tampon {
+            margin-left: auto;
+            font-family: var(--police-titre);
+            font-weight: 400;
+            font-size: 0.95rem;
+            border: var(--trait-fin) solid var(--encre);
+            padding: 0.15em 0.55em;
+            transform: rotate(-3deg);
+        }
+
+        .roulette-joueur input[type="text"] { width: 100%; }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .suggestion {
+            font-family: var(--police-texte);
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--encre);
+            background: var(--carton);
+            border: 2px solid var(--encre);
+            border-radius: var(--rayon);
+            padding: 0.3em 0.6em;
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.1s ease;
+        }
+
+        .suggestion:hover { background: var(--ocre); transform: translateY(-2px); }
+        .suggestion:active { transform: translateY(1px); }
+
+        .roulette-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.6rem;
+        }
+
+        .roulette-actions .btn-lien { align-self: center; }
+
+        @media (max-width: 900px) {
+            .roulette { grid-template-columns: minmax(0, 1fr); }
+            .roue-zone { width: min(100%, 24rem); }
         }
 
         /* ===================== Génération des questions ===================== */
@@ -735,6 +939,28 @@
                 </div>
             </div>
 
+            <!-- Roue des catégories (joueurs qui ont coché « Catégorie au hasard ») -->
+            <div class="config-panel carte" id="roulettePanel" style="display:none;">
+                <div class="roulette">
+                    <div class="roue-zone">
+                        <svg class="roue-pointeur" id="rouePointeur" viewBox="0 0 40 44" aria-hidden="true"><path d="M4 4h32L20 40z" fill="#C8401F" stroke="#221C15" stroke-width="4" stroke-linejoin="miter"/></svg>
+                        <svg id="roue" viewBox="-100 -100 200 200" role="img" aria-label="Roue des catégories"></svg>
+                        <div class="tampon roue-resultat" id="roueResultat" style="display:none;"></div>
+                    </div>
+
+                    <div class="roulette-cote">
+                        <h2>La roue des catégories</h2>
+                        <p class="note">Chacun lance la roue à son tour, puis choisit un sujet dans la catégorie tirée.</p>
+                        <div id="rouletteList" aria-live="polite"></div>
+                        <div class="roulette-actions">
+                            <button id="spinBtn" class="btn btn-geant">Tourner la roue</button>
+                            <button id="rouletteDoneBtn" class="btn btn-geant" style="display:none;">C'est parti !</button>
+                            <button class="btn-lien" onclick="cancelRoulette()">Retour à la configuration</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Panel de génération des questions -->
             <div class="config-panel carte" id="generationPanel" style="display:none;">
                 <h2>Génération des questions</h2>
@@ -861,6 +1087,7 @@
         let turnOrder = [];
         let currentTurnIndex = 0;
         let gameSessionStarted = false;
+        let randomCategory = [];
 
         // ===== Scores =====
 
@@ -1125,12 +1352,27 @@
                 const label3 = document.createElement('label');
                 label3.textContent = 'Joueur';
 
+                const randomLabel = document.createElement('label');
+                randomLabel.className = 'hasard';
+                const randomInput = document.createElement('input');
+                randomInput.type = 'checkbox';
+                randomInput.id = `random${i}`;
+                randomInput.checked = !!randomCategory[i];
+                nameInput.disabled = randomInput.checked;
+                randomInput.addEventListener('change', () => {
+                    randomCategory[i] = randomInput.checked;
+                    nameInput.disabled = randomInput.checked;
+                });
+                randomLabel.appendChild(randomInput);
+                randomLabel.appendChild(document.createTextNode('Catégorie au hasard'));
+
                 group.appendChild(label1);
                 group.appendChild(colorInput);
                 group.appendChild(label2);
                 group.appendChild(nameInput);
                 group.appendChild(label3);
                 group.appendChild(playerInput);
+                group.appendChild(randomLabel);
                 container.appendChild(group);
             }
         }
@@ -1818,6 +2060,282 @@
             document.getElementById('configPanel').style.display = 'block';
         }
 
+        // ===== Roue des catégories =====
+
+        // Catégories tirées pour les joueurs qui cochent « Catégorie au hasard » ; le joueur choisit ensuite un sujet dedans.
+        const RANDOM_CATEGORIES = [
+            {
+                name: 'Géographie', label: ['Géographie'], color: '#2A4A7A', ink: '#F1E7D0',
+                icon: '<circle cx="24" cy="24" r="17"/><path d="M7 24h34M24 7c-7 5-7 29 0 34M24 7c7 5 7 29 0 34"/>',
+                examples: ['Pays', 'Capitales', 'Fleuves', 'Montagnes', 'Drapeaux']
+            },
+            {
+                name: 'Arts et Divertissement', label: ['Arts &amp;', 'Divertissement'], color: '#D97A8C', ink: '#221C15',
+                icon: '<path d="M24 6l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z"/>',
+                examples: ['Cinéma', 'Télévision', 'Musique', 'Célébrités', 'Livres', 'Auteurs', 'Peinture', 'Sculpture', 'Opéra']
+            },
+            {
+                name: 'Histoire', label: ['Histoire'], color: '#E3A21A', ink: '#221C15',
+                icon: '<path d="M7 17L24 8l17 9zM11 21v15M19 21v15M29 21v15M37 21v15M6 41h36"/>',
+                examples: ['Événements', 'Personnages historiques', 'Guerres', 'Dates']
+            },
+            {
+                name: 'Sciences et Nature', label: ['Sciences', '&amp; Nature'], color: '#1F6A5C', ink: '#F1E7D0',
+                icon: '<path d="M19 6h10M21 6v12L9 38v4h30v-4L27 18V6M14 31h20"/>',
+                examples: ['Biologie', 'Physique', 'Chimie', 'Astronomie', 'Animaux', 'Corps humain']
+            },
+            {
+                name: 'Sports et Loisirs', label: ['Sports', '&amp; Loisirs'], color: '#C8401F', ink: '#F1E7D0',
+                icon: '<path d="M15 7h18v10a9 9 0 0 1-18 0zM15 11H8v4a7 7 0 0 0 7 6M33 11h7v4a7 7 0 0 1-7 6M24 26v8M16 34h16v7H16z"/>',
+                examples: ['Sports', 'Jeux', 'Records', 'Loisirs']
+            }
+        ];
+        const SEGMENT_ANGLE = 360 / RANDOM_CATEGORIES.length;
+
+        let roulette = { players: [], current: 0, rotation: 0, spinning: false, pool: [], onDone: null };
+        let audioCtx = null;
+
+        function launchWithRoulette(onDone) {
+            if (!validateConfig()) return;
+            const indices = [];
+            for (let i = 0; i < nbColors; i++) {
+                if (randomCategory[i]) indices.push(i);
+            }
+            if (indices.length === 0) {
+                onDone();
+                return;
+            }
+            openRoulette(indices, onDone);
+        }
+
+        function wheelPoint(angle, r) {
+            const rad = angle * Math.PI / 180;
+            return `${(r * Math.sin(rad)).toFixed(2)} ${(-r * Math.cos(rad)).toFixed(2)}`;
+        }
+
+        function buildWheel() {
+            const wheel = document.getElementById('roue');
+            let svg = '';
+            RANDOM_CATEGORIES.forEach((cat, k) => {
+                const c = k * SEGMENT_ANGLE;
+                const a0 = c - SEGMENT_ANGLE / 2;
+                const a1 = c + SEGMENT_ANGLE / 2;
+                svg += `<path d="M0 0L${wheelPoint(a0, 96)}A96 96 0 0 1 ${wheelPoint(a1, 96)}Z" fill="${cat.color}" stroke="#221C15" stroke-width="3" stroke-linejoin="round"/>`;
+                svg += `<g transform="rotate(${c})">`
+                    + `<g transform="translate(-13 -57) scale(0.54)" fill="none" stroke="${cat.ink}" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter">${cat.icon}</g>`
+                    + cat.label.map((line, n) => `<text x="0" y="${-64 - (cat.label.length - 1 - n) * 9}" text-anchor="middle" fill="${cat.ink}" font-family="Chivo, sans-serif" font-weight="900" font-size="8.5">${line}</text>`).join('')
+                    + `</g>`;
+            });
+            svg += '<circle r="97" fill="none" stroke="#221C15" stroke-width="5"/>';
+            svg += '<circle r="15" fill="#F1E7D0" stroke="#221C15" stroke-width="4"/><rect x="-4" y="-4" width="8" height="8" fill="#221C15"/>';
+            wheel.innerHTML = svg;
+        }
+
+        function openRoulette(indices, onDone) {
+            if (!document.getElementById('roue').childElementCount) buildWheel();
+            roulette.players = indices.map(i => ({
+                index: i,
+                name: document.getElementById(`playerName${i}`).value || `Joueur ${i + 1}`,
+                color: document.getElementById(`color${i}`).value,
+                category: null,
+                subject: ''
+            }));
+            roulette.current = 0;
+            roulette.pool = [];
+            roulette.onDone = onDone;
+            document.getElementById('roueResultat').style.display = 'none';
+            renderRouletteList();
+            updateRouletteButtons();
+            document.getElementById('configPanel').style.display = 'none';
+            document.getElementById('roulettePanel').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // Tirage sans remise : pas deux fois la même catégorie tant que toutes ne sont pas sorties.
+        function drawCategory() {
+            if (roulette.pool.length === 0) {
+                roulette.pool = shuffleArray(RANDOM_CATEGORIES.map((_, k) => k));
+            }
+            return roulette.pool.pop();
+        }
+
+        function playTone(freq, duration, volume, delay = 0) {
+            try {
+                audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+                const start = audioCtx.currentTime + delay;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(volume, start);
+                gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+                osc.connect(gain).connect(audioCtx.destination);
+                osc.start(start);
+                osc.stop(start + duration);
+            } catch (e) {
+                // Pas de son disponible : la roue tourne quand même.
+            }
+        }
+
+        function spinWheel() {
+            if (roulette.spinning || roulette.current >= roulette.players.length) return;
+            const wheel = document.getElementById('roue');
+            const pointer = document.getElementById('rouePointeur');
+            const k = drawCategory();
+            const jitter = (Math.random() - 0.5) * SEGMENT_ANGLE * 0.7;
+            const target = roulette.rotation - (roulette.rotation % 360) + 360 * 6 + (360 - k * SEGMENT_ANGLE) + jitter;
+
+            roulette.spinning = true;
+            document.getElementById('roueResultat').style.display = 'none';
+            updateRouletteButtons();
+
+            // Animation image par image : démarrage vif puis longue décélération, pour faire durer le suspense
+            const from = roulette.rotation;
+            const duration = 5500;
+            const start = performance.now();
+            let lastSegment = Math.floor((from + SEGMENT_ANGLE / 2) / SEGMENT_ANGLE);
+            roulette.rotation = target;
+
+            function frame() {
+                if (!roulette.spinning) return;
+                const t = Math.min((performance.now() - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - t, 4);
+                const angle = from + (target - from) * eased;
+                wheel.style.transform = `rotate(${angle}deg)`;
+
+                // Cliquetis : un « tic » à chaque frontière de case qui passe sous le pointeur
+                const segment = Math.floor((angle + SEGMENT_ANGLE / 2) / SEGMENT_ANGLE);
+                if (segment !== lastSegment) {
+                    lastSegment = segment;
+                    pointer.classList.remove('tic');
+                    void pointer.offsetWidth;
+                    pointer.classList.add('tic');
+                    playTone(1500, 0.03, 0.05);
+                }
+
+                if (t < 1) requestAnimationFrame(frame);
+                else landWheel(k);
+            }
+            requestAnimationFrame(frame);
+        }
+
+        function landWheel(k) {
+            roulette.spinning = false;
+            const cat = RANDOM_CATEGORIES[k];
+            const player = roulette.players[roulette.current];
+            player.category = k;
+
+            const stamp = document.getElementById('roueResultat');
+            stamp.textContent = cat.name;
+            stamp.style.background = cat.color;
+            stamp.style.color = cat.ink;
+            stamp.style.display = 'block';
+            playTone(660, 0.14, 0.08);
+            playTone(990, 0.3, 0.08, 0.12);
+
+            roulette.current++;
+            renderRouletteList();
+            updateRouletteButtons();
+            const input = document.getElementById(`sujet${roulette.current - 1}`);
+            if (input) input.focus({ preventScroll: true });
+        }
+
+        function renderRouletteList() {
+            const list = document.getElementById('rouletteList');
+            list.innerHTML = '';
+            list.style.display = 'flex';
+            list.style.flexDirection = 'column';
+            list.style.gap = '0.7rem';
+
+            roulette.players.forEach((player, j) => {
+                const row = document.createElement('div');
+                row.className = 'roulette-joueur';
+                if (j === roulette.current && player.category === null) row.classList.add('actif');
+
+                const line = document.createElement('div');
+                line.className = 'roulette-ligne';
+                const badge = document.createElement('span');
+                badge.className = 'pastille';
+                badge.style.background = player.color;
+                const name = document.createElement('span');
+                name.textContent = player.name;
+                line.appendChild(badge);
+                line.appendChild(name);
+
+                if (player.category === null) {
+                    const status = document.createElement('span');
+                    status.className = 'roulette-statut';
+                    status.textContent = j === roulette.current ? 'À toi de tourner !' : 'En attente';
+                    line.appendChild(status);
+                    row.appendChild(line);
+                } else {
+                    const cat = RANDOM_CATEGORIES[player.category];
+                    const tag = document.createElement('span');
+                    tag.className = 'categorie-tampon';
+                    tag.style.background = cat.color;
+                    tag.style.color = cat.ink;
+                    tag.textContent = cat.name;
+                    line.appendChild(tag);
+                    row.appendChild(line);
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.id = `sujet${j}`;
+                    input.value = player.subject;
+                    input.placeholder = `Ton sujet en ${cat.name}…`;
+                    input.setAttribute('aria-label', `Sujet de ${player.name} en ${cat.name}`);
+                    input.addEventListener('input', () => {
+                        player.subject = input.value;
+                        updateRouletteButtons();
+                    });
+                    row.appendChild(input);
+
+                    const suggestions = document.createElement('div');
+                    suggestions.className = 'suggestions';
+                    cat.examples.forEach(example => {
+                        const chip = document.createElement('button');
+                        chip.type = 'button';
+                        chip.className = 'suggestion';
+                        chip.textContent = example;
+                        chip.addEventListener('click', () => {
+                            input.value = example;
+                            player.subject = example;
+                            updateRouletteButtons();
+                        });
+                        suggestions.appendChild(chip);
+                    });
+                    row.appendChild(suggestions);
+                }
+                list.appendChild(row);
+            });
+        }
+
+        function updateRouletteButtons() {
+            const spinBtn = document.getElementById('spinBtn');
+            const doneBtn = document.getElementById('rouletteDoneBtn');
+            const allSpun = roulette.current >= roulette.players.length;
+            spinBtn.style.display = allSpun && !roulette.spinning ? 'none' : '';
+            spinBtn.disabled = roulette.spinning;
+            if (!allSpun) spinBtn.textContent = `Tourner pour ${roulette.players[roulette.current].name}`;
+            doneBtn.style.display = allSpun && !roulette.spinning ? '' : 'none';
+            doneBtn.disabled = !roulette.players.every(p => p.subject.trim() !== '');
+        }
+
+        function finishRoulette() {
+            roulette.players.forEach(player => {
+                const cat = RANDOM_CATEGORIES[player.category];
+                document.getElementById(`colorName${player.index}`).value = `${cat.name} : ${player.subject.trim()}`;
+            });
+            document.getElementById('roulettePanel').style.display = 'none';
+            roulette.onDone();
+        }
+
+        function cancelRoulette() {
+            roulette.spinning = false;
+            document.getElementById('roulettePanel').style.display = 'none';
+            document.getElementById('configPanel').style.display = 'block';
+        }
+
         // ===== Démarrage / cycle de jeu =====
 
         async function startGame() {
@@ -1946,8 +2464,10 @@
 
         document.getElementById('nbColors').addEventListener('input', initColorInputs);
 
-        document.getElementById('startBtn').addEventListener('click', startGame);
-        document.getElementById('previewBtn').addEventListener('click', previewGame);
+        document.getElementById('startBtn').addEventListener('click', () => launchWithRoulette(startGame));
+        document.getElementById('previewBtn').addEventListener('click', () => launchWithRoulette(previewGame));
+        document.getElementById('spinBtn').addEventListener('click', spinWheel);
+        document.getElementById('rouletteDoneBtn').addEventListener('click', finishRoulette);
         document.getElementById('restartBtn').addEventListener('click', restart);
         document.getElementById('backBtn').addEventListener('click', backToConfig);
         document.getElementById('importBtn').addEventListener('click', onImportQuestions);
