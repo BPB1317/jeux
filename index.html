@@ -6,240 +6,328 @@
 <title>Game Hub by Kévin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="commun.css">
 <style>
-    :root {
-        --stage: #181829;
-        --ink: #20202f;
-        --ink-soft: #3a3a4a;
-        --cream: #fdf6e9;
-        --card: #fffaf0;
-        --ui-blue: #3498db;
-        --font-display: 'Baloo 2', cursive;
-        --font-body: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
     body {
-        min-height: 100vh;
-        font-family: var(--font-body);
-        background-color: var(--stage);
-        background-image:
-            radial-gradient(circle at 15% 15%, rgba(52,152,219,0.16), transparent 35%),
-            radial-gradient(circle at 85% 80%, rgba(232,67,147,0.14), transparent 35%),
-            linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-        background-size: auto, auto, 42px 42px, 42px 42px;
-        color: var(--cream);
         display: flex;
         flex-direction: column;
-        align-items: center;
-        padding: 40px 20px 60px;
+        padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 4rem) 3rem;
+    }
+
+    .page {
+        width: 100%;
+        max-width: 72rem;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(1.8rem, 4vw, 2.6rem);
     }
 
     header {
-        text-align: center;
-        margin-bottom: 44px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem 2rem;
+    }
+
+    .marque {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.6rem 1rem;
     }
 
     .logo {
-        font-family: var(--font-display);
-        font-size: 2.8em;
-        font-weight: 800;
-        letter-spacing: 0.5px;
-        color: #ffffff;
-        text-shadow: 5px 5px 0 var(--ui-blue);
-        margin-bottom: 0;
+        font-size: clamp(2rem, 5vw, 2.8rem);
+        line-height: 1;
     }
 
-    .logo::after {
-        content: '';
-        display: block;
-        width: 170px;
-        height: 6px;
-        margin: 18px auto 0;
-        border-radius: 3px;
-        background: linear-gradient(90deg, #3498db, #e84393, #f1c40f, #16a085, #9b59b6, #e67e22, #ef5b50);
+    .signature {
+        font-weight: 900;
+        font-size: 1rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
     }
 
     .tagline {
-        color: var(--cream);
-        font-size: 1.1em;
-        font-weight: 600;
-        margin-top: 18px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--encre-douce);
     }
 
-    .games-grid {
+    /* ---------- L'étagère de boîtes ---------- */
+
+    .etagere {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 26px;
-        max-width: 1100px;
-        width: 100%;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+        gap: 2rem;
     }
 
-    .game-card {
+    .couvercle {
+        --jeu-texte: var(--carton);
         display: flex;
         flex-direction: column;
-        background: var(--card);
-        border: 3px solid var(--ink);
-        border-top: 8px solid var(--accent, var(--ui-blue));
-        border-radius: 14px;
-        padding: 26px 22px;
+        color: var(--encre);
         text-decoration: none;
-        color: var(--ink);
-        box-shadow: 6px 6px 0 rgba(10,10,20,0.45);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        background: var(--carton);
+        border: var(--trait) solid var(--encre);
+        box-shadow: var(--ombre);
+        transition: transform 0.15s cubic-bezier(.3, 1.6, .5, 1), box-shadow 0.15s cubic-bezier(.3, 1.6, .5, 1);
     }
 
-    .game-card:hover {
+    .couvercle:hover {
         transform: translate(-4px, -4px);
-        box-shadow: 10px 10px 0 rgba(10,10,20,0.45);
+        box-shadow: var(--ombre-forte);
     }
 
-    .game-card:active {
-        transform: translate(0, 0);
-        box-shadow: 3px 3px 0 rgba(10,10,20,0.4);
+    .couvercle:active {
+        transform: translate(5px, 5px);
+        box-shadow: 1px 1px 0 var(--encre);
+        transition-duration: 0.05s;
     }
 
-    .game-icon-wrap {
-        width: 58px;
-        height: 58px;
+    .couvercle-face {
         display: flex;
         align-items: center;
-        justify-content: center;
-        background: var(--accent, var(--ui-blue));
-        border: 2px solid var(--ink);
-        border-radius: 12px;
-        color: var(--ink);
-        margin-bottom: 16px;
+        gap: 1rem;
+        padding: 1.2rem 1.4rem;
+        color: var(--jeu-texte);
+        background: var(--jeu);
+        border-bottom: var(--trait) solid var(--encre);
     }
 
-    .game-icon-wrap svg {
-        width: 32px;
-        height: 32px;
+    .couvercle-face svg {
+        width: 3.2rem;
+        height: 3.2rem;
+        flex-shrink: 0;
     }
 
-    .game-title {
-        font-family: var(--font-display);
-        font-size: 1.35em;
+    .couvercle-titre {
+        font-family: var(--police-titre);
+        font-size: 1.7rem;
+        line-height: 1.05;
+    }
+
+    .couvercle-dos {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.3rem 1.4rem 1.5rem;
+    }
+
+    .couvercle-numero { color: var(--jeu); }
+
+    .couvercle-description {
+        flex: 1;
+        font-size: 1.05rem;
         font-weight: 700;
-        color: var(--ink);
-        margin-bottom: 8px;
+        line-height: 1.4;
     }
 
-    .game-description {
-        color: var(--ink-soft);
-        font-size: 0.95em;
-        line-height: 1.45;
-        flex-grow: 1;
-        margin-bottom: 18px;
-    }
-
-    .game-play {
-        display: inline-flex;
+    .couvercle-jouer {
         align-self: flex-start;
-        align-items: center;
-        gap: 6px;
-        background: var(--accent, var(--ui-blue));
-        color: var(--ink);
-        border: 2px solid var(--ink);
-        border-radius: 8px;
-        padding: 9px 20px;
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: 0.95em;
-        box-shadow: 3px 3px 0 rgba(10,10,20,0.35);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        font-family: var(--police-titre);
+        font-size: 1.25rem;
+        color: var(--jeu-texte);
+        background: var(--jeu);
+        border: var(--trait) solid var(--encre);
+        border-radius: var(--rayon);
+        box-shadow: 4px 4px 0 var(--encre);
+        padding: 0.4em 1.3em;
     }
 
-    .game-card:hover .game-play {
-        transform: translate(-2px, -2px);
-        box-shadow: 5px 5px 0 rgba(10,10,20,0.4);
+    /* Un seul jeu : la boîte prend toute la largeur, couvercle à gauche */
+    .couvercle:only-child {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        min-height: 20rem;
+        box-shadow: var(--ombre-forte);
     }
+
+    .couvercle:only-child:hover { box-shadow: 14px 14px 0 var(--encre); }
+
+    .couvercle:only-child .couvercle-face {
+        width: 38%;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1.2rem;
+        padding: 2rem;
+        border-bottom: 0;
+        border-right: var(--trait) solid var(--encre);
+        text-align: center;
+    }
+
+    .couvercle:only-child .couvercle-face svg { width: 7rem; height: 7rem; }
+    .couvercle:only-child .couvercle-titre { font-size: clamp(2rem, 4vw, 2.8rem); }
+    .couvercle:only-child .couvercle-dos { padding: 2rem 2.4rem; gap: 1.3rem; }
+    .couvercle:only-child .couvercle-description { font-size: clamp(1.15rem, 2vw, 1.5rem); }
+    .couvercle:only-child .couvercle-jouer { font-size: 1.6rem; padding: 0.45em 1.6em; box-shadow: var(--ombre); }
+
+    @media (max-width: 640px) {
+        .couvercle:only-child { flex-direction: column; min-height: 0; }
+        .couvercle:only-child .couvercle-face {
+            width: auto;
+            flex-direction: row;
+            justify-content: flex-start;
+            padding: 1.2rem 1.4rem;
+            border-right: 0;
+            border-bottom: var(--trait) solid var(--encre);
+            text-align: left;
+        }
+        .couvercle:only-child .couvercle-face svg { width: 3.4rem; height: 3.4rem; }
+        .couvercle:only-child .couvercle-dos { padding: 1.3rem 1.4rem 1.5rem; }
+    }
+
+    /* ---------- Pied de page ---------- */
 
     footer {
-        margin-top: 50px;
-        color: var(--cream);
-        font-weight: 600;
-        font-size: 0.9em;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem 1.5rem;
+    }
+
+    .compte {
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+
+    .places {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+
+    .place-libre {
+        width: 8rem;
+        padding: 0.8em 0;
         text-align: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--encre-douce);
+        border: var(--trait-fin) dashed #6B5D48;
     }
 </style>
 </head>
 <body>
-    <header>
-        <div class="logo">Game Hub by Kévin</div>
-        <p class="tagline">Choisis ton jeu et lance la soirée</p>
-    </header>
+    <div class="page">
+        <header>
+            <div class="marque">
+                <h1 class="tampon logo">GAME HUB</h1>
+                <span class="signature">de Kévin</span>
+            </div>
+            <p class="tagline">Choisis une boîte, on lance la soirée.</p>
+        </header>
 
-    <div class="games-grid" id="gamesGrid"></div>
+        <main class="etagere" id="gamesGrid"></main>
 
-    <footer id="footerCount"></footer>
+        <footer>
+            <p class="compte" id="footerCount"></p>
+            <div class="places" id="freeSlots" aria-hidden="true"></div>
+        </footer>
+    </div>
 
     <script>
+        // Icônes du hub : trait épais, angles carrés, dans une grille 48×48.
         const ICONS = {
-            dice: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="34" height="34" rx="8"/><circle cx="16.5" cy="16.5" r="2.2" fill="currentColor" stroke="none"/><circle cx="31.5" cy="16.5" r="2.2" fill="currentColor" stroke="none"/><circle cx="24" cy="24" r="2.2" fill="currentColor" stroke="none"/><circle cx="16.5" cy="31.5" r="2.2" fill="currentColor" stroke="none"/><circle cx="31.5" cy="31.5" r="2.2" fill="currentColor" stroke="none"/></svg>',
-            music: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="33" r="6"/><circle cx="33" cy="27" r="6"/><path d="M23 33V15l16-4v18"/></svg>',
-            bolt: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M26 5L11 27h9l-3 16 20-25h-10l4-13z"/></svg>',
-            clock: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="17"/><path d="M24 14v10l7 5"/></svg>',
-            key: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="24" r="8.5"/><path d="M23.5 24H41M33 24v6M39 24v6"/></svg>',
-            grid: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="15" height="15" rx="3"/><rect x="26" y="7" width="15" height="15" rx="3"/><rect x="7" y="26" width="15" height="15" rx="3"/><rect x="26" y="26" width="15" height="15" rx="3"/></svg>',
-            camera: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="15" width="38" height="25" rx="4"/><path d="M17 15l3-6h8l3 6"/><circle cx="24" cy="27" r="7.5"/></svg>',
-            bars: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="28" width="9" height="13" rx="2"/><rect x="20" y="18" width="9" height="23" rx="2"/><rect x="33" y="7" width="9" height="34" rx="2"/></svg>'
+            dice: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="7" y="7" width="34" height="34"/><rect x="14" y="14" width="5" height="5" fill="currentColor" stroke="none"/><rect x="29" y="14" width="5" height="5" fill="currentColor" stroke="none"/><rect x="21.5" y="21.5" width="5" height="5" fill="currentColor" stroke="none"/><rect x="14" y="29" width="5" height="5" fill="currentColor" stroke="none"/><rect x="29" y="29" width="5" height="5" fill="currentColor" stroke="none"/></svg>',
+            music: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="9" y="30" width="10" height="9"/><rect x="29" y="25" width="10" height="9"/><path d="M19 30V12l20-5v18"/></svg>',
+            bolt: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M27 5L11 27h10l-3 16 19-24H27l4-14z"/></svg>',
+            clock: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><circle cx="24" cy="24" r="17"/><path d="M24 14v11l7 5"/></svg>',
+            key: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="7" y="16" width="16" height="16"/><path d="M23 24h18M34 24v7M41 24v7"/></svg>',
+            grid: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="6" y="6" width="36" height="36"/><path d="M18 6v36M30 6v36M6 18h36M6 30h36"/><rect x="19.8" y="19.8" width="8.4" height="8.4" fill="currentColor" stroke="none"/></svg>',
+            camera: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="5" y="15" width="38" height="25"/><path d="M17 15l3-6h8l3 6"/><rect x="17" y="21" width="14" height="13"/></svg>',
+            bars: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="7" y="28" width="9" height="13"/><rect x="20" y="18" width="9" height="23"/><rect x="33" y="7" width="9" height="34"/></svg>'
         };
 
         // Ajouter un jeu = ajouter une entrée ici. "folder" doit correspondre au nom exact du dossier contenant son index.html
         // (minuscules, sans espaces, accents ni apostrophes : le serveur en ligne respecte la casse, contrairement à Windows).
         // "icon" doit référencer une clé de ICONS ci-dessus (ou en ajouter une nouvelle dans le même style de trait).
+        // "color" : de préférence une encre de commun.css (tomate #C8401F, ocre #E3A21A, sapin #1F6A5C, prusse #2A4A7A, prune #7E3A58, ciel #8FC0CF).
         const GAMES = [
             {
                 folder: 'la-grille',
                 title: 'La Grille',
-                icon: 'dice',
-                color: '#3498db',
+                icon: 'grid',
+                color: '#1F6A5C',
                 description: "Grille de cases à mémoriser, avec des questions à thème et à difficulté générées avec l'IA."
             }
         ];
+
+        // Texte foncé sur les couleurs claires, clair sur les foncées.
+        function textColorFor(hex) {
+            const n = parseInt(hex.replace('#', ''), 16);
+            const [r, g, b] = [n >> 16, (n >> 8) & 255, n & 255].map(v => {
+                v /= 255;
+                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+            });
+            const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            return lum > 0.3 ? 'var(--encre)' : 'var(--carton)';
+        }
+
+        function countLabel(n) {
+            if (n === 1) return '1 jeu dans la boîte. Les prochains sont en route.';
+            if (n < 5) return `${n} jeux dans la boîte. De quoi tenir la soirée.`;
+            return `${n} jeux dans la boîte. Personne ne rentre avant minuit.`;
+        }
 
         function renderGames() {
             const grid = document.getElementById('gamesGrid');
             grid.innerHTML = '';
 
-            GAMES.forEach(game => {
+            GAMES.forEach((game, index) => {
                 const card = document.createElement('a');
-                card.className = 'game-card';
+                card.className = 'couvercle';
                 card.href = encodeURIComponent(game.folder) + '/index.html';
-                card.style.setProperty('--accent', game.color);
+                card.style.setProperty('--jeu', game.color);
+                card.style.setProperty('--jeu-texte', textColorFor(game.color));
 
-                const iconWrap = document.createElement('div');
-                iconWrap.className = 'game-icon-wrap';
-                iconWrap.innerHTML = ICONS[game.icon] || '';
+                const face = document.createElement('div');
+                face.className = 'couvercle-face';
+                face.innerHTML = ICONS[game.icon] || '';
 
-                const title = document.createElement('div');
-                title.className = 'game-title';
+                const title = document.createElement('h2');
+                title.className = 'couvercle-titre';
                 title.textContent = game.title;
+                face.appendChild(title);
 
-                const desc = document.createElement('div');
-                desc.className = 'game-description';
+                const back = document.createElement('div');
+                back.className = 'couvercle-dos';
+
+                const number = document.createElement('div');
+                number.className = 'surtitre couvercle-numero';
+                number.textContent = `Jeu n°${index + 1}`;
+
+                const desc = document.createElement('p');
+                desc.className = 'couvercle-description';
                 desc.textContent = game.description;
 
                 const play = document.createElement('div');
-                play.className = 'game-play';
-                play.textContent = 'Jouer ▶';
+                play.className = 'couvercle-jouer';
+                play.textContent = 'Jouer';
 
-                card.appendChild(iconWrap);
-                card.appendChild(title);
-                card.appendChild(desc);
-                card.appendChild(play);
+                back.appendChild(number);
+                back.appendChild(desc);
+                back.appendChild(play);
+                card.appendChild(face);
+                card.appendChild(back);
                 grid.appendChild(card);
             });
 
-            document.getElementById('footerCount').textContent = `${GAMES.length} jeu(x) disponible(s)`;
+            document.getElementById('footerCount').textContent = countLabel(GAMES.length);
+
+            const slots = document.getElementById('freeSlots');
+            slots.innerHTML = '';
+            for (let i = GAMES.length; i < 3; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'place-libre';
+                slot.textContent = 'Place libre';
+                slots.appendChild(slot);
+            }
         }
 
         renderGames();

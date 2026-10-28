@@ -6,908 +6,751 @@
     <title>La Grille</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../commun.css">
     <style>
         :root {
-            --stage: #181829;
-            --ink: #20202f;
-            --ink-soft: #3a3a4a;
-            --cream: #fdf6e9;
-            --card: #fffaf0;
-            --ui-blue: #3498db;
-            --ui-blue-ink: #1b5e82;
-            --ui-red: #ef5b50;
-            --ui-red-ink: #a53125;
-            --ui-yellow: #f1c40f;
-            --ui-yellow-ink: #8a6d0a;
-            --ui-green: #2ecc71;
-            --ui-green-ink: #1f7a3d;
-            --font-display: 'Baloo 2', cursive;
-            --font-body: 'Nunito', 'Segoe UI', Arial, sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --jeu: var(--sapin);
+            --jeu-texte: var(--carton);
+            --dos-case: #2E261D;
         }
 
         body {
-            font-family: var(--font-body);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background: var(--stage);
-            color: var(--cream);
-            padding: 24px 20px 60px;
+            padding: clamp(1rem, 3vw, 2rem) clamp(0.75rem, 3vw, 2.5rem) 3rem;
         }
 
         .container {
-            text-align: center;
-            width: min(94vw, 1100px);
+            width: min(100%, 72rem);
+            margin: 0 auto;
             transition: width 0.2s;
         }
 
         .container.wide {
-            width: min(97vw, 1900px);
+            width: min(100%, 120rem);
         }
 
-        .top-nav {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 8px;
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .carte h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
 
-        .hub-link {
-            color: var(--cream);
-            text-decoration: none;
-            font-family: var(--font-display);
-            font-size: 14px;
-            font-weight: 700;
-            padding: 7px 16px;
-            border: 2px solid var(--cream);
-            border-radius: 20px;
-            background: transparent;
-            transition: all 0.2s;
+        .note {
+            font-size: 0.85rem;
+            line-height: 1.45;
+            color: var(--encre-douce);
         }
 
-        .hub-link:hover {
-            background: var(--cream);
-            color: var(--ink);
+        /* ===================== Configuration ===================== */
+
+        .config-grille {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(17rem, 1fr);
+            gap: 2rem;
+            align-items: start;
         }
 
-        h1 {
-            font-family: var(--font-display);
-            font-size: 2.6em;
-            font-weight: 800;
-            margin-bottom: 0;
-            color: #ffffff;
-            text-shadow: 5px 5px 0 var(--ui-blue);
+        .config-joueurs {
+            padding: 1.3rem 1.4rem 1.4rem;
         }
-
-        .container > h1::after {
-            content: '';
-            display: block;
-            width: 160px;
-            height: 6px;
-            margin: 10px auto 14px;
-            border-radius: 3px;
-            background: linear-gradient(90deg, #ffffff, var(--ui-blue), var(--ui-red), var(--ui-yellow), var(--ui-green));
-        }
-
-        /* Onglets */
-        .tabs {
-            display: inline-flex;
-            gap: 8px;
-            margin: 0 auto 16px;
-            padding: 6px;
-            background: rgba(0,0,0,0.25);
-            border: 2px solid rgba(255,255,255,0.15);
-            border-radius: 16px;
-        }
-
-        .tab {
-            background: transparent;
-            color: var(--cream);
-            border: none;
-            padding: 12px 28px;
-            font-family: var(--font-display);
-            font-size: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 700;
-        }
-
-        .tab.active {
-            background: var(--ui-blue);
-            color: var(--ink);
-            box-shadow: 0 3px 0 rgba(0,0,0,0.35);
-        }
-
-        .tab:nth-child(2).active {
-            background: var(--ui-yellow);
-        }
-
-        .tab:hover:not(.active) {
-            background: rgba(255,255,255,0.12);
-            color: #ffffff;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .config-panel {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .config-panel > h2 {
-            font-family: var(--font-display);
-            font-size: 1.7em;
-            text-align: center;
-            margin-bottom: 0;
-            color: var(--cream);
-        }
-
-        .config-panel > h2::after {
-            content: '';
-            display: block;
-            width: 120px;
-            height: 5px;
-            margin: 10px auto 22px;
-            border-radius: 3px;
-            background: linear-gradient(90deg, #ffffff, var(--ui-blue), var(--ui-red), var(--ui-yellow), var(--ui-green));
-        }
-
-        .config-section {
-            margin-bottom: 26px;
-            background: var(--card);
-            border: 3px solid var(--ink);
-            border-radius: 14px;
-            box-shadow: 6px 6px 0 rgba(10,10,20,0.45);
-            overflow: hidden;
-        }
-
-        .config-section h3 {
-            font-family: var(--font-display);
-            font-size: 1.25em;
-            padding: 12px 20px;
-            color: var(--ink);
-            border-bottom: 3px solid var(--ink);
-        }
-
-        .config-section--blue h3 { background: var(--ui-blue); }
-        .config-section--yellow h3 { background: var(--ui-yellow); }
-        .config-section--green h3 { background: var(--ui-green); }
-        .config-section--rainbow h3 { background: linear-gradient(90deg, #ffffff, var(--ui-blue), var(--ui-red), var(--ui-yellow), var(--ui-green)); }
 
         #colorInputsContainer {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+            gap: 0.7rem;
         }
 
-        .config-section > *:not(h3) {
-            padding-left: 20px;
-            padding-right: 20px;
-        }
-
-        .config-section > h3 + * {
-            margin-top: 18px;
-        }
-
-        .config-section > *:last-child {
-            padding-bottom: 20px;
-        }
-
-        .config-row {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .config-item {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .config-item label {
-            margin-bottom: 6px;
-            font-weight: 800;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            color: var(--ink);
-        }
-
-        .config-section--blue .config-item label { color: var(--ui-blue-ink); }
-        .config-section--yellow .config-item label { color: var(--ui-yellow-ink); }
-        .config-section--green .config-item label { color: var(--ui-green-ink); }
-
-        .config-item input {
-            padding: 9px 12px;
-            border: 2px solid var(--ink);
-            border-radius: 8px;
-            font-size: 16px;
-            width: 150px;
-            background: #ffffff;
-            color: var(--ink);
-            font-weight: 700;
-        }
-
-        .config-item input:focus {
-            outline: none;
-            border-color: var(--ui-blue);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
-        }
-
+        /* Une ligne par joueur : couleur | joueur | thème (l'ordre du DOM est réarrangé par la grille) */
         .color-input-group {
-            display: flex;
-            gap: 15px;
-            padding: 12px;
-            background: #ffffff;
-            border: 2px solid var(--ink);
-            border-radius: 10px;
-            align-items: center;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 3rem minmax(0, 1fr) minmax(0, 1fr);
+            column-gap: 0.6rem;
+            row-gap: 0.25rem;
+            align-items: end;
+            padding: 0.6rem 0.7rem 0.7rem;
+            background: #FFFDF7;
+            border: var(--trait-fin) solid var(--encre);
         }
 
         .color-input-group label {
-            font-weight: 800;
-            font-size: 13px;
+            font-weight: 900;
+            font-size: 0.68rem;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
-            min-width: 70px;
-            color: var(--ink-soft);
+            color: var(--encre-douce);
+        }
+
+        /* Les intitulés ne s'affichent qu'au-dessus de la première ligne (restent lus par les lecteurs d'écran) */
+        .color-input-group:not(:first-child) label,
+        .color-input-group > label:first-child {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+
+        .color-input-group > :nth-child(1) { grid-column: 1; grid-row: 1; }
+        .color-input-group > :nth-child(2) { grid-column: 1; grid-row: 2; }
+        .color-input-group > :nth-child(3) { grid-column: 3; grid-row: 1; }
+        .color-input-group > :nth-child(4) { grid-column: 3; grid-row: 2; }
+        .color-input-group > :nth-child(5) { grid-column: 2; grid-row: 1; }
+        .color-input-group > :nth-child(6) { grid-column: 2; grid-row: 2; }
+
+        .color-input-group input[type="color"] {
+            width: 100%;
         }
 
         .color-input-group input[type="text"] {
-            padding: 7px 10px;
-            border: 2px solid var(--ink);
-            border-radius: 8px;
-            font-size: 14px;
-            flex: 1;
-            min-width: 100px;
-            background: #ffffff;
-            color: var(--ink);
-            font-weight: 600;
+            width: 100%;
+            font-size: 0.95rem;
         }
 
-        .color-input-group input[type="text"]:focus {
-            outline: none;
-            border-color: var(--ui-red);
-        }
-
-        .color-input-group input[type="color"] {
-            width: 54px;
-            height: 40px;
-            border: 2px solid var(--ink);
-            border-radius: 8px;
-            cursor: pointer;
-            background: transparent;
-        }
-
-        .btn {
-            background: var(--ui-blue);
-            color: var(--ink);
-            border: 3px solid var(--ink);
-            padding: 15px 30px;
-            font-family: var(--font-display);
-            font-size: 17px;
-            font-weight: 700;
-            border-radius: 10px;
-            cursor: pointer;
-            margin: 8px;
-            box-shadow: 4px 4px 0 rgba(10,10,20,0.45);
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
-
-        .btn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0 rgba(10,10,20,0.45);
-        }
-
-        .btn:active {
-            transform: translate(0, 0);
-            box-shadow: 2px 2px 0 rgba(10,10,20,0.45);
-        }
-
-        .btn-positive { background: var(--ui-green); }
-        .btn-neutral { background: var(--ui-blue); }
-        .btn-destructive { background: var(--ui-red); }
-        .btn-info { background: var(--ui-yellow); }
-
-        .btn-small {
-            padding: 8px 15px;
-            font-size: 14px;
-            margin: 5px;
-            border-width: 2px;
-            box-shadow: 3px 3px 0 rgba(10,10,20,0.4);
-        }
-
-        .game-area {
-            display: none;
-        }
-
-        .game-area.active {
-            display: block;
-        }
-
-        .info {
-            background: var(--card);
-            border: 3px solid var(--ink);
-            padding: 12px;
-            border-radius: 14px;
-            margin-bottom: 14px;
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--ink);
-            box-shadow: 5px 5px 0 rgba(10,10,20,0.4);
-        }
-
-        #timer {
-            color: var(--ui-red-ink);
-            font-size: 24px;
-        }
-
-        #grid {
-            display: grid;
-            gap: 10px;
-            justify-content: center;
-            background: var(--stage);
-            border: 3px solid var(--ink);
-            padding: 20px;
-            border-radius: 18px;
-            box-shadow: 5px 5px 0 rgba(10,10,20,0.4);
-            margin: 0 auto 20px;
-        }
-
-        .cell {
-            aspect-ratio: 1;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: clamp(13px, 1.6vw, 24px);
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 3px solid rgba(0,0,0,0.5);
-            box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
-            color: white;
-            text-shadow:
-                -1px -1px 0 #000,
-                1px -1px 0 #000,
-                -1px 1px 0 #000,
-                1px 1px 0 #000,
-                0 0 5px rgba(0,0,0,0.5);
-        }
-
-        .cell.flipped {
-            background: #0e0e1c !important;
-            border-color: rgba(255,255,255,0.2);
-        }
-
-        .cell.flipped::before {
-            content: attr(data-number);
-            color: white;
-            text-shadow: none;
-            font-size: 24px;
-        }
-
-        .cell:hover {
-            transform: scale(1.06) rotate(-1deg);
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
-        }
-
-        .legend {
-            background: var(--card);
-            border: 3px solid var(--ink);
-            padding: 20px;
-            border-radius: 18px;
-            box-shadow: 5px 5px 0 rgba(10,10,20,0.4);
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .legend h3 {
-            font-family: var(--font-display);
-            color: var(--ink);
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            text-align: left;
-        }
-
-        .legend-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .legend-item {
+        .config-cote {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            padding: 16px 20px;
-            flex: 0 1 auto;
-            background: #ffffff;
-            border: 2px solid var(--ink);
-            border-radius: 10px;
+            gap: 1.3rem;
         }
 
-        .legend-color {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            border: 2px solid var(--ink);
-            box-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+        .config-reglages {
+            padding: 1.2rem 1.3rem 1.3rem;
         }
 
-        .legend-text {
-            text-align: center;
-            font-size: 15px;
+        .reglages-ligne {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.7rem;
         }
 
-        .legend-theme {
-            font-weight: 800;
-            color: var(--ink);
-            font-size: 1.05em;
+        .reglages-ligne input {
+            width: 100%;
+            font-size: 1.15rem;
         }
 
-        .legend-player {
-            color: var(--ink-soft);
-            font-style: italic;
+        .config-reglages .note { margin-top: 0.8rem; }
+
+        #validationMessage {
+            color: var(--tomate);
+            font-weight: 900;
+            font-size: 0.9rem;
+            margin-top: 0.7rem;
         }
 
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+        #validationMessage:empty { display: none; }
 
-        /* Classement */
-        .ranking-container {
-            background: var(--card);
-            border: 3px solid var(--ink);
-            padding: 28px;
-            border-radius: 18px;
-            box-shadow: 6px 6px 0 rgba(10,10,20,0.45);
-        }
+        #startBtn { width: 100%; }
 
-        .ranking-header {
+        #previewBtn { align-self: center; }
+
+        .config-historique summary {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .ranking-header h2 {
-            font-family: var(--font-display);
-            color: var(--ink);
-        }
-
-        .ranking-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .ranking-table th {
-            background: var(--ui-blue);
-            color: var(--ink);
-            padding: 15px;
-            text-align: left;
-            font-size: 16px;
-            font-family: var(--font-display);
-        }
-
-        .ranking-table th:first-child {
-            border-radius: 8px 0 0 8px;
-        }
-
-        .ranking-table th:last-child {
-            border-radius: 0 8px 8px 0;
-        }
-
-        .ranking-table td {
-            padding: 15px;
-            border-bottom: 2px solid rgba(32,32,47,0.1);
-            color: var(--ink);
-        }
-
-        .ranking-table tr:hover {
-            background: rgba(52, 152, 219, 0.08);
-        }
-
-        .rank-medal {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        .player-color-badge {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 10px;
-            border: 2px solid var(--ink);
-            vertical-align: middle;
-        }
-
-        .score-controls {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .score-btn {
-            color: var(--ink);
-            border: 2px solid var(--ink);
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            gap: 1rem;
+            padding: 0.9rem 1.3rem;
+            font-weight: 900;
+            font-size: 0.95rem;
             cursor: pointer;
-            font-size: 18px;
-            font-weight: 800;
-            transition: all 0.15s;
-            box-shadow: 2px 2px 0 rgba(10,10,20,0.35);
+            list-style: none;
         }
 
-        .score-btn-plus { background: var(--ui-green); }
-        .score-btn-minus { background: var(--ui-red); }
+        .config-historique summary::-webkit-details-marker { display: none; }
 
-        .score-btn:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 3px 3px 0 rgba(10,10,20,0.4);
+        .config-historique summary::after {
+            content: '+';
+            font-family: var(--police-titre);
+            font-size: 1.4rem;
+            line-height: 1;
         }
 
-        .score-display {
-            font-weight: 800;
-            font-size: 18px;
-            color: var(--ink);
-            min-width: 40px;
-            text-align: center;
-        }
+        .config-historique[open] summary::after { content: '−'; }
 
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--ui-green);
-            color: var(--ink);
-            font-weight: 800;
-            padding: 15px 25px;
-            border: 3px solid var(--ink);
-            border-radius: 12px;
-            box-shadow: 5px 5px 0 rgba(10,10,20,0.4);
-            animation: slideIn 0.3s, slideOut 0.3s 2.7s;
-            z-index: 1000;
-            max-width: 350px;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(400px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(400px); opacity: 0; }
-        }
-
-        #validationMessage {
-            color: var(--ui-red-ink);
-            font-weight: 800;
-            min-height: 20px;
-        }
-
-        .add-points-section {
-            background: #ffffff;
-            border: 2px solid var(--ink);
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 20px;
-        }
-
-        .add-points-form {
+        .historique-corps {
             display: flex;
-            gap: 10px;
-            align-items: center;
+            flex-direction: column;
+            gap: 0.7rem;
+            padding: 0 1.3rem 1.2rem;
+        }
+
+        #historyStats { font-weight: 700; }
+
+        .controls {
+            display: flex;
+            gap: 0.8rem;
             justify-content: center;
             flex-wrap: wrap;
         }
 
-        .add-points-form select,
-        .add-points-form input[type="number"] {
-            padding: 8px 12px;
-            border: 2px solid var(--ink);
-            border-radius: 8px;
-            font-size: 14px;
-            background: #ffffff;
-            color: var(--ink);
-            font-weight: 600;
+        .historique-corps .controls { justify-content: flex-start; }
+
+        @media (max-width: 900px) {
+            .config-grille { grid-template-columns: minmax(0, 1fr); }
         }
 
-        /* Génération de questions */
+        /* ===================== Génération des questions ===================== */
+
+        #generationPanel {
+            max-width: 56rem;
+            margin: 0 auto;
+            padding: 1.6rem;
+        }
+
         .generation-step {
-            margin: 15px 0 8px;
-            color: var(--ink);
-            font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.7rem;
+            margin: 1.2rem 0 0.6rem;
+            font-weight: 900;
+            font-size: 1.05rem;
         }
 
         .step-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            border: 2px solid var(--ink);
-            font-family: var(--font-display);
-            font-size: 14px;
             flex-shrink: 0;
-            color: var(--ink);
+            width: 2rem;
+            height: 2rem;
+            font-family: var(--police-titre);
+            color: var(--jeu-texte);
+            background: var(--jeu);
+            border: var(--trait-fin) solid var(--encre);
         }
 
-        .step-badge-1 { background: var(--ui-blue); }
-        .step-badge-2 { background: var(--ui-green); }
-
-        .prompt-textarea, .response-textarea {
+        .prompt-textarea,
+        .response-textarea {
+            display: block;
             width: 100%;
             font-family: 'Courier New', monospace;
-            font-size: 12px;
-            padding: 12px;
-            border: 2px solid var(--ink);
-            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 400;
             resize: vertical;
-            background: #ffffff;
-            color: var(--ink);
-        }
-
-        .prompt-textarea:focus, .response-textarea:focus {
-            outline: none;
-            border-color: var(--ui-blue);
+            margin-bottom: 0.6rem;
         }
 
         .generation-error {
             white-space: pre-line;
-            color: var(--ui-red-ink);
-            font-weight: 800;
-            margin-top: 10px;
+            color: var(--tomate);
+            font-weight: 900;
+            margin-top: 0.6rem;
         }
 
-        #questionPanel h3 {
-            text-align: left;
-            color: var(--ink);
+        .generation-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem 1.5rem;
+            margin-top: 1.2rem;
         }
 
-        #questionPanel p {
-            text-align: left;
-            color: var(--ink);
-        }
+        /* ===================== Partie ===================== */
 
-        .turn-banner {
-            background: var(--card);
-            border: 3px solid var(--ink);
-            border-left-width: 10px;
-            border-left-color: var(--ui-blue);
-            padding: 12px 18px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-family: var(--font-display);
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--ink);
-            box-shadow: 4px 4px 0 rgba(10,10,20,0.4);
-        }
-
-        .question-overlay-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(10,10,20,0.75);
-            z-index: 900;
-        }
-
-        .question-overlay {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 901;
-            max-width: 640px;
-            width: 90vw;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .question-overlay .question-text {
-            font-size: 1.45em;
-            line-height: 1.45;
-        }
-
-        .question-meta {
-            font-weight: 800;
-            margin: 8px 0;
-        }
+        .game-area { display: none; }
+        .game-area.active { display: block; }
 
         .game-layout {
             display: flex;
-            gap: 48px;
+            gap: 2.5rem;
             align-items: flex-start;
             justify-content: center;
         }
 
         .game-main {
-            flex: 1 1 auto;
-            max-width: 900px;
+            flex: 0 1 auto;
+            max-width: 60rem;
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
         }
 
-        .live-scoreboard {
-            width: 380px;
+        .game-side {
+            width: 24rem;
             flex-shrink: 0;
-            background: var(--card);
-            border: 3px solid var(--ink);
-            border-radius: 16px;
-            padding: 26px;
-            box-shadow: 6px 6px 0 rgba(10,10,20,0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
             position: sticky;
-            top: 20px;
-            text-align: left;
+            top: 1rem;
+        }
+
+        .game-controls { justify-content: flex-start; }
+
+        .info {
+            width: 100%;
+            font-family: var(--police-titre);
+            font-size: 1.5rem;
+            line-height: 1.25;
+            text-align: center;
+            text-wrap: balance;
+            color: var(--carton);
+            background: var(--encre);
+            border: var(--trait) solid var(--encre);
+            padding: 0.45em 0.8em;
+        }
+
+        #timer {
+            color: var(--ocre);
+            font-size: 1.5em;
+            line-height: 1;
+        }
+
+        .turn-banner {
+            width: 100%;
+            font-family: var(--police-titre);
+            font-size: 1.6rem;
+            line-height: 1.2;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            border-left: 1.4rem solid var(--jeu);
+            box-shadow: var(--ombre);
+            padding: 0.45em 0.8em;
+            animation: banniere 0.35s cubic-bezier(.3, 1.5, .5, 1);
+        }
+
+        @keyframes banniere {
+            from { transform: translateX(-1.5rem); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        #grid {
+            display: grid;
+            gap: clamp(5px, 0.6vw, 10px);
+            justify-content: center;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre-forte);
+            padding: clamp(0.6rem, 1.2vw, 1.1rem);
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--police-titre);
+            font-size: clamp(14px, 2.3vw, 40px);
+            color: var(--carton);
+            /* Chiffre clair cerné d'encre : lisible sur toutes les couleurs de joueurs */
+            text-shadow:
+                -2px -2px 0 var(--encre), 2px -2px 0 var(--encre),
+                -2px 2px 0 var(--encre), 2px 2px 0 var(--encre),
+                0 -2px 0 var(--encre), 0 2px 0 var(--encre),
+                -2px 0 0 var(--encre), 2px 0 0 var(--encre);
+            border: var(--trait-fin) solid var(--encre);
+            border-radius: var(--rayon);
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.12s cubic-bezier(.3, 1.6, .5, 1), box-shadow 0.12s cubic-bezier(.3, 1.6, .5, 1);
+        }
+
+        .cell:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 var(--encre);
+        }
+
+        .cell:active {
+            transform: translate(1px, 1px);
+            box-shadow: none;
+        }
+
+        .cell.flipped {
+            background: var(--dos-case) !important;
+            text-shadow: none;
+        }
+
+        .cell.flipped::before {
+            content: attr(data-number);
+            color: var(--kraft);
+        }
+
+        .cell[data-answered="true"] {
+            animation: retourne 0.4s cubic-bezier(.3, 1.4, .5, 1);
+        }
+
+        @keyframes retourne {
+            from { transform: perspective(400px) rotateY(90deg); }
+            to { transform: perspective(400px) rotateY(0); }
+        }
+
+        /* Légende compacte sous la grille */
+        #legend { width: 100%; }
+
+        .legend-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            padding: 0.4em 0.75em;
+        }
+
+        .legend-color {
+            width: 1.5rem;
+            height: 1.5rem;
+            flex-shrink: 0;
+            border: var(--trait-fin) solid var(--encre);
+        }
+
+        .legend-text {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0 0.45rem;
+        }
+
+        .legend-theme { font-weight: 900; }
+
+        .legend-player {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--encre-douce);
+        }
+
+        /* Classement en direct */
+        .live-scoreboard {
+            padding: 1.2rem 1.4rem 0.8rem;
         }
 
         .live-scoreboard h3 {
-            font-family: var(--font-display);
-            color: var(--ink);
-            margin-bottom: 18px;
-            font-size: 1.5em;
+            font-family: var(--police-texte);
+            font-weight: 900;
+            font-size: 0.8rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
         }
 
         .live-score-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 2px solid rgba(32,32,47,0.1);
-            font-weight: 700;
-            font-size: 1.15em;
-            color: var(--ink);
+            gap: 0.8rem;
+            padding: 0.65rem 0;
+            border-top: 2px solid var(--filet);
+            font-weight: 900;
+            font-size: 1.3rem;
         }
 
-        .live-scoreboard .player-color-badge {
-            width: 32px;
-            height: 32px;
-        }
-
-        .live-score-row:last-child {
-            border-bottom: none;
+        .live-score-row > span:last-child {
+            font-family: var(--police-titre);
+            font-size: 1.7rem;
+            line-height: 1;
         }
 
         .live-score-name {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.6rem;
+            min-width: 0;
         }
 
         .live-score-rank {
-            font-size: 16px;
-            color: var(--ink-soft);
-            min-width: 20px;
+            min-width: 1.2em;
+            font-size: 1rem;
+            color: var(--encre-douce);
         }
 
-        @media (max-width: 800px) {
-            .game-layout {
-                flex-direction: column;
-            }
-
-            .live-scoreboard {
-                width: 100%;
-                position: static;
-            }
+        .player-color-badge {
+            display: inline-block;
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: var(--trait-fin) solid var(--encre);
+            vertical-align: middle;
         }
+
+        .live-scoreboard .player-color-badge {
+            width: 1.7rem;
+            height: 1.7rem;
+        }
+
+        /* Question (en surimpression) */
+        .question-overlay-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 900;
+            background: rgba(34, 28, 21, 0.82);
+        }
+
+        .question-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            z-index: 901;
+            width: min(92vw, 48rem);
+            max-height: 88vh;
+            overflow-y: auto;
+            transform: translate(-50%, -50%);
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre-forte);
+            padding: clamp(1.2rem, 3vw, 2.2rem);
+            animation: surgit 0.28s cubic-bezier(.3, 1.5, .5, 1);
+        }
+
+        @keyframes surgit {
+            from { transform: translate(-50%, -46%) scale(0.94); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        #questionPanel h3 {
+            font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+            margin-bottom: 0.4rem;
+        }
+
+        #questionPanel p {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+        }
+
+        #questionPanel .question-meta {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--encre-douce);
+        }
+
+        #questionPanel .question-text {
+            font-size: clamp(1.5rem, 3vw, 2.4rem);
+            line-height: 1.3;
+        }
+
+        #questionPanel .btn {
+            font-size: 1.05rem;
+            padding: 0.7em 1.2em;
+        }
+
+        /* Mobile : minuteur et tour au-dessus de la grille, scores en dessous */
+        @media (max-width: 900px) {
+            .game-layout { flex-direction: column; align-items: stretch; gap: 1.2rem; }
+            .game-side { display: contents; }
+            .info { order: -2; }
+            .turn-banner { order: -1; }
+            .game-controls { justify-content: center; }
+        }
+
+        /* ===================== Classement ===================== */
+
+        .ranking-container {
+            padding: clamp(1rem, 3vw, 1.8rem);
+            overflow-x: auto;
+        }
+
+        .ranking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .ranking-header h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            margin: 0;
+        }
+
+        .ranking-table {
+            width: 100%;
+            min-width: 34rem;
+            border-collapse: collapse;
+        }
+
+        .ranking-table th {
+            font-weight: 900;
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-align: left;
+            color: var(--carton);
+            background: var(--encre);
+            padding: 0.8em 1em;
+        }
+
+        .ranking-table td {
+            padding: 0.7em 1em;
+            border-bottom: 2px solid var(--filet);
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+
+        .ranking-table tr:hover td { background: #E9DEC4; }
+
+        .rank-medal {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.3rem;
+            height: 2.3rem;
+            font-family: var(--police-titre);
+            font-size: 1.3rem;
+        }
+
+        .rank-podium-1,
+        .rank-podium-2,
+        .rank-podium-3 {
+            border: var(--trait-fin) solid var(--encre);
+            box-shadow: 3px 3px 0 var(--encre);
+        }
+
+        .rank-podium-1 { background: var(--ocre); }
+        .rank-podium-2 { background: var(--ciel); }
+        .rank-podium-3 { background: var(--tomate); color: var(--carton); }
+
+        .ranking-table .player-color-badge { margin-right: 0.6rem; }
+
+        .score-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .score-btn {
+            width: 2.2rem;
+            height: 2.2rem;
+            font-family: var(--police-texte);
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            border-radius: var(--rayon);
+            box-shadow: 3px 3px 0 var(--encre);
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        .score-btn-plus { background: var(--sapin); }
+        .score-btn-minus { background: var(--tomate); }
+
+        .score-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--encre); }
+        .score-btn:active { transform: translate(3px, 3px); box-shadow: none; }
+
+        .score-display {
+            min-width: 2.6rem;
+            text-align: center;
+            font-family: var(--police-titre);
+            font-size: 1.6rem;
+        }
+
+        .add-points-section {
+            margin-top: 1.4rem;
+            padding-top: 1.2rem;
+            border-top: var(--trait-fin) dashed var(--filet);
+        }
+
+        .add-points-section h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .add-points-form {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+        }
+
+        .add-points-form input[type="number"] { width: 6rem; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="top-nav">
-            <a class="hub-link" href="../index.html">⬅ Hub</a>
-        </div>
-        <h1>🎲 La Grille</h1>
+        <header class="barre-jeu">
+            <a class="retour-hub" href="../index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square" aria-hidden="true"><path d="M15 4l-8 8 8 8"/></svg>
+                Hub
+            </a>
+            <h1 class="titre-jeu">
+                <span class="icone">
+                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square" aria-hidden="true"><rect x="6" y="6" width="36" height="36"/><path d="M18 6v36M30 6v36M6 18h36M6 30h36"/></svg>
+                </span>
+                La Grille
+            </h1>
 
-        <!-- Onglets -->
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('game')">Jeu</button>
-            <button class="tab" onclick="switchTab('ranking')">🏆 Classement</button>
-        </div>
+            <!-- Onglets -->
+            <nav class="onglets tabs">
+                <button class="tab active" onclick="switchTab('game')">Partie</button>
+                <button class="tab" onclick="switchTab('ranking')">Classement</button>
+            </nav>
+        </header>
 
         <!-- Onglet Jeu -->
         <div id="gameTab" class="tab-content active">
             <!-- Panel de configuration -->
             <div class="config-panel" id="configPanel">
-                <h2>Configuration du jeu</h2>
+                <div class="config-grille">
+                    <section class="carte config-joueurs">
+                        <h2>Joueurs et thèmes</h2>
+                        <div id="colorInputsContainer"></div>
+                    </section>
 
-                <div class="config-section config-section--blue">
-                    <h3>Configuration de la grille</h3>
-                    <div class="config-row">
-                        <div class="config-item">
-                            <label for="nbCases">Nombre de cases</label>
-                            <input type="number" id="nbCases" value="36" min="4" max="100">
-                        </div>
-                        <div class="config-item">
-                            <label for="nbColors">Nombre de joueurs</label>
-                            <input type="number" id="nbColors" value="5" min="2" max="10">
-                        </div>
+                    <div class="config-cote">
+                        <section class="carte config-reglages">
+                            <h2>Réglages</h2>
+                            <div class="reglages-ligne">
+                                <div class="champ">
+                                    <label for="nbColors">Joueurs</label>
+                                    <input type="number" id="nbColors" value="5" min="2" max="10">
+                                </div>
+                                <div class="champ">
+                                    <label for="nbCases">Cases</label>
+                                    <input type="number" id="nbCases" value="36" min="4" max="100">
+                                </div>
+                                <div class="champ">
+                                    <label for="timerInput">Mémo (s)</label>
+                                    <input type="number" id="timerInput" value="30" min="5" max="300" step="5">
+                                </div>
+                            </div>
+                            <p id="validationMessage"></p>
+                            <p class="note">Un thème « Culture Générale » ouvert à tous s'ajoute aux thèmes des joueurs. Chaque thème a un tiers de questions faciles, moyennes et difficiles.</p>
+                        </section>
+
+                        <button id="startBtn" class="btn btn-geant">Lancer la partie</button>
+                        <button id="previewBtn" class="btn-lien">Aperçu de l'interface, sans IA</button>
+
+                        <details class="carte config-historique">
+                            <summary>Historique anti-répétition</summary>
+                            <div class="historique-corps">
+                                <p id="historyStats"></p>
+                                <p class="note">Stocké dans ce navigateur. Exporte puis importe-le pour le passer d'un PC à l'autre.</p>
+                                <div class="controls">
+                                    <button class="btn btn-small btn-neutral" onclick="exportHistory()">Exporter</button>
+                                    <button class="btn btn-small btn-neutral" onclick="document.getElementById('historyFileInput').click()">Importer</button>
+                                    <input type="file" id="historyFileInput" accept="application/json" style="display:none;" onchange="importHistoryFile(this)">
+                                    <button class="btn btn-small btn-destructive" onclick="resetHistory()">Réinitialiser</button>
+                                </div>
+                            </div>
+                        </details>
                     </div>
-                    <p id="validationMessage"></p>
-                    <p style="font-size: 13px; color: var(--ink-soft);">Un thème "Culture Générale" (ouvert à tous, sans propriétaire) est automatiquement ajouté en plus des thèmes des joueurs. Chaque thème reçoit un tiers de questions faciles, un tiers moyennes et un tiers difficiles, réparties aléatoirement sur la grille.</p>
-                </div>
-
-                <div class="config-section config-section--yellow">
-                    <h3>Durée de mémorisation</h3>
-                    <div class="config-row">
-                        <div class="config-item">
-                            <label for="timerInput">Temps (secondes)</label>
-                            <input type="number" id="timerInput" value="30" min="5" max="300" step="5">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="config-section config-section--rainbow">
-                    <h3>Personnalisation des couleurs et joueurs</h3>
-                    <div id="colorInputsContainer"></div>
-                </div>
-
-                <div class="config-section config-section--green">
-                    <h3>Historique des questions (anti-répétition)</h3>
-                    <p id="historyStats"></p>
-                    <p style="font-size: 13px; color: var(--ink-soft);">L'historique est stocké dans ce navigateur. Utilise Exporter/Importer pour le transporter d'un PC à l'autre.</p>
-                    <div class="controls">
-                        <button class="btn btn-small btn-neutral" onclick="exportHistory()">Exporter</button>
-                        <button class="btn btn-small btn-neutral" onclick="document.getElementById('historyFileInput').click()">Importer</button>
-                        <input type="file" id="historyFileInput" accept="application/json" style="display:none;" onchange="importHistoryFile(this)">
-                        <button class="btn btn-small btn-destructive" onclick="resetHistory()">Réinitialiser</button>
-                    </div>
-                </div>
-
-                <div style="text-align: center;">
-                    <button id="startBtn" class="btn btn-positive">Démarrer le jeu</button>
-                    <button id="previewBtn" class="btn btn-small btn-neutral">👁️ Aperçu de l'interface (sans IA)</button>
                 </div>
             </div>
 
             <!-- Panel de génération des questions -->
-            <div class="config-panel" id="generationPanel" style="display:none;">
+            <div class="config-panel carte" id="generationPanel" style="display:none;">
                 <h2>Génération des questions</h2>
 
-                <p class="generation-step"><span class="step-badge step-badge-1">1</span> Ce prompt a été copié automatiquement dans ton presse-papier. Colle-le dans Claude (claude.ai ou Claude Code) :</p>
-                <textarea id="promptOutput" class="prompt-textarea" readonly rows="10"></textarea>
+                <p class="generation-step"><span class="step-badge">1</span> Le prompt est déjà dans ton presse-papier. Colle-le dans Claude (claude.ai ou Claude Code) :</p>
+                <textarea id="promptOutput" class="prompt-textarea" readonly rows="8"></textarea>
                 <button class="btn btn-small btn-neutral" onclick="copyPromptAgain()">Recopier le prompt</button>
 
-                <p class="generation-step"><span class="step-badge step-badge-2">2</span> Colle ici la réponse JSON complète renvoyée par l'IA :</p>
-                <textarea id="aiResponseInput" class="response-textarea" rows="10" placeholder="Colle ici la réponse JSON de l'IA..."></textarea>
+                <p class="generation-step"><span class="step-badge">2</span> Colle ici la réponse JSON complète de l'IA :</p>
+                <textarea id="aiResponseInput" class="response-textarea" rows="8" placeholder="Colle ici la réponse JSON de l'IA..."></textarea>
 
                 <p id="generationError" class="generation-error"></p>
 
-                <div style="text-align: center; margin-top: 15px;">
-                    <button id="importBtn" class="btn btn-positive">Importer et démarrer</button>
-                    <button class="btn btn-small btn-neutral" onclick="cancelGeneration()">Annuler</button>
+                <div class="generation-actions">
+                    <button id="importBtn" class="btn btn-geant">Importer et jouer</button>
+                    <button class="btn-lien" onclick="cancelGeneration()">Annuler</button>
                 </div>
             </div>
 
@@ -915,25 +758,28 @@
             <div class="game-area" id="gameArea">
                 <div class="game-layout">
                     <div class="game-main">
-                        <div class="info" id="info">Mémorisez les positions ! ⏱️ <span id="timer">30</span>s</div>
-                        <div class="turn-banner" id="turnBanner" style="display:none;"></div>
                         <div id="grid"></div>
 
                         <!-- Légende des couleurs -->
                         <div class="legend" id="legend">
                             <div class="legend-container" id="legendContainer"></div>
                         </div>
-
-                        <div class="controls">
-                            <button id="restartBtn" class="btn btn-neutral">Nouvelle grille</button>
-                            <button id="backBtn" class="btn btn-neutral">Configuration</button>
-                        </div>
                     </div>
 
-                    <!-- Classement en direct -->
-                    <div class="live-scoreboard" id="liveScoreboard">
-                        <h3>🏆 Classement en direct</h3>
-                        <div id="liveScoreboardList"></div>
+                    <div class="game-side">
+                        <div class="info" id="info">Mémorisez les positions&nbsp;! <span id="timer">30</span>s</div>
+                        <div class="turn-banner" id="turnBanner" style="display:none;"></div>
+
+                        <!-- Classement en direct -->
+                        <div class="live-scoreboard carte" id="liveScoreboard">
+                            <h3>Scores en direct</h3>
+                            <div id="liveScoreboardList"></div>
+                        </div>
+
+                        <div class="controls game-controls">
+                            <button id="restartBtn" class="btn btn-small btn-neutral">Nouvelle grille</button>
+                            <button id="backBtn" class="btn btn-small btn-neutral">Configuration</button>
+                        </div>
                     </div>
                 </div>
 
@@ -945,9 +791,9 @@
 
         <!-- Onglet Classement -->
         <div id="rankingTab" class="tab-content">
-            <div class="ranking-container">
+            <div class="ranking-container carte">
                 <div class="ranking-header">
-                    <h2>🏆 Classement des joueurs</h2>
+                    <h2>Classement des joueurs</h2>
                     <button class="btn btn-small btn-destructive" onclick="resetScores()">Réinitialiser les scores</button>
                 </div>
 
@@ -966,7 +812,7 @@
                 </table>
 
                 <div class="add-points-section">
-                    <h3 style="font-family: var(--font-display); color: var(--ink); margin-bottom: 12px;">Ajouter des points manuellement</h3>
+                    <h3>Ajouter des points à la main</h3>
                     <div class="add-points-form">
                         <select id="playerSelect">
                             <option value="">Choisir un joueur</option>
@@ -985,13 +831,26 @@
         const DIFFICULTY_LABELS = { facile: 'Facile', moyen: 'Moyen', difficile: 'Difficile' };
         const HISTORY_KEY = 'quizQuestionHistory';
         const CULTURE_GENERALE_NAME = 'Culture Générale';
-        const CULTURE_GENERALE_COLOR = '#FFFFFF';
+        const CULTURE_GENERALE_COLOR = '#C9B68C';
 
         let nbCases = 30;
         let nbColors = 5;
         let rows, cols;
-        let colors = ['#9b59b6', '#3498db', '#e74c3c', '#f1c40f', '#2ecc71'];
-        let colorNames = ['Violet', 'Bleu', 'Rouge', 'Jaune', 'Vert'];
+        let colors = ['#C8401F', '#E3A21A', '#2A4A7A', '#7E3A58', '#8FC0CF'];
+        let colorNames = ['Tomate', 'Ocre', 'Prusse', 'Prune', 'Ciel'];
+        // Couleur proposée pour chaque joueur, dans l'esprit de la palette de commun.css (au-delà de 10, couleur au hasard)
+        const PLAYER_PALETTE = [
+            { color: '#C8401F', name: 'Tomate' },
+            { color: '#E3A21A', name: 'Ocre' },
+            { color: '#2A4A7A', name: 'Prusse' },
+            { color: '#7E3A58', name: 'Prune' },
+            { color: '#8FC0CF', name: 'Ciel' },
+            { color: '#1F6A5C', name: 'Sapin' },
+            { color: '#D97A8C', name: 'Rose' },
+            { color: '#8A9A2B', name: 'Olive' },
+            { color: '#6E4B2F', name: 'Brou' },
+            { color: '#9C8AC4', name: 'Lavande' }
+        ];
         let playerNames = ['Joueur 1', 'Joueur 2', 'Joueur 3', 'Joueur 4', 'Joueur 5'];
         let playerScores = {};
         let colorMap = [];
@@ -1071,16 +930,10 @@
             players.forEach((player, index) => {
                 const tr = document.createElement('tr');
 
-                let medal = '';
-                if (index === 0) medal = '🥇';
-                else if (index === 1) medal = '🥈';
-                else if (index === 2) medal = '🥉';
-                else medal = `${index + 1}.`;
-
                 const rankTd = document.createElement('td');
                 const medalSpan = document.createElement('span');
-                medalSpan.className = 'rank-medal';
-                medalSpan.textContent = medal;
+                medalSpan.className = index < 3 ? `rank-medal rank-podium-${index + 1}` : 'rank-medal';
+                medalSpan.textContent = index + 1;
                 rankTd.appendChild(medalSpan);
 
                 const nameTd = document.createElement('td');
@@ -1134,7 +987,7 @@
             saveScores();
             updateRanking();
             updateLiveScoreboard();
-            showNotification(`${delta > 0 ? '➕' : '➖'} ${Math.abs(delta)} point(s) pour ${playerName}`);
+            showNotification(`${delta > 0 ? '+' : '−'}${Math.abs(delta)} point(s) pour ${playerName}`);
         }
 
         function updateLiveScoreboard() {
@@ -1236,8 +1089,9 @@
             container.innerHTML = '';
 
             while (colors.length < nbColorsInput) {
-                colors.push('#' + Math.floor(Math.random()*16777215).toString(16));
-                colorNames.push(`Couleur ${colors.length}`);
+                const extra = PLAYER_PALETTE[colors.length];
+                colors.push(extra ? extra.color : '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0'));
+                colorNames.push(extra ? extra.name : `Couleur ${colors.length}`);
                 playerNames.push(`Joueur ${playerNames.length + 1}`);
             }
 
@@ -1263,13 +1117,13 @@
                 playerInput.placeholder = 'Nom du joueur';
 
                 const label1 = document.createElement('label');
-                label1.textContent = 'Couleur:';
+                label1.textContent = 'Couleur';
 
                 const label2 = document.createElement('label');
-                label2.textContent = 'Thème:';
+                label2.textContent = 'Thème';
 
                 const label3 = document.createElement('label');
-                label3.textContent = 'Joueur:';
+                label3.textContent = 'Joueur';
 
                 group.appendChild(label1);
                 group.appendChild(colorInput);
@@ -1388,12 +1242,12 @@
             message.style.color = '';
 
             if (nbCases < 4 || nbCases > 100) {
-                message.textContent = '⚠️ Le nombre de cases doit être entre 4 et 100';
+                message.textContent = 'Le nombre de cases doit être entre 4 et 100';
                 return false;
             }
 
             if (nbColors < 2 || nbColors > 10) {
-                message.textContent = '⚠️ Le nombre de joueurs doit être entre 2 et 10';
+                message.textContent = 'Le nombre de joueurs doit être entre 2 et 10';
                 return false;
             }
 
@@ -1403,9 +1257,9 @@
                 const adjusted = nearestValidCaseCount(nbCases, totalThemes);
                 nbCases = adjusted;
                 document.getElementById('nbCases').value = adjusted;
-                message.style.color = 'var(--ui-blue-ink)';
-                message.textContent = `ℹ️ Nombre de cases ajusté à ${adjusted} pour répartir également ${totalThemes} thèmes (${nbColors} joueur(s) + Culture Générale) avec un tiers facile/moyen/difficile par thème.`;
-                showNotification(`🔧 Nombre de cases ajusté automatiquement à ${adjusted}`);
+                message.style.color = 'var(--prusse)';
+                message.textContent = `Nombre de cases ajusté à ${adjusted} pour répartir également ${totalThemes} thèmes (${nbColors} joueur(s) + Culture Générale) avec un tiers facile/moyen/difficile par thème.`;
+                showNotification(`Nombre de cases ajusté automatiquement à ${adjusted}`);
             } else {
                 message.textContent = '';
             }
@@ -1501,7 +1355,7 @@
             });
             flippedTime = true;
             canFlip = true;
-            document.getElementById('info').textContent = '🎯 Cliquez sur les cases pour révéler les questions !';
+            document.getElementById('info').textContent = 'Cliquez sur une case pour révéler sa question !';
             startTurnOrder();
             document.getElementById('turnBanner').style.display = 'block';
         }
@@ -1528,9 +1382,9 @@
             if (!banner) return;
             const player = currentTurnPlayer();
             const idx = playerNames.indexOf(player);
-            const color = idx !== -1 ? colors[idx] : '#3498db';
+            const color = idx !== -1 ? colors[idx] : '#1F6A5C';
             banner.style.borderLeftColor = color;
-            banner.textContent = `🎯 Au tour de : ${player}`;
+            banner.textContent = `Au tour de ${player}`;
         }
 
         document.addEventListener('click', (e) => {
@@ -1562,7 +1416,7 @@
 
             const title = document.createElement('h3');
             const themeLabel = isGeneral ? 'Culture Générale (ouvert à tous)' : `${cellEl.dataset.colorName} (thème de ${cellEl.dataset.player})`;
-            title.textContent = `❓ Case ${cellEl.dataset.number} — ${themeLabel}`;
+            title.textContent = `Case ${cellEl.dataset.number} — ${themeLabel}`;
             panel.appendChild(title);
 
             const meta = document.createElement('p');
@@ -1579,7 +1433,7 @@
 
             const answerP = document.createElement('p');
             answerP.style.display = 'none';
-            answerP.style.color = 'var(--ui-blue-ink)';
+            answerP.style.color = 'var(--sapin)';
             answerP.style.fontWeight = 'bold';
             answerP.style.marginBottom = '12px';
             answerP.textContent = cellEl.dataset.reponse || '';
@@ -1587,7 +1441,7 @@
 
             const showBtn = document.createElement('button');
             showBtn.className = 'btn btn-small btn-info';
-            showBtn.textContent = '👁️ Afficher la réponse';
+            showBtn.textContent = 'Afficher la réponse';
             showBtn.addEventListener('click', () => {
                 answerP.style.display = answerP.style.display === 'none' ? 'block' : 'none';
             });
@@ -1601,11 +1455,11 @@
 
             const correctBtn = document.createElement('button');
             correctBtn.className = 'btn btn-small btn-positive';
-            correctBtn.textContent = `✅ Bonne réponse (+${totalPoints})`;
+            correctBtn.textContent = `Bonne réponse (+${totalPoints})`;
 
             const wrongBtn = document.createElement('button');
             wrongBtn.className = 'btn btn-small btn-destructive';
-            wrongBtn.textContent = '❌ Mauvaise réponse (0)';
+            wrongBtn.textContent = 'Mauvaise réponse (0)';
 
             function resolveTurn(pointsAwarded) {
                 correctBtn.disabled = true;
@@ -1677,7 +1531,7 @@
             a.download = `historique-questions-${date}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            showNotification('💾 Historique exporté');
+            showNotification('Historique exporté');
         }
 
         function mergeHistories(a, b) {
@@ -1710,9 +1564,9 @@
                     const merged = mergeHistories(current, imported);
                     saveHistory(merged);
                     updateHistoryStats();
-                    showNotification('📂 Historique importé et fusionné avec succès');
+                    showNotification('Historique importé et fusionné avec succès');
                 } catch (err) {
-                    alert("⚠️ Fichier invalide : impossible d'importer l'historique.\n" + err.message);
+                    alert("Fichier invalide : impossible d'importer l'historique.\n" + err.message);
                 }
             };
             reader.readAsText(file);
@@ -1723,7 +1577,7 @@
             if (confirm("Voulez-vous vraiment effacer tout l'historique des questions déjà posées ? Cette action est irréversible.")) {
                 localStorage.removeItem(HISTORY_KEY);
                 updateHistoryStats();
-                showNotification('🗑️ Historique des questions réinitialisé');
+                showNotification('Historique des questions réinitialisé');
             }
         }
 
@@ -1799,9 +1653,9 @@
             const text = document.getElementById('promptOutput').value;
             try {
                 await navigator.clipboard.writeText(text);
-                showNotification('📋 Prompt recopié dans le presse-papier');
+                showNotification('Prompt recopié dans le presse-papier');
             } catch (e) {
-                showNotification('⚠️ Copie automatique impossible, sélectionne le texte manuellement');
+                showNotification('Copie automatique impossible, sélectionne le texte manuellement');
             }
         }
 
@@ -1897,7 +1751,7 @@
             });
 
             if (missing.length > 0) {
-                let msg = "⚠️ Pas assez de questions valables et uniques :\n" + missing.join("\n");
+                let msg = "Pas assez de questions valables et uniques :\n" + missing.join("\n");
                 if (droppedDuplicateHistory > 0) msg += `\n\n(${droppedDuplicateHistory} question(s) ignorée(s) car déjà posée(s) précédemment)`;
                 if (droppedDuplicateBatch > 0) msg += `\n(${droppedDuplicateBatch} doublon(s) dans la réponse collée)`;
                 if (malformedCount > 0) msg += `\n(${malformedCount} entrée(s) mal formée(s) ignorée(s))`;
@@ -1951,7 +1805,7 @@
                 });
 
                 const ignored = result.droppedDuplicateBatch + result.droppedDuplicateHistory + result.malformedCount + result.unknownThemeCount;
-                showNotification('✅ Questions importées avec succès' + (ignored > 0 ? ` (${ignored} entrée(s) ignorée(s))` : ''));
+                showNotification('Questions importées avec succès' + (ignored > 0 ? ` (${ignored} entrée(s) ignorée(s))` : ''));
                 updateHistoryStats();
                 launchGameArea();
             } catch (err) {
@@ -1991,9 +1845,9 @@
 
             try {
                 await navigator.clipboard.writeText(promptText);
-                showNotification('📋 Prompt copié — colle-le dans Claude !');
+                showNotification('Prompt copié — colle-le dans Claude !');
             } catch (e) {
-                showNotification('⚠️ Copie automatique impossible, copie le prompt manuellement');
+                showNotification('Copie automatique impossible, copie le prompt manuellement');
             }
 
             document.getElementById('configPanel').style.display = 'none';
@@ -2013,7 +1867,7 @@
             updateLiveScoreboard();
 
             let timeLeft = parseInt(document.getElementById('timerInput').value) || 30;
-            document.getElementById('info').innerHTML = `Mémorisez les positions ! ⏱️ <span id="timer">${timeLeft}</span>s`;
+            document.getElementById('info').innerHTML = `Mémorisez les positions&nbsp;! <span id="timer">${timeLeft}</span>s`;
 
             flippedTime = false;
             canFlip = false;
@@ -2087,7 +1941,7 @@
 
             updateLiveScoreboard();
             flipAllCells();
-            document.getElementById('info').textContent = '👁️ Mode aperçu — questions factices, aucun appel IA';
+            document.getElementById('info').textContent = 'Mode aperçu : questions factices, aucun appel à l\'IA';
         }
 
         document.getElementById('nbColors').addEventListener('input', initColorInputs);

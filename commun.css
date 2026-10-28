@@ -1,0 +1,382 @@
+/* =====================================================================
+   Direction artistique commune du Game Hub — « Boîte de jeu cartonnée »
+   Partagée par le hub (index.html) et chaque jeu (../commun.css).
+   Un jeu définit sa couleur avec --jeu (et --jeu-texte si sa couleur est claire).
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Chivo:wght@400;700;900&display=swap');
+
+:root {
+    /* Fond et matières */
+    --kraft: #D8C7A3;
+    --kraft-fonce: #C9B68C;
+    --carton: #F1E7D0;
+    --encre: #221C15;
+    --encre-douce: #4A3F31;
+    --filet: #CDBB94;
+
+    /* Encres d'imprimerie : couleurs de jeux et de joueurs */
+    --tomate: #C8401F;
+    --ocre: #E3A21A;
+    --sapin: #1F6A5C;
+    --prusse: #2A4A7A;
+    --prune: #7E3A58;
+    --ciel: #8FC0CF;
+
+    /* Couleur du jeu courant (chaque jeu la redéfinit) */
+    --jeu: var(--tomate);
+    --jeu-texte: var(--carton);
+
+    /* Typographie */
+    --police-titre: 'Alfa Slab One', 'Rockwell', Georgia, serif;
+    --police-texte: 'Chivo', 'Segoe UI', Arial, sans-serif;
+
+    /* Traits et ombres franches (jamais d'ombre floue) */
+    --trait: 4px;
+    --trait-fin: 3px;
+    --ombre: 6px 6px 0 var(--encre);
+    --ombre-forte: 10px 10px 0 var(--encre);
+    --rayon: 4px;
+}
+
+/* Le texte grandit avec l'écran : confortable sur mobile, lisible à 3 m sur la TV */
+html {
+    font-size: clamp(16px, 0.55vw + 11px, 24px);
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--kraft);
+    color: var(--encre);
+    font-family: var(--police-texte);
+    font-size: 1rem;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+    font-family: var(--police-titre);
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+:focus-visible {
+    outline: 4px solid var(--ocre);
+    outline-offset: 3px;
+}
+
+/* ---------- Tampon (logo, mentions) ---------- */
+
+.tampon {
+    display: inline-block;
+    font-family: var(--police-titre);
+    color: var(--carton);
+    background: var(--tomate);
+    border: var(--trait) solid var(--encre);
+    box-shadow: var(--ombre);
+    padding: 0.2em 0.45em 0.25em;
+    transform: rotate(-2deg);
+}
+
+.mention {
+    display: inline-block;
+    font-weight: 900;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: var(--trait-fin) solid var(--encre);
+    padding: 0.3em 0.65em;
+}
+
+.surtitre {
+    font-weight: 900;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+/* ---------- Cartes ---------- */
+
+.carte {
+    background: var(--carton);
+    border: var(--trait) solid var(--encre);
+    box-shadow: var(--ombre);
+}
+
+/* ---------- Icônes : trait épais, angles carrés ---------- */
+
+.icone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--jeu);
+    color: var(--jeu-texte);
+    border: var(--trait) solid var(--encre);
+}
+
+.icone svg {
+    width: 62%;
+    height: 62%;
+}
+
+/* ---------- Boutons ---------- */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    font-family: var(--police-texte);
+    font-weight: 900;
+    font-size: 1rem;
+    line-height: 1.1;
+    color: var(--encre);
+    background: var(--carton);
+    border: var(--trait-fin) solid var(--encre);
+    border-radius: var(--rayon);
+    box-shadow: 4px 4px 0 var(--encre);
+    padding: 0.75em 1.3em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.12s cubic-bezier(.3, 1.6, .5, 1), box-shadow 0.12s cubic-bezier(.3, 1.6, .5, 1);
+}
+
+.btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--encre);
+}
+
+.btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 var(--encre);
+    transition-duration: 0.05s;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
+    box-shadow: 4px 4px 0 var(--encre);
+}
+
+/* Le bouton qui lance la partie : il domine l'écran */
+.btn-jeu,
+.btn-geant {
+    font-family: var(--police-titre);
+    font-weight: 400;
+    color: var(--jeu-texte);
+    background: var(--jeu);
+    border-width: var(--trait);
+    box-shadow: var(--ombre);
+}
+
+.btn-geant {
+    font-size: 1.9rem;
+    padding: 0.55em 1.2em;
+}
+
+.btn-jeu:hover,
+.btn-geant:hover {
+    box-shadow: 9px 9px 0 var(--encre);
+}
+
+.btn-positive { color: var(--carton); background: var(--sapin); }
+.btn-destructive { color: var(--carton); background: var(--tomate); }
+.btn-info { color: var(--encre); background: var(--ocre); }
+.btn-neutral { color: var(--encre); background: var(--carton); }
+
+.btn-small {
+    font-size: 0.85rem;
+    padding: 0.55em 0.95em;
+    box-shadow: 3px 3px 0 var(--encre);
+}
+
+.btn-small:hover { box-shadow: 4px 4px 0 var(--encre); }
+
+/* Lien discret, pour les actions secondaires */
+.btn-lien {
+    font-family: var(--police-texte);
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--encre-douce);
+    background: none;
+    border: 0;
+    padding: 0.4em 0.2em;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+}
+
+.btn-lien:hover { color: var(--encre); }
+
+/* ---------- Barre en haut de chaque jeu ---------- */
+
+.barre-jeu {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.retour-hub {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 900;
+    font-size: 0.95rem;
+    color: var(--encre);
+    background: var(--carton);
+    border: var(--trait-fin) solid var(--encre);
+    padding: 0.55em 0.9em;
+    text-decoration: none;
+    transition: transform 0.12s ease;
+}
+
+.retour-hub svg { width: 1em; height: 1em; }
+.retour-hub:hover { transform: translateX(-3px); }
+
+.titre-jeu {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+.titre-jeu .icone {
+    width: 1.45em;
+    height: 1.45em;
+}
+
+/* ---------- Onglets ---------- */
+
+.onglets {
+    display: inline-flex;
+    margin-left: auto;
+    border: var(--trait-fin) solid var(--encre);
+    background: var(--carton);
+}
+
+.onglets .tab {
+    font-family: var(--police-texte);
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--encre);
+    background: transparent;
+    border: 0;
+    padding: 0.7em 1.3em;
+    cursor: pointer;
+}
+
+.onglets .tab + .tab { border-left: var(--trait-fin) solid var(--encre); }
+.onglets .tab:hover:not(.active) { background: var(--kraft); }
+.onglets .tab.active { color: var(--carton); background: var(--encre); }
+
+/* ---------- Champs ---------- */
+
+.champ {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.champ label,
+.etiquette-champ {
+    font-weight: 900;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--encre-douce);
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    font-family: var(--police-texte);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--encre);
+    background: #FFFDF7;
+    border: var(--trait-fin) solid var(--encre);
+    border-radius: var(--rayon);
+    padding: 0.5em 0.65em;
+    min-width: 0;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--ocre);
+}
+
+input[type="color"] {
+    width: 3rem;
+    height: 2.6rem;
+    padding: 0;
+    border: var(--trait-fin) solid var(--encre);
+    border-radius: var(--rayon);
+    background: none;
+    cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+input[type="color"]::-webkit-color-swatch { border: 0; }
+input[type="color"]::-moz-color-swatch { border: 0; }
+
+/* ---------- Pastille de couleur (joueur, thème) ---------- */
+
+.pastille {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 1.4rem;
+    height: 1.4rem;
+    border: var(--trait-fin) solid var(--encre);
+    vertical-align: middle;
+}
+
+/* ---------- Notification ---------- */
+
+.notification {
+    position: fixed;
+    top: 1.2rem;
+    right: 1.2rem;
+    z-index: 1000;
+    max-width: min(22rem, calc(100vw - 2.4rem));
+    font-weight: 900;
+    color: var(--carton);
+    background: var(--encre);
+    border: var(--trait-fin) solid var(--encre);
+    box-shadow: 5px 5px 0 var(--ocre);
+    padding: 0.85em 1.2em;
+    animation: notif-entree 0.3s cubic-bezier(.3, 1.4, .5, 1), notif-sortie 0.3s 2.7s ease-in forwards;
+}
+
+@keyframes notif-entree {
+    from { transform: translateY(-140%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes notif-sortie {
+    to { transform: translateY(-140%); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
