@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#D8C7A3">
+    <title>Quatre Coins</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../commun.css">
+    <style>
+        :root {
+            --jeu: var(--tomate);
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            min-height: 100dvh;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .ecran {
+            display: none;
+            min-height: 100dvh;
+            padding: 1rem;
+            padding-bottom: max(1rem, env(safe-area-inset-bottom));
+        }
+
+        .ecran.actif {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .centre {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        /* Bandeau du joueur : pseudo et couleur */
+        .bandeau {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 900;
+        }
+
+        .bandeau .pastille {
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+
+        .bandeau .droite {
+            margin-left: auto;
+        }
+
+        /* ---------- Rejoindre ---------- */
+
+        .rejoindre {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        .rejoindre h1 {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        #champCode {
+            font-family: var(--police-titre);
+            font-size: 2.4rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            text-align: center;
+            padding: 0.2em;
+        }
+
+        #champPseudo {
+            font-size: 1.3rem;
+        }
+
+        .palette {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.6rem;
+        }
+
+        .palette button {
+            aspect-ratio: 1;
+            border: var(--trait-fin) solid var(--encre);
+            border-radius: var(--rayon);
+            cursor: pointer;
+        }
+
+        .palette button[aria-pressed="true"] {
+            outline: 4px solid var(--encre);
+            outline-offset: 3px;
+        }
+
+        .palette button:disabled {
+            opacity: 0.2;
+            cursor: default;
+        }
+
+        .rejoindre .btn-geant {
+            width: 100%;
+            font-size: 1.6rem;
+        }
+
+        .erreur {
+            font-weight: 900;
+            color: var(--tomate);
+        }
+
+        /* ---------- Boutons de réponse : tout l'écran, aucun scroll ---------- */
+
+        #ecranBoutons.actif {
+            height: 100dvh;
+            gap: 0.8rem;
+            overflow: hidden;
+        }
+
+        #chronoJoueur {
+            font-family: var(--police-titre);
+            font-size: 1.4rem;
+        }
+
+        .boutons {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .boutons button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--coin-texte);
+            background: var(--coin);
+            border: var(--trait) solid var(--encre);
+            border-radius: var(--rayon);
+            box-shadow: var(--ombre);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .boutons button:active {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0 var(--encre);
+        }
+
+        .boutons .forme {
+            width: 45%;
+            height: 45%;
+        }
+
+        /* ---------- Messages ---------- */
+
+        .grand-message {
+            font-family: var(--police-titre);
+            font-size: 2.6rem;
+            line-height: 1.1;
+            text-wrap: balance;
+        }
+
+        .tres-grand {
+            font-family: var(--police-titre);
+            font-size: 3.4rem;
+        }
+
+        .detail {
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+
+        #ecranInfo[data-ton="juste"] { background: var(--sapin); color: var(--carton); }
+        #ecranInfo[data-ton="rate"] { background: var(--tomate); color: var(--carton); }
+
+        .forme-envoyee {
+            width: 9rem;
+            height: 9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--coin-texte);
+            background: var(--coin);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+        }
+
+        .forme-envoyee .forme {
+            width: 55%;
+            height: 55%;
+        }
+
+        /* ---------- Animations ---------- */
+
+        .forme-envoyee {
+            animation: envoi 0.45s cubic-bezier(.3, 1.6, .5, 1) both;
+        }
+
+        @keyframes envoi {
+            from { transform: scale(1.6) rotate(-10deg); }
+            to { transform: scale(1) rotate(-3deg); }
+        }
+
+        #ecranInfo .centre > * {
+            animation: monte 0.4s cubic-bezier(.3, 1.4, .5, 1) both;
+        }
+
+        #ecranInfo .centre > :nth-child(2) { animation-delay: 0.08s; }
+        #ecranInfo .centre > :nth-child(3) { animation-delay: 0.16s; }
+        #ecranInfo .centre > :nth-child(4) { animation-delay: 0.24s; }
+
+        @keyframes monte {
+            from { transform: translateY(1.2em); opacity: 0; }
+        }
+
+        #ecranInfo[data-ton="rate"] .grand-message {
+            animation: secoue 0.5s ease-out both;
+        }
+
+        @keyframes secoue {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-0.4em); }
+            40% { transform: translateX(0.35em); }
+            60% { transform: translateX(-0.25em); }
+            80% { transform: translateX(0.15em); }
+        }
+
+        .tampon {
+            font-size: 1.4rem;
+        }
+
+        .rejoindre h1.tampon {
+            align-self: flex-start;
+            font-size: 1.9rem;
+            margin: 0.4rem 0 0.6rem;
+        }
+
+        /* Carte du joueur en salle d'attente */
+        .carte-joueur {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 1.6rem 2.2rem;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            margin-bottom: 1.2rem;
+            transform: rotate(-2deg);
+            animation: envoi 0.5s cubic-bezier(.3, 1.6, .5, 1) both;
+        }
+
+        .carte-joueur .pastille {
+            width: 4rem;
+            height: 4rem;
+            border-width: var(--trait);
+        }
+
+        .carte-joueur .pseudo {
+            font-family: var(--police-titre);
+            font-size: 2rem;
+            line-height: 1.1;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <section id="ecranChargement" class="ecran actif">
+        <div class="centre">
+            <p id="messageChargement" class="surtitre">Connexion…</p>
+        </div>
+    </section>
+
+    <section id="ecranRejoindre" class="ecran">
+        <form class="rejoindre" id="formRejoindre" autocomplete="off">
+            <h1 class="tampon">Quatre Coins</h1>
+            <div class="champ">
+                <label for="champCode">Code affiché sur la TV</label>
+                <input type="text" id="champCode" maxlength="4" inputmode="text" autocapitalize="characters" spellcheck="false">
+            </div>
+            <div class="champ">
+                <label for="champPseudo">Ton pseudo</label>
+                <input type="text" id="champPseudo" maxlength="16" spellcheck="false">
+            </div>
+            <div class="champ">
+                <span class="etiquette-champ">Ta couleur</span>
+                <div class="palette" id="palette"></div>
+            </div>
+            <p id="erreurRejoindre" class="erreur" hidden></p>
+            <button type="submit" class="btn btn-geant" id="btnRejoindre">Rejoindre</button>
+        </form>
+    </section>
+
+    <section id="ecranAttente" class="ecran">
+        <div class="centre">
+            <div class="carte-joueur" id="carteJoueur"></div>
+            <p class="grand-message">Tu es dans la partie</p>
+            <p class="detail">Garde l'œil sur la TV, ça va commencer.</p>
+        </div>
+        <button class="btn-lien" id="btnQuitter">Quitter la partie</button>
+    </section>
+
+    <section id="ecranBoutons" class="ecran">
+        <div class="bandeau"><span id="numJoueur"></span><span class="droite" id="chronoJoueur"></span></div>
+        <div class="boutons" id="boutons"></div>
+    </section>
+
+    <section id="ecranInfo" class="ecran">
+        <div class="bandeau qui"></div>
+        <div class="centre" id="info"></div>
+    </section>
+
+    <script type="module">
+        import { db, connexion, heureServeur, COINS, formeSVG, PALETTE_JOUEURS, rangDe, ordinal, echapper, lireStockage, ecrireStockage, CLE_JOUEUR } from './commun.js';
+        import { ref, set, update, get, remove, onValue, onDisconnect, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+        const $ = id => document.getElementById(id);
+
+        let uid = null;
+        let code = null;
+        let etat = null;
+        let moi = null;
+        let scores = {};
+        let maReponse;          // undefined : pas encore lue ; null : pas de réponse
+        let qSuivie = null;
+        let arreterReponse = null;
+        let refusQ = null;      // question où la réponse est arrivée trop tard
+        let couleur = null;
+        let couleursPrises = new Set();
+
+        function afficher(id) {
+            document.querySelectorAll('.ecran').forEach(e => e.classList.toggle('actif', e.id === id));
+        }
+
+        // ---------- Démarrage : on retrouve sa partie après une veille ou un rechargement ----------
+
+        async function demarrer() {
+            try {
+                uid = await connexion();
+            } catch {
+                afficher('ecranChargement');
+                $('messageChargement').textContent = 'Pas de connexion. Vérifie le wifi puis recharge la page.';
+                return;
+            }
+            const enCours = lireStockage(CLE_JOUEUR);
+            if (enCours && await revenir(enCours)) return;
+            ecrireStockage(CLE_JOUEUR, null);
+            formulaire();
+        }
+
+        async function revenir(c) {
+            try {
+                const fiche = (await get(ref(db, `parties/${c}/joueurs/${uid}`))).val();
+                if (!fiche) return false;
+                entrer(c);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        // ---------- Rejoindre ----------
+
+        function formulaire() {
+            afficher('ecranRejoindre');
+            const codeUrl = new URLSearchParams(location.search).get('code');
+            if (codeUrl) $('champCode').value = codeUrl.toUpperCase().slice(0, 4);
+            rendrePalette();
+            if ($('champCode').value.length === 4) {
+                chargerCouleursPrises();
+                $('champPseudo').focus();
+            }
+        }
+
+        function rendrePalette() {
+            if (couleursPrises.has(couleur)) couleur = null;
+            if (!couleur) couleur = PALETTE_JOUEURS.find(c => !couleursPrises.has(c.hex))?.hex || PALETTE_JOUEURS[0].hex;
+            $('palette').innerHTML = PALETTE_JOUEURS.map(c => `
+                <button type="button" data-couleur="${c.hex}" style="background:${c.hex}" aria-label="${c.nom}"
+                    aria-pressed="${c.hex === couleur}" ${couleursPrises.has(c.hex) ? 'disabled' : ''}></button>`).join('');
+        }
+
+        async function chargerCouleursPrises() {
+            try {
+                const tous = (await get(ref(db, `parties/${$('champCode').value}/joueurs`))).val() || {};
+                couleursPrises = new Set(Object.entries(tous).filter(([id]) => id !== uid).map(([, j]) => j.couleur));
+            } catch {
+                couleursPrises = new Set();
+            }
+            rendrePalette();
+        }
+
+        $('champCode').addEventListener('input', e => {
+            e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+            if (e.target.value.length === 4) chargerCouleursPrises();
+        });
+
+        $('palette').addEventListener('click', e => {
+            const bouton = e.target.closest('[data-couleur]');
+            if (!bouton || bouton.disabled) return;
+            couleur = bouton.dataset.couleur;
+            rendrePalette();
+        });
+
+        $('formRejoindre').addEventListener('submit', async e => {
+            e.preventDefault();
+            const c = $('champCode').value;
+            const pseudo = $('champPseudo').value.trim();
+            const erreur = message => { $('erreurRejoindre').textContent = message; $('erreurRejoindre').hidden = false; };
+            $('erreurRejoindre').hidden = true;
+            if (c.length !== 4) return erreur('Le code fait 4 lettres.');
+            if (!pseudo) return erreur('Choisis un pseudo.');
+            $('btnRejoindre').disabled = true;
+            try {
+                const meta = (await get(ref(db, `parties/${c}/meta`))).val();
+                if (!meta) throw new Error();
+            } catch {
+                $('btnRejoindre').disabled = false;
+                return erreur('Aucune partie avec ce code.');
+            }
+            try {
+                await set(ref(db, `parties/${c}/joueurs/${uid}`), { pseudo, couleur, arrive: serverTimestamp(), enLigne: true });
+                entrer(c);
+            } catch {
+                $('btnRejoindre').disabled = false;
+                erreur('Impossible de rejoindre la partie.');
+            }
+        });
+
+        // ---------- Dans la partie ----------
+
+        function entrer(c) {
+            code = c;
+            ecrireStockage(CLE_JOUEUR, c);
+            garderEcranAllume();
+            const base = `parties/${c}`;
+            onValue(ref(db, `${base}/etat`), s => {
+                const avant = etat;
+                etat = s.val();
+                if (!etat) return partieTerminee(avant);
+                suivreReponse();
+                rendre();
+            }, () => partieTerminee(etat));
+            onValue(ref(db, `${base}/joueurs/${uid}`), s => { moi = s.val(); rendre(); });
+            onValue(ref(db, `${base}/scores`), s => { scores = s.val() || {}; rendre(); });
+            // Présence : la TV grise les joueurs déconnectés et ne les attend pas
+            onValue(ref(db, '.info/connected'), s => {
+                if (s.val() !== true) return;
+                onDisconnect(ref(db, `${base}/joueurs/${uid}/enLigne`)).set(false);
+                update(ref(db, `${base}/joueurs/${uid}`), { enLigne: true }).catch(() => {});
+            });
+        }
+
+        function suivreReponse() {
+            const q = etat.phase === 'question' ? etat.q : null;
+            if (q === qSuivie) return;
+            if (arreterReponse) arreterReponse();
+            arreterReponse = null;
+            maReponse = undefined;
+            qSuivie = q;
+            if (q !== null) {
+                arreterReponse = onValue(ref(db, `parties/${code}/reponses/${q}/${uid}`), s => { maReponse = s.val(); rendre(); });
+            }
+        }
+
+        function partieTerminee(dernierEtat) {
+            ecrireStockage(CLE_JOUEUR, null);
+            if (dernierEtat && dernierEtat.phase === 'fin') return;
+            code = null;
+            afficher('ecranInfo');
+            $('ecranInfo').dataset.ton = '';
+            $('info').innerHTML = `<p class="grand-message">La partie est terminée</p>
+                <a class="btn btn-geant" href="joueur.html">Rejoindre une partie</a>`;
+        }
+
+        function rendreBandeaux() {
+            const html = `<span class="pastille" style="background:${echapper(moi.couleur)}"></span><span>${echapper(moi.pseudo)}</span>`;
+            document.querySelectorAll('.qui').forEach(q => { q.innerHTML = html; });
+            $('carteJoueur').innerHTML = `<span class="pastille" style="background:${echapper(moi.couleur)}"></span><span class="pseudo">${echapper(moi.pseudo)}</span>`;
+        }
+
+        // Le message n'est reconstruit (et réanimé) que s'il change
+        let cleInfo = null;
+        function info(ton, html) {
+            afficher('ecranInfo');
+            if (cleInfo === ton + html) return false;
+            cleInfo = ton + html;
+            $('ecranInfo').dataset.ton = ton;
+            $('info').innerHTML = html;
+            // Les points défilent jusqu'à leur valeur
+            $('info').querySelectorAll('[data-compte]').forEach(el => {
+                const cible = Number(el.dataset.compte);
+                const debut = performance.now();
+                const pas = t => {
+                    const p = Math.min((t - debut) / 900, 1);
+                    el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 3)));
+                    if (p < 1) requestAnimationFrame(pas);
+                };
+                requestAnimationFrame(pas);
+            });
+            return true;
+        }
+
+        function vibrer(motif) {
+            if (navigator.vibrate) navigator.vibrate(motif);
+        }
+
+        function rendre() {
+            if (!etat || !moi || !code) return;
+            rendreBandeaux();
+            const total = scores[uid]?.total ?? 0;
+            if (etat.phase === 'salle') {
+                afficher('ecranAttente');
+            } else if (etat.phase === 'question') {
+                if (refusQ === etat.q) {
+                    info('rate', `<p class="grand-message">Trop tard</p><p class="detail">Ta réponse est arrivée après la fin du chrono.</p>`);
+                } else if (maReponse === undefined) {
+                    return;
+                } else if (maReponse) {
+                    const k = maReponse.choix;
+                    info('', `<div class="forme-envoyee" style="--coin:${COINS[k].couleur};--coin-texte:${COINS[k].texte}">${formeSVG(k)}</div>
+                        <p class="grand-message">Réponse envoyée</p><p class="detail">Regarde la TV.</p>`);
+                } else {
+                    afficher('ecranBoutons');
+                    $('numJoueur').textContent = `Question ${Number(etat.q) + 1} / ${etat.total}`;
+                    ticJoueur();
+                }
+            } else if (etat.phase === 'revelation') {
+                const d = scores[uid]?.dernier;
+                if (!d || d.q !== etat.q) return;
+                if (d.juste) {
+                    const serie = scores[uid]?.serie ?? 0;
+                    const nouveau = info('juste', `<p class="grand-message">Bonne réponse</p><p class="tres-grand">+<span data-compte="${d.points}">0</span> pts</p>
+                        ${d.bonus ? `<span class="tampon">Série de ${serie} : +${d.bonus}</span>` : ''}<p class="detail">Total : ${total} pts</p>`);
+                    if (nouveau) vibrer([40, 60, 40]);
+                } else {
+                    const nouveau = info('rate', `<p class="grand-message">${d.repondu ? 'Raté' : 'Pas de réponse'}</p><p class="detail">Total : ${total} pts</p>`);
+                    if (nouveau) vibrer(220);
+                }
+            } else if (etat.phase === 'classement') {
+                info('', `<p class="surtitre">Classement</p><p class="tres-grand">${ordinal(rangDe(uid, scores))}</p><p class="detail">${total} pts</p>`);
+            } else if (etat.phase === 'fin') {
+                const rang = rangDe(uid, scores);
+                const nb = Object.keys(scores).length || 1;
+                info(rang === 1 ? 'juste' : '', `<p class="surtitre">Fin de la partie</p>
+                    ${rang === 1 ? '<span class="tampon">Victoire</span>' : ''}<p class="tres-grand">${ordinal(rang)}</p>
+                    <p class="detail">sur ${nb} ${nb > 1 ? 'joueurs' : 'joueur'}, avec ${total} pts</p>`);
+            }
+        }
+
+        // ---------- Répondre ----------
+
+        $('boutons').innerHTML = COINS.map((c, k) =>
+            `<button type="button" data-choix="${k}" style="--coin:${c.couleur};--coin-texte:${c.texte}" aria-label="${c.nom}">${formeSVG(k)}</button>`
+        ).join('');
+
+        $('boutons').addEventListener('click', e => {
+            const bouton = e.target.closest('[data-choix]');
+            if (bouton) repondre(Number(bouton.dataset.choix));
+        });
+
+        async function repondre(k) {
+            if (!etat || etat.phase !== 'question' || maReponse) return;
+            const q = etat.q;
+            if (navigator.vibrate) navigator.vibrate(60);
+            maReponse = { choix: k };
+            rendre();
+            try {
+                // L'heure de réponse est posée par le serveur, jamais par l'horloge du téléphone
+                await set(ref(db, `parties/${code}/reponses/${q}/${uid}`), { choix: k, a: serverTimestamp() });
+            } catch {
+                refusQ = q;
+                maReponse = null;
+                rendre();
+            }
+        }
+
+        function ticJoueur() {
+            if (!etat || etat.phase !== 'question') return;
+            const reste = etat.debut + etat.duree * 1000 - heureServeur();
+            $('chronoJoueur').textContent = Math.max(0, Math.ceil(reste / 1000));
+        }
+
+        setInterval(ticJoueur, 250);
+
+        $('btnQuitter').addEventListener('click', async () => {
+            ecrireStockage(CLE_JOUEUR, null);
+            try { await remove(ref(db, `parties/${code}/joueurs/${uid}`)); } catch { /* tant pis */ }
+            location.href = 'joueur.html';
+        });
+
+        // L'écran reste allumé pendant la partie (si le téléphone le permet)
+        async function garderEcranAllume() {
+            try { await navigator.wakeLock?.request('screen'); } catch { /* non supporté */ }
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && code) garderEcranAllume();
+        });
+
+        demarrer();
+    </script>
+</body>
+</html>

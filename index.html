@@ -267,7 +267,8 @@
             key: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="7" y="16" width="16" height="16"/><path d="M23 24h18M34 24v7M41 24v7"/></svg>',
             grid: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="6" y="6" width="36" height="36"/><path d="M18 6v36M30 6v36M6 18h36M6 30h36"/><rect x="19.8" y="19.8" width="8.4" height="8.4" fill="currentColor" stroke="none"/></svg>',
             camera: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="5" y="15" width="38" height="25"/><path d="M17 15l3-6h8l3 6"/><rect x="17" y="21" width="14" height="13"/></svg>',
-            bars: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="7" y="28" width="9" height="13"/><rect x="20" y="18" width="9" height="23"/><rect x="33" y="7" width="9" height="34"/></svg>'
+            bars: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="7" y="28" width="9" height="13"/><rect x="20" y="18" width="9" height="23"/><rect x="33" y="7" width="9" height="34"/></svg>',
+            coins: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><circle cx="14" cy="14" r="7"/><rect x="27" y="7" width="14" height="14"/><path d="M14 27l7.5 13h-15z"/><path d="M28 28l12 12M40 28L28 40"/></svg>'
         };
 
         // Ajouter un jeu = ajouter une entrée ici. "folder" doit correspondre au nom exact du dossier contenant son index.html
@@ -285,6 +286,17 @@
                 rules: [
                     '3 niveaux de difficulté : 1, 2 ou 3 points.',
                     "Vole le thème d'un autre joueur pour 1 point de plus."
+                ]
+            },
+            {
+                folder: 'quatre-coins',
+                title: 'Quatre Coins',
+                icon: 'coins',
+                color: '#C8401F',
+                description: 'Quiz sur la TV, réponses au téléphone. Scanne le code et tape le bon coin.',
+                rules: [
+                    'De 500 à 1000 points selon ta rapidité.',
+                    'Bonus de série dès 3 bonnes réponses d\'affilée.'
                 ]
             }
         ];

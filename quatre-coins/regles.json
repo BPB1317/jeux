@@ -1,0 +1,74 @@
+{
+  // Règles de sécurité de Quatre Coins.
+  // À coller dans la console Firebase : Realtime Database > Règles > Publier.
+  "rules": {
+    "parties": {
+      ".indexOn": ["meta/creeLe"],
+      // Seule lecture globale permise : la liste des parties de plus de 24 h, pour les supprimer
+      ".read": "auth != null && query.orderByChild === 'meta/creeLe' && query.endAt <= now - 86400000",
+
+      "$code": {
+        // Créer une partie (code libre ou partie périmée) en s'en déclarant l'hôte,
+        // ou supprimer une partie périmée ou la sienne
+        ".write": "auth != null && (((!data.exists() || data.child('meta/creeLe').val() < now - 86400000) && newData.child('meta/hote').val() === auth.uid && newData.child('meta/creeLe').val() === now) || (!newData.exists() && (data.child('meta/creeLe').val() < now - 86400000 || data.child('meta/hote').val() === auth.uid)))",
+        ".validate": "$code.matches(/^[A-Z]{4}$/)",
+
+        "meta": {
+          ".read": "auth != null && data.child('creeLe').val() > now - 86400000"
+        },
+
+        // Les questions et les bonnes réponses : l'hôte seul
+        "secret": {
+          ".read": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val()",
+          ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val()"
+        },
+
+        // État, résultats et scores : lus par tous les participants, écrits par l'hôte seul
+        "etat": {
+          ".read": "auth != null && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000",
+          ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val() && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000"
+        },
+        "resultats": {
+          ".read": "auth != null && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000",
+          ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val() && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000"
+        },
+        "scores": {
+          ".read": "auth != null && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000",
+          ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val() && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000"
+        },
+
+        // Chaque joueur écrit sa propre fiche, et rien d'autre que pseudo, couleur, présence
+        "joueurs": {
+          ".read": "auth != null && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000",
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000",
+            ".validate": "newData.hasChildren(['pseudo', 'couleur'])",
+            "pseudo": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16" },
+            "couleur": { ".validate": "newData.isString() && newData.val().matches(/^#[0-9A-Fa-f]{6}$/)" },
+            "arrive": { ".validate": "newData.isNumber()" },
+            "enLigne": { ".validate": "newData.isBoolean()" },
+            "$autre": { ".validate": false }
+          }
+        },
+
+        // Une seule réponse par joueur et par question, pendant le chrono (1,5 s de marge réseau),
+        // horodatée par le serveur
+        "reponses": {
+          ".read": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val()",
+          "$q": {
+            "$uid": {
+              ".read": "auth != null && auth.uid === $uid",
+              ".write": "auth != null && auth.uid === $uid && !data.exists() && root.child('parties/' + $code + '/joueurs/' + $uid).exists() && root.child('parties/' + $code + '/etat/phase').val() === 'question' && root.child('parties/' + $code + '/etat/q').val() === $q && now <= root.child('parties/' + $code + '/etat/debut').val() + root.child('parties/' + $code + '/etat/duree').val() * 1000 + 1500",
+              ".validate": "newData.hasChildren(['choix', 'a'])",
+              "choix": { ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 3" },
+              "a": { ".validate": "newData.val() === now" },
+              "$autre": { ".validate": false }
+            }
+          }
+        },
+
+        "$autre": { ".validate": false }
+      }
+    }
+  }
+}

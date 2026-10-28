@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quatre Coins</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../commun.css">
+    <style>
+        :root {
+            --jeu: var(--tomate);
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        .ecran {
+            display: none;
+            min-height: 100vh;
+            padding: clamp(1rem, 2.5vw, 2.5rem);
+        }
+
+        .ecran.actif {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .centre {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .erreur {
+            font-weight: 900;
+            color: var(--tomate);
+        }
+
+        /* ---------- Réglages ---------- */
+
+        .config {
+            width: min(40rem, 100%);
+            margin: 0 auto;
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+
+        .config-ligne {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .config .btn-geant {
+            margin-top: 0.5rem;
+        }
+
+        #etatFichier {
+            font-weight: 700;
+            color: var(--encre-douce);
+        }
+
+        /* ---------- Salle d'attente ---------- */
+
+        .logo {
+            align-self: flex-start;
+            font-size: clamp(1.6rem, 2.6vw, 2.8rem);
+        }
+
+        .salle {
+            flex: 1;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: clamp(1.5rem, 4vw, 5rem);
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .invitation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.9rem;
+            text-align: center;
+            padding: clamp(1.2rem, 2vw, 2.2rem);
+            transform: rotate(-1deg);
+        }
+
+        #code {
+            font-family: var(--police-titre);
+            font-size: clamp(3.5rem, 8vw, 8.5rem);
+            letter-spacing: 0.1em;
+            line-height: 1;
+            color: var(--carton);
+            background: var(--tomate);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 0.05em 0.25em 0.1em 0.35em;
+        }
+
+        #qr {
+            padding: 0.6rem;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+        }
+
+        #qr img,
+        #qr canvas {
+            display: block;
+            width: clamp(9rem, 17vw, 17rem);
+            height: auto;
+        }
+
+        .adresse {
+            font-size: clamp(0.9rem, 1.2vw, 1.3rem);
+            line-height: 1.35;
+        }
+
+        #lienJoueur {
+            word-break: break-all;
+        }
+
+        .arrivees h2 {
+            font-size: clamp(2rem, 3.6vw, 3.8rem);
+            margin-bottom: 1.5rem;
+        }
+
+        #listeJoueurs {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem;
+            margin-bottom: 2.5rem;
+            min-height: 3rem;
+        }
+
+        #listeJoueurs li {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            font-weight: 900;
+            font-size: clamp(1.3rem, 2.2vw, 2.4rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            box-shadow: 4px 4px 0 var(--encre);
+            padding: 0.3em 0.7em;
+            transform: rotate(var(--penche, 0deg));
+        }
+
+        #listeJoueurs li.nouveau {
+            animation: pose 0.45s cubic-bezier(.3, 1.6, .5, 1) both;
+        }
+
+        @keyframes pose {
+            from { transform: translateY(-1.5em) rotate(-8deg) scale(1.3); opacity: 0; }
+        }
+
+        #listeJoueurs li.hors-ligne {
+            opacity: 0.4;
+        }
+
+        #listeJoueurs .pastille {
+            width: 1em;
+            height: 1em;
+        }
+
+        /* ---------- Question ---------- */
+
+        #ecranQuestion.actif {
+            height: 100vh;
+            gap: clamp(0.8rem, 1.8vh, 1.5rem);
+        }
+
+        .entete-question {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: clamp(1rem, 1.6vw, 1.7rem);
+        }
+
+        .entete-question .mention {
+            font-size: 1em;
+        }
+
+        #compteur {
+            margin-left: auto;
+            font-weight: 900;
+        }
+
+        #chrono {
+            font-family: var(--police-titre);
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            line-height: 1;
+            min-width: 1.8em;
+            text-align: center;
+            color: var(--carton);
+            background: var(--encre);
+            border: var(--trait) solid var(--encre);
+            padding: 0.08em 0.15em 0.12em;
+        }
+
+        #chrono.urgent {
+            background: var(--tomate);
+            animation: battement 1s ease-out infinite;
+        }
+
+        @keyframes battement {
+            0% { transform: scale(1.18); }
+            40%, 100% { transform: scale(1); }
+        }
+
+        .difficulte {
+            display: inline-flex;
+            gap: 0.25em;
+        }
+
+        .difficulte i {
+            width: 0.7em;
+            height: 0.7em;
+            border: var(--trait-fin) solid var(--encre);
+        }
+
+        .difficulte i.plein {
+            background: var(--encre);
+        }
+
+        /* Jauge de temps : se vide de gauche à droite */
+        .jauge {
+            height: clamp(0.7rem, 1.1vw, 1.1rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+        }
+
+        #jauge {
+            height: 100%;
+            background: var(--encre);
+            transform-origin: left;
+            transition: transform 0.2s linear, background-color 0.3s;
+        }
+
+        #jauge.urgent {
+            background: var(--tomate);
+        }
+
+        #ecranQuestion.revele .jauge {
+            visibility: hidden;
+        }
+
+        #texteQuestion {
+            font-size: clamp(2rem, 3.8vw, 4.6rem);
+            text-align: center;
+            text-wrap: balance;
+            animation: apparait 0.4s ease-out both;
+        }
+
+        @keyframes apparait {
+            from { transform: translateY(0.4em); opacity: 0; }
+        }
+
+        #imageQuestion {
+            flex: 1;
+            min-height: 0;
+            max-height: 32vh;
+            object-fit: contain;
+            align-self: center;
+            border: var(--trait) solid var(--encre);
+        }
+
+        #reponsesTV {
+            flex: 1;
+            min-height: 0;
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-auto-rows: 1fr;
+            gap: clamp(0.6rem, 1.4vw, 1.4rem);
+        }
+
+        .coin {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.6em;
+            font-weight: 900;
+            font-size: clamp(1.4rem, 2.6vw, 3.2rem);
+            line-height: 1.15;
+            color: var(--coin-texte);
+            background: var(--coin);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 0.4em 0.7em;
+            overflow: hidden;
+            animation: arrive 0.45s cubic-bezier(.3, 1.5, .5, 1) both;
+            animation-delay: calc(var(--i) * 0.12s + 0.25s);
+            transition: opacity 0.4s, filter 0.4s, transform 0.4s;
+        }
+
+        @keyframes arrive {
+            from { transform: scale(0.6); opacity: 0; }
+        }
+
+        #ecranQuestion.revele .coin {
+            animation: none;
+        }
+
+        .coin .forme {
+            position: relative;
+            width: 1.4em;
+            height: 1.4em;
+            flex-shrink: 0;
+        }
+
+        .coin .texte-reponse {
+            position: relative;
+            flex: 1;
+        }
+
+        /* Répartition des votes : un filet d'encre en bas de la case, proportionnel aux votes */
+        .coin .barre-votes {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 0.35em;
+            width: calc(var(--part) * 100%);
+            background: var(--encre);
+            transform-origin: left;
+            animation: remplit 0.8s cubic-bezier(.2, .8, .3, 1) both;
+        }
+
+        @keyframes remplit {
+            from { transform: scaleX(0); }
+        }
+
+        .coin .votes {
+            position: relative;
+            font-family: var(--police-titre);
+            font-weight: 400;
+            font-size: 1.3em;
+        }
+
+        .coin.fausse {
+            opacity: 0.35;
+            filter: grayscale(0.7);
+            transform: scale(0.96);
+        }
+
+        .coin.bonne {
+            overflow: visible;
+            transform: scale(1.02);
+        }
+
+        .coin .tampon-bonne {
+            position: absolute;
+            top: -0.9em;
+            right: 1.2em;
+            font-size: 0.55em;
+            color: var(--carton);
+            background: var(--sapin);
+            animation: tamponne 0.4s 0.3s cubic-bezier(.3, 1.6, .5, 1) both;
+        }
+
+        @keyframes tamponne {
+            from { transform: scale(2.2) rotate(-12deg); opacity: 0; }
+            to { transform: scale(1) rotate(-4deg); opacity: 1; }
+        }
+
+        .actions-tv {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* ---------- Classement et podium ---------- */
+
+        .ecran h2.grand {
+            font-size: clamp(2.2rem, 4.5vw, 4.5rem);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #listeClassement,
+        #autresFin {
+            list-style: none;
+            width: min(52rem, 100%);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .ligne-score {
+            animation: glisse 0.4s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation-delay: calc(var(--i, 0) * 0.1s);
+            display: grid;
+            grid-template-columns: 2.5em 1.1em 1fr auto auto;
+            align-items: center;
+            gap: 0.7em;
+            font-weight: 900;
+            font-size: clamp(1.3rem, 2.2vw, 2.4rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            padding: 0.35em 0.7em;
+        }
+
+        .ligne-score .pastille {
+            width: 1em;
+            height: 1em;
+        }
+
+        .ligne-score .gain {
+            font-size: 0.75em;
+            color: var(--sapin);
+        }
+
+        .ligne-score .rang {
+            font-family: var(--police-titre);
+            font-weight: 400;
+        }
+
+        .ligne-score.premier {
+            background: var(--ocre);
+            box-shadow: var(--ombre);
+        }
+
+        @keyframes glisse {
+            from { transform: translateX(-3em); opacity: 0; }
+        }
+
+        .autres {
+            text-align: center;
+            font-weight: 700;
+            font-size: clamp(1rem, 1.6vw, 1.6rem);
+            margin-top: 1rem;
+            color: var(--encre-douce);
+        }
+
+        .podium {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: clamp(1rem, 2vw, 2rem);
+            margin-bottom: 2rem;
+        }
+
+        .marche {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            width: clamp(9rem, 18vw, 18rem);
+            font-weight: 900;
+            font-size: clamp(1.2rem, 2vw, 2.2rem);
+            text-align: center;
+        }
+
+        .marche .socle {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            font-family: var(--police-titre);
+            font-weight: 400;
+            font-size: 1.8em;
+            padding-top: 0.2em;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+        }
+
+        .marche-1 .socle { height: 14rem; background: var(--ocre); }
+        .marche-2 .socle { height: 10rem; }
+        .marche-3 .socle { height: 7rem; background: var(--kraft-fonce); }
+
+        /* Le podium se dévoile du 3e au 1er */
+        .marche .socle {
+            transform-origin: bottom;
+            animation: monte 0.7s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation-delay: var(--delai);
+        }
+
+        .marche .nom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            animation: tombe 0.5s cubic-bezier(.3, 1.6, .5, 1) both;
+            animation-delay: calc(var(--delai) + 0.6s);
+        }
+
+        .marche .nom .pastille {
+            width: 1.6em;
+            height: 1.6em;
+        }
+
+        .marche-1 .nom {
+            font-size: 1.35em;
+        }
+
+        .marche .vainqueur {
+            font-size: 0.6em;
+            margin-bottom: 0.4rem;
+        }
+
+        @keyframes monte {
+            from { transform: scaleY(0); }
+        }
+
+        @keyframes tombe {
+            from { transform: translateY(-2em); opacity: 0; }
+        }
+
+        #autresFin {
+            animation: apparait 0.5s 3.6s both;
+        }
+
+        /* Confettis en papier aux couleurs des encres, sans halo */
+        .confettis {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .confettis i {
+            position: absolute;
+            top: -2rem;
+            width: 0.8rem;
+            height: 1.2rem;
+            border: 2px solid var(--encre);
+            animation: confetti linear both;
+        }
+
+        @keyframes confetti {
+            to { transform: translateY(110vh) rotate(var(--tour)); }
+        }
+
+        @media (max-width: 800px) {
+            .salle { grid-template-columns: 1fr; }
+            .config-ligne { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <section id="ecranChargement" class="ecran actif">
+        <div class="centre">
+            <p id="messageChargement" class="surtitre">Connexion…</p>
+        </div>
+    </section>
+
+    <section id="ecranConfig" class="ecran">
+        <header class="barre-jeu">
+            <a class="retour-hub" href="../index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square" aria-hidden="true"><path d="M15 4l-8 8 8 8"/></svg>
+                Hub
+            </a>
+            <h1 class="titre-jeu">Quatre Coins</h1>
+        </header>
+        <div class="config carte">
+            <div class="champ">
+                <label for="choixFichier">Questions</label>
+                <select id="choixFichier"></select>
+            </div>
+            <div class="champ">
+                <label for="fichierLocal">Ou un fichier de l'ordinateur</label>
+                <input type="file" id="fichierLocal" accept=".json,application/json">
+            </div>
+            <p id="etatFichier">Chargement des questions…</p>
+            <div class="config-ligne">
+                <div class="champ">
+                    <label for="duree">Temps par question</label>
+                    <select id="duree">
+                        <option value="10">10 secondes</option>
+                        <option value="15">15 secondes</option>
+                        <option value="20" selected>20 secondes</option>
+                        <option value="30">30 secondes</option>
+                    </select>
+                </div>
+                <div class="champ">
+                    <label for="nbQuestions">Nombre de questions</label>
+                    <input type="number" id="nbQuestions" min="1" value="10">
+                </div>
+            </div>
+            <button id="btnCreer" class="btn btn-geant" disabled>Créer la partie</button>
+            <p id="erreurConfig" class="erreur" hidden></p>
+        </div>
+    </section>
+
+    <section id="ecranSalle" class="ecran">
+        <h1 class="tampon logo">Quatre Coins</h1>
+        <div class="salle">
+            <div class="invitation carte">
+                <p class="surtitre">Scanne pour jouer</p>
+                <div id="qr"></div>
+                <p class="adresse">ou va sur <strong id="lienJoueur"></strong><br>et entre le code</p>
+                <div id="code"></div>
+            </div>
+            <div class="arrivees">
+                <h2 id="nbJoueurs">Personne pour l'instant</h2>
+                <ul id="listeJoueurs"></ul>
+                <button class="btn btn-geant" data-action="suivant" id="btnLancer" disabled>Lancer la partie</button>
+            </div>
+        </div>
+        <div class="actions-tv">
+            <button class="btn-lien" data-action="son"></button>
+            <button class="btn-lien" data-action="abandonner">Abandonner la partie</button>
+        </div>
+    </section>
+
+    <section id="ecranQuestion" class="ecran">
+        <div class="entete-question">
+            <span id="numQuestion" class="mention"></span>
+            <span id="themeQuestion" class="surtitre"></span>
+            <span id="difficulte" class="difficulte"></span>
+            <span id="compteur"></span>
+            <span id="chrono"></span>
+        </div>
+        <div class="jauge"><div id="jauge"></div></div>
+        <h2 id="texteQuestion"></h2>
+        <img id="imageQuestion" alt="" hidden>
+        <ul id="reponsesTV"></ul>
+        <div class="actions-tv">
+            <button class="btn" data-action="suivant" id="btnQuestion"></button>
+        </div>
+    </section>
+
+    <section id="ecranClassement" class="ecran">
+        <h2 class="grand">Classement</h2>
+        <ol id="listeClassement"></ol>
+        <p id="autresClassement" class="autres"></p>
+        <div class="actions-tv">
+            <button class="btn-lien" data-action="abandonner">Abandonner la partie</button>
+            <button class="btn btn-geant" data-action="suivant" id="btnClassement"></button>
+        </div>
+    </section>
+
+    <section id="ecranFin" class="ecran">
+        <div class="confettis" id="confettis" aria-hidden="true"></div>
+        <h2 class="grand">Le podium</h2>
+        <div class="podium" id="podium"></div>
+        <ol id="autresFin"></ol>
+        <div class="actions-tv">
+            <button class="btn btn-geant" data-action="abandonner">Nouvelle partie</button>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module">
+        import { db, connexion, heureServeur, COINS, formeSVG, pointsRapidite, bonusSerie, genererCode, classer, echapper, lireStockage, ecrireStockage, CLE_HOTE } from './commun.js';
+        import { ref, set, update, get, remove, onValue, serverTimestamp, query, orderByChild, endAt } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+        const $ = id => document.getElementById(id);
+
+        let uid = null;
+        let code = null;
+        let banque = [];        // questions du fichier choisi
+        let questions = [];     // questions de la partie, bonnes réponses comprises : l'hôte seul les connaît
+        let etat = null;
+        let joueurs = {};
+        let scores = {};
+        let resultats = {};
+        let reponses = {};      // réponses à la question en cours
+        let horsLigneDepuis = {};   // heure où chaque joueur déconnecté a été vu hors ligne
+        let qEcoutee = null;
+        let arreterReponses = null;
+        let revelationEnCours = false;
+        let derniereAction = null;
+        let qrAffiche = null;
+
+        let cleEcran = null;        // étape affichée : on ne reconstruit (et ne réanime) l'écran qu'au changement d'étape
+        let joueursVus = null;      // pour animer les nouveaux arrivants seulement
+        let dernierTic = null;
+
+        function afficher(id) {
+            document.querySelectorAll('.ecran').forEach(e => e.classList.toggle('actif', e.id === id));
+        }
+
+        // ---------- Sons : synthétisés avec WebAudio, aucun fichier à charger ----------
+
+        const son = {
+            actif: lireStockage('quatreCoins.son') !== 'non',
+            ctx: null,
+            // Le navigateur n'autorise le son qu'après un geste (clic, touche)
+            debloquer() {
+                if (!this.ctx) {
+                    try { this.ctx = new AudioContext(); } catch { return; }
+                }
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            },
+            note(freq, debut, duree, type = 'triangle', volume = 0.12) {
+                if (!this.actif || !this.ctx) return;
+                const t = this.ctx.currentTime + debut;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(volume, t);
+                gain.gain.exponentialRampToValueAtTime(0.0001, t + duree);
+                osc.connect(gain).connect(this.ctx.destination);
+                osc.start(t);
+                osc.stop(t + duree);
+            },
+            arrivee() { this.note(660, 0, 0.12); this.note(990, 0.08, 0.18); },
+            question() { [523, 659, 784].forEach((f, k) => this.note(f, k * 0.08, 0.2)); },
+            tic(dernier) { this.note(dernier ? 880 : 1320, 0, 0.06, 'square', 0.05); },
+            revelation() { this.note(392, 0, 0.1, 'square', 0.06); this.note(523, 0.1, 0.1, 'square', 0.06); this.note(784, 0.2, 0.5); },
+            classement() { [392, 494, 587].forEach((f, k) => this.note(f, k * 0.06, 0.15, 'triangle', 0.08)); },
+            podium(place) { this.note([0, 784, 587, 494][place], 0, 0.35); },
+            fanfare() { [523, 659, 784, 1047, 784, 1047].forEach((f, k) => this.note(f, k * 0.13, k === 5 ? 0.8 : 0.16)); }
+        };
+
+        function majBoutonSon() {
+            document.querySelectorAll('[data-action="son"]').forEach(b => { b.textContent = son.actif ? 'Son : activé' : 'Son : coupé'; });
+        }
+
+        majBoutonSon();
+
+        function erreurFatale(message) {
+            afficher('ecranChargement');
+            $('messageChargement').textContent = message;
+        }
+
+        // ---------- Démarrage : on reprend la partie en cours si la TV a rechargé ----------
+
+        async function demarrer() {
+            try {
+                uid = await connexion();
+            } catch {
+                erreurFatale('Connexion à Firebase impossible. Vérifie internet puis recharge la page.');
+                return;
+            }
+            const enCours = lireStockage(CLE_HOTE);
+            if (enCours && await reprendre(enCours)) return;
+            ecrireStockage(CLE_HOTE, null);
+            preparerConfig();
+        }
+
+        async function reprendre(c) {
+            try {
+                const meta = (await get(ref(db, `parties/${c}/meta`))).val();
+                if (!meta || meta.hote !== uid) return false;
+                questions = (await get(ref(db, `parties/${c}/secret/questions`))).val() || [];
+                code = c;
+                ecouter();
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        // ---------- Réglages ----------
+
+        async function preparerConfig() {
+            afficher('ecranConfig');
+            try {
+                const liste = await (await fetch('questions/index.json')).json();
+                $('choixFichier').innerHTML = liste.map(f => `<option value="${echapper(f.fichier)}">${echapper(f.titre)}</option>`).join('');
+                await chargerFichierListe();
+            } catch {
+                $('etatFichier').textContent = 'Impossible de lire la liste des fichiers de questions.';
+            }
+        }
+
+        async function chargerFichierListe() {
+            const url = new URL('questions/' + $('choixFichier').value, location.href);
+            try {
+                utiliserBanque(await (await fetch(url)).json(), url);
+            } catch {
+                utiliserBanque(null);
+            }
+        }
+
+        function utiliserBanque(donnees, base) {
+            try {
+                banque = validerQuestions(donnees, base);
+                $('etatFichier').textContent = `${banque.length} questions dans le fichier.`;
+                $('nbQuestions').max = banque.length;
+                $('nbQuestions').value = Math.min(banque.length, Number($('nbQuestions').value) || 10);
+            } catch (e) {
+                banque = [];
+                $('etatFichier').textContent = e.message;
+            }
+            $('btnCreer').disabled = banque.length === 0;
+        }
+
+        function validerQuestions(donnees, base) {
+            if (!Array.isArray(donnees) || !donnees.length) throw new Error('Le fichier doit contenir une liste de questions.');
+            return donnees.map((q, i) => {
+                const ok = q && typeof q.question === 'string' && Array.isArray(q.reponses) && q.reponses.length === 4
+                    && Number.isInteger(q.bonne) && q.bonne >= 0 && q.bonne <= 3;
+                if (!ok) throw new Error(`Question ${i + 1} mal formée : il faut « question », 4 « reponses » et « bonne » entre 0 et 3.`);
+                const propre = { question: q.question, reponses: q.reponses.map(String), bonne: q.bonne, theme: String(q.theme || ''), difficulte: Number(q.difficulte) || 1 };
+                if (q.image) propre.image = base ? new URL(q.image, base).href : String(q.image);
+                return propre;
+            });
+        }
+
+        function melanger(liste) {
+            for (let i = liste.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [liste[i], liste[j]] = [liste[j], liste[i]];
+            }
+            return liste;
+        }
+
+        async function creerPartie() {
+            $('btnCreer').disabled = true;
+            $('erreurConfig').hidden = true;
+            const nb = Math.max(1, Math.min(banque.length, Number($('nbQuestions').value) || banque.length));
+            const duree = Number($('duree').value);
+            const liste = melanger([...banque]).slice(0, nb);
+            nettoyerVieillesParties();
+            // Le code est réservé par la règle de sécurité : si une partie récente l'occupe, l'écriture est refusée
+            for (let essai = 0; essai < 10; essai++) {
+                const c = genererCode();
+                try {
+                    await set(ref(db, `parties/${c}`), {
+                        meta: { hote: uid, creeLe: serverTimestamp(), nbQuestions: nb, duree },
+                        secret: { questions: liste },
+                        etat: { phase: 'salle', duree, total: nb }
+                    });
+                    code = c;
+                    questions = liste;
+                    ecouter();
+                    return;
+                } catch { /* code occupé, on en tire un autre */ }
+            }
+            $('erreurConfig').textContent = 'Impossible de créer la partie. As-tu bien publié les règles de sécurité ?';
+            $('erreurConfig').hidden = false;
+            $('btnCreer').disabled = false;
+        }
+
+        // Pas de serveur pour supprimer les vieilles parties : chaque nouvelle partie fait le ménage
+        async function nettoyerVieillesParties() {
+            try {
+                const limite = heureServeur() - 86400000 - 120000;
+                const vieilles = await get(query(ref(db, 'parties'), orderByChild('meta/creeLe'), endAt(limite)));
+                const suppressions = {};
+                vieilles.forEach(p => { suppressions[p.key] = null; });
+                if (Object.keys(suppressions).length) await update(ref(db, 'parties'), suppressions);
+            } catch { /* on réessaiera à la prochaine partie */ }
+        }
+
+        // ---------- Écoute de la partie : l'écran est toujours le reflet de la base ----------
+
+        function ecouter() {
+            ecrireStockage(CLE_HOTE, code);
+            const base = `parties/${code}`;
+            onValue(ref(db, `${base}/etat`), s => {
+                etat = s.val();
+                if (!etat) { ecrireStockage(CLE_HOTE, null); location.reload(); return; }
+                suivreReponses();
+                rendre();
+            });
+            onValue(ref(db, `${base}/joueurs`), s => {
+                joueurs = s.val() || {};
+                Object.entries(joueurs).forEach(([id, j]) => {
+                    if (j.enLigne !== false) delete horsLigneDepuis[id];
+                    else if (!horsLigneDepuis[id]) horsLigneDepuis[id] = Date.now();
+                });
+                rendre();
+            });
+            onValue(ref(db, `${base}/scores`), s => { scores = s.val() || {}; rendre(); });
+            onValue(ref(db, `${base}/resultats`), s => { resultats = s.val() || {}; rendre(); });
+        }
+
+        function suivreReponses() {
+            const q = etat.phase === 'question' || etat.phase === 'revelation' ? etat.q : null;
+            if (q === qEcoutee) return;
+            if (arreterReponses) arreterReponses();
+            arreterReponses = null;
+            reponses = {};
+            qEcoutee = q;
+            if (q !== null) {
+                arreterReponses = onValue(ref(db, `parties/${code}/reponses/${q}`), s => { reponses = s.val() || {}; rendre(); });
+            }
+        }
+
+        function rendre() {
+            if (!etat) return;
+            if (etat.phase === 'salle') rendreSalle();
+            else if (etat.phase === 'question' || etat.phase === 'revelation') rendreQuestion();
+            else if (etat.phase === 'classement') rendreClassement();
+            else if (etat.phase === 'fin') rendreFin();
+        }
+
+        function pastille(couleur) {
+            return `<span class="pastille" style="background:${echapper(couleur)}"></span>`;
+        }
+
+        function rendreSalle() {
+            afficher('ecranSalle');
+            $('code').textContent = code;
+            const url = new URL(`joueur.html?code=${code}`, location.href).href;
+            if (qrAffiche !== url) {
+                $('qr').innerHTML = '';
+                new QRCode($('qr'), { text: url, width: 512, height: 512, colorDark: '#221C15', colorLight: '#F1E7D0', correctLevel: QRCode.CorrectLevel.M });
+                $('lienJoueur').textContent = url.replace(/^https?:\/\//, '').replace(/\?.*$/, '');
+                qrAffiche = url;
+            }
+            const liste = Object.entries(joueurs).sort(([, a], [, b]) => (a.arrive || 0) - (b.arrive || 0));
+            // Au premier affichage (ou après un rechargement), personne n'est « nouveau »
+            const premiers = joueursVus === null;
+            if (premiers) joueursVus = new Set();
+            let nouveaux = 0;
+            $('listeJoueurs').innerHTML = liste.map(([id, j], k) => {
+                const nouveau = !joueursVus.has(id);
+                if (nouveau && !premiers) nouveaux++;
+                joueursVus.add(id);
+                const classes = [j.enLigne === false ? 'hors-ligne' : '', nouveau && !premiers ? 'nouveau' : ''].join(' ');
+                return `<li class="${classes}" style="--penche:${[-2, 1.5, -1, 2, 0.5][k % 5]}deg">${pastille(j.couleur)}${echapper(j.pseudo)}</li>`;
+            }).join('');
+            if (nouveaux) son.arrivee();
+            $('nbJoueurs').textContent = liste.length === 0 ? "Personne pour l'instant"
+                : liste.length === 1 ? '1 joueur dans la place' : `${liste.length} joueurs dans la place`;
+            $('btnLancer').disabled = liste.length === 0;
+        }
+
+        // Change d'étape ? On reconstruit l'écran et on joue le son de l'étape
+        function nouvelleEtape(cle) {
+            if (cle === cleEcran) return false;
+            cleEcran = cle;
+            return true;
+        }
+
+        function rendreQuestion() {
+            afficher('ecranQuestion');
+            const i = Number(etat.q);
+            const question = questions[i];
+            if (!question) return;
+            const res = resultats[etat.q];
+            const revele = etat.phase === 'revelation' && !!res;
+            const nbJoueurs = Object.keys(joueurs).length;
+            const nbReponses = Object.keys(reponses).length;
+            $('compteur').textContent = `${nbReponses} / ${nbJoueurs} ${nbReponses > 1 ? 'réponses' : 'réponse'}`;
+            if (!nouvelleEtape(`${etat.q}:${revele}`)) return;
+
+            $('ecranQuestion').classList.toggle('revele', revele);
+            $('numQuestion').textContent = `Question ${i + 1} / ${etat.total}`;
+            $('themeQuestion').textContent = question.theme;
+            $('difficulte').innerHTML = [1, 2, 3].map(n => `<i class="${n <= question.difficulte ? 'plein' : ''}"></i>`).join('');
+            $('difficulte').title = `Difficulté ${question.difficulte} sur 3`;
+            if ($('texteQuestion').textContent !== question.question) {
+                $('texteQuestion').textContent = question.question;
+                // Relance l'animation d'apparition
+                $('texteQuestion').style.animation = 'none';
+                $('texteQuestion').offsetWidth;
+                $('texteQuestion').style.animation = '';
+            }
+            $('imageQuestion').hidden = !question.image;
+            if (question.image && $('imageQuestion').getAttribute('src') !== question.image) $('imageQuestion').src = question.image;
+            const maxVotes = revele ? Math.max(1, ...res.votes) : 1;
+            $('reponsesTV').innerHTML = question.reponses.map((r, k) => `
+                <li class="coin ${revele ? (k === res.bonne ? 'bonne' : 'fausse') : ''}" style="--i:${k};--coin:${COINS[k].couleur};--coin-texte:${COINS[k].texte}">
+                    ${revele ? `<span class="barre-votes" style="--part:${res.votes[k] / maxVotes}"></span>` : ''}
+                    ${formeSVG(k)}<span class="texte-reponse">${echapper(r)}</span>
+                    ${revele ? `<span class="votes">${res.votes[k]}</span>` : ''}
+                    ${revele && k === res.bonne ? '<span class="tampon tampon-bonne">Bonne réponse</span>' : ''}
+                </li>`).join('');
+            $('chrono').hidden = revele;
+            $('btnQuestion').textContent = revele ? 'Classement' : 'Révéler maintenant';
+            $('btnQuestion').className = revele ? 'btn btn-geant' : 'btn btn-small';
+            if (revele) son.revelation();
+            else son.question();
+            dernierTic = null;
+            tic();
+        }
+
+        function lignesScore(liste, decalage = 0) {
+            return liste.map((s, k) => {
+                const j = joueurs[s.id] || { pseudo: '?', couleur: '#CDBB94' };
+                const gain = s.dernier && s.dernier.points ? `+${s.dernier.points}` : '';
+                return `<li class="ligne-score ${s.rang === 1 ? 'premier' : ''}" style="--i:${k + decalage}">
+                    <span class="rang">${s.rang}</span>${pastille(j.couleur)}<span>${echapper(j.pseudo)}</span><span class="gain">${gain}</span><span>${s.total}</span>
+                </li>`;
+            }).join('');
+        }
+
+        function classementAvecRangs() {
+            const liste = classer(scores);
+            liste.forEach((s, k) => { s.rang = k > 0 && s.total === liste[k - 1].total ? liste[k - 1].rang : k + 1; });
+            return liste;
+        }
+
+        function rendreClassement() {
+            afficher('ecranClassement');
+            if (!nouvelleEtape(`classement:${etat.q}`)) return;
+            const liste = classementAvecRangs();
+            $('listeClassement').innerHTML = lignesScore(liste.slice(0, 5));
+            const autres = liste.length - 5;
+            $('autresClassement').textContent = autres > 0 ? `et ${autres} ${autres > 1 ? 'autres joueurs' : 'autre joueur'} en embuscade` : '';
+            const derniere = Number(etat.q) + 1 >= etat.total;
+            $('btnClassement').textContent = derniere ? 'Voir le podium' : 'Question suivante';
+            son.classement();
+        }
+
+        function rendreFin() {
+            afficher('ecranFin');
+            if (!nouvelleEtape('fin')) return;
+            const liste = classementAvecRangs();
+            // Ordre de dévoilement : 3e, puis 2e, puis 1er
+            const delais = { 3: 0.3, 2: 1.3, 1: 2.5 };
+            const marche = (s, place) => {
+                if (!s) return '';
+                const j = joueurs[s.id] || { pseudo: '?', couleur: '#CDBB94' };
+                return `<div class="marche marche-${place}" style="--delai:${delais[place]}s">
+                    <div class="nom">${place === 1 ? '<span class="tampon vainqueur">Victoire</span>' : ''}${pastille(j.couleur)}<span>${echapper(j.pseudo)}</span><span>${s.total} pts</span></div>
+                    <div class="socle">${s.rang}</div>
+                </div>`;
+            };
+            $('podium').innerHTML = marche(liste[1], 2) + marche(liste[0], 1) + marche(liste[2], 3);
+            $('autresFin').innerHTML = lignesScore(liste.slice(3));
+            [3, 2].forEach(p => { if (liste[p - 1]) setTimeout(() => son.podium(p), (delais[p] + 0.6) * 1000); });
+            setTimeout(() => { son.fanfare(); lancerConfettis(); }, (delais[1] + 0.6) * 1000);
+        }
+
+        function lancerConfettis() {
+            const couleurs = ['#C8401F', '#E3A21A', '#2A4A7A', '#7E3A58', '#1F6A5C', '#F1E7D0'];
+            $('confettis').innerHTML = Array.from({ length: 70 }, () => {
+                const duree = 2.5 + Math.random() * 2.5;
+                return `<i style="left:${Math.random() * 100}%;background:${couleurs[Math.floor(Math.random() * couleurs.length)]};
+                    animation-duration:${duree}s;animation-delay:${Math.random() * 1.5}s;--tour:${Math.round(Math.random() * 1440 - 720)}deg"></i>`;
+            }).join('');
+        }
+
+        // ---------- Déroulé ----------
+
+        function lancerQuestion(i) {
+            return set(ref(db, `parties/${code}/etat`), {
+                phase: 'question', q: String(i), debut: serverTimestamp(), duree: etat.duree, total: etat.total
+            });
+        }
+
+        // Calcule les points et révèle la bonne réponse en une seule écriture :
+        // si la TV recharge, les points ne sont jamais comptés deux fois
+        async function reveler() {
+            if (revelationEnCours || etat.phase !== 'question') return;
+            revelationEnCours = true;
+            try {
+                const question = questions[Number(etat.q)];
+                const reps = (await get(ref(db, `parties/${code}/reponses/${etat.q}`))).val() || {};
+                const votes = [0, 0, 0, 0];
+                Object.values(reps).forEach(r => { if (Number.isInteger(r.choix)) votes[r.choix]++; });
+                const maj = {};
+                Object.keys(joueurs).forEach(id => {
+                    const avant = scores[id] || { total: 0, serie: 0 };
+                    const r = reps[id];
+                    let points = 0, bonus = 0, serie = 0;
+                    const juste = !!r && r.choix === question.bonne;
+                    if (juste) {
+                        serie = (avant.serie || 0) + 1;
+                        points = pointsRapidite(r.a - etat.debut, etat.duree * 1000);
+                        bonus = bonusSerie(serie);
+                    }
+                    maj[`scores/${id}`] = {
+                        total: (avant.total || 0) + points + bonus,
+                        serie,
+                        dernier: { q: etat.q, repondu: !!r, juste, points: points + bonus, bonus }
+                    };
+                });
+                maj[`resultats/${etat.q}`] = { bonne: question.bonne, votes };
+                maj['etat/phase'] = 'revelation';
+                await update(ref(db, `parties/${code}`), maj);
+            } finally {
+                revelationEnCours = false;
+            }
+        }
+
+        // Un double appui sur la même étape est ignoré ; l'étape suivante répond tout de suite
+        async function suivant() {
+            if (!etat || (etat.phase === 'salle' && !Object.keys(joueurs).length)) return;
+            const cle = `${etat.phase}:${etat.q}`;
+            if (derniereAction === cle) return;
+            derniereAction = cle;
+            try {
+                const i = Number(etat.q);
+                if (etat.phase === 'salle') await lancerQuestion(0);
+                else if (etat.phase === 'question') await reveler();
+                else if (etat.phase === 'revelation') await update(ref(db, `parties/${code}/etat`), { phase: 'classement' });
+                else if (etat.phase === 'classement') {
+                    if (i + 1 < etat.total) await lancerQuestion(i + 1);
+                    else await update(ref(db, `parties/${code}/etat`), { phase: 'fin' });
+                }
+            } catch {
+                derniereAction = null;
+            }
+        }
+
+        async function abandonner() {
+            if (etat.phase !== 'fin' && !confirm('Abandonner la partie en cours ?')) return;
+            ecrireStockage(CLE_HOTE, null);
+            try { await remove(ref(db, `parties/${code}`)); } catch { /* elle sera supprimée au bout de 24 h */ }
+            location.reload();
+        }
+
+        // Chrono : fin du temps ou tout le monde a répondu.
+        // Un joueur déconnecté depuis plus de 10 s n'est plus attendu ; en deçà, il est peut-être en train de recharger
+        function tic() {
+            if (!etat || etat.phase !== 'question') return;
+            const reste = etat.debut + etat.duree * 1000 - heureServeur();
+            const secondes = Math.max(0, Math.ceil(reste / 1000));
+            const urgent = secondes <= 5;
+            $('chrono').textContent = secondes;
+            $('chrono').classList.toggle('urgent', urgent);
+            $('jauge').classList.toggle('urgent', urgent);
+            $('jauge').style.transform = `scaleX(${Math.min(Math.max(reste / (etat.duree * 1000), 0), 1)})`;
+            if (urgent && secondes > 0 && secondes !== dernierTic) son.tic(secondes === 1);
+            dernierTic = secondes;
+            const presents = Object.keys(joueurs).filter(id => !horsLigneDepuis[id] || Date.now() - horsLigneDepuis[id] < 10000);
+            const tousOntRepondu = presents.length > 0 && presents.every(id => reponses[id]);
+            if (reste <= 0 || tousOntRepondu) reveler();
+        }
+
+        setInterval(tic, 200);
+
+        // ---------- Commandes : souris ou clavier (Entrée, espace, flèche droite) ----------
+
+        document.addEventListener('click', e => {
+            const action = e.target.closest('[data-action]')?.dataset.action;
+            if (action === 'suivant') suivant();
+            if (action === 'abandonner') abandonner();
+            if (action === 'son') {
+                son.actif = !son.actif;
+                ecrireStockage('quatreCoins.son', son.actif ? null : 'non');
+                majBoutonSon();
+            }
+        });
+
+        document.addEventListener('pointerdown', () => son.debloquer());
+
+        document.addEventListener('keydown', e => {
+            son.debloquer();
+            if (!etat || e.target.closest('input, select, button')) return;
+            if (['Enter', ' ', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+                suivant();
+            }
+        });
+
+        $('choixFichier').addEventListener('change', chargerFichierListe);
+        $('fichierLocal').addEventListener('change', async e => {
+            const fichier = e.target.files[0];
+            if (!fichier) return;
+            try {
+                utiliserBanque(JSON.parse(await fichier.text()), null);
+            } catch {
+                utiliserBanque(null);
+                $('etatFichier').textContent = `« ${fichier.name} » n'est pas un fichier JSON valide.`;
+            }
+        });
+        $('btnCreer').addEventListener('click', creerPartie);
+
+        demarrer();
+    </script>
+</body>
+</html>
