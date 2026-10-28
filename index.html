@@ -120,10 +120,35 @@
     .couvercle-numero { color: var(--jeu); }
 
     .couvercle-description {
-        flex: 1;
         font-size: 1.05rem;
         font-weight: 700;
         line-height: 1.4;
+    }
+
+    .couvercle-regles {
+        flex: 1;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.9rem;
+        font-style: italic;
+        color: var(--encre-douce);
+    }
+
+    .couvercle-regles li {
+        position: relative;
+        padding-left: 1em;
+    }
+
+    .couvercle-regles li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.5em;
+        width: 0.45em;
+        height: 0.45em;
+        background: var(--jeu);
     }
 
     .couvercle-jouer {
@@ -163,6 +188,7 @@
     .couvercle:only-child .couvercle-titre { font-size: clamp(2rem, 4vw, 2.8rem); }
     .couvercle:only-child .couvercle-dos { padding: 2rem 2.4rem; gap: 1.3rem; }
     .couvercle:only-child .couvercle-description { font-size: clamp(1.15rem, 2vw, 1.5rem); }
+    .couvercle:only-child .couvercle-regles { font-size: clamp(0.9rem, 1.4vw, 1.1rem); }
     .couvercle:only-child .couvercle-jouer { font-size: 1.6rem; padding: 0.45em 1.6em; box-shadow: var(--ombre); }
 
     @media (max-width: 640px) {
@@ -247,6 +273,7 @@
         // Ajouter un jeu = ajouter une entrée ici. "folder" doit correspondre au nom exact du dossier contenant son index.html
         // (minuscules, sans espaces, accents ni apostrophes : le serveur en ligne respecte la casse, contrairement à Windows).
         // "icon" doit référencer une clé de ICONS ci-dessus (ou en ajouter une nouvelle dans le même style de trait).
+        // "rules" (facultatif) : quelques règles courtes, affichées en petit sous la description.
         // "color" : de préférence une encre de commun.css (tomate #C8401F, ocre #E3A21A, sapin #1F6A5C, prusse #2A4A7A, prune #7E3A58, ciel #8FC0CF).
         const GAMES = [
             {
@@ -254,7 +281,11 @@
                 title: 'La Grille',
                 icon: 'grid',
                 color: '#1F6A5C',
-                description: "Grille de cases à mémoriser, avec des questions à thème et à difficulté générées avec l'IA."
+                description: "Grille de cases à mémoriser, avec des questions à thème.",
+                rules: [
+                    '3 niveaux de difficulté : 1, 2 ou 3 points.',
+                    "Vole le thème d'un autre joueur pour 1 point de plus."
+                ]
             }
         ];
 
@@ -312,6 +343,18 @@
 
                 back.appendChild(number);
                 back.appendChild(desc);
+
+                if (game.rules && game.rules.length) {
+                    const rules = document.createElement('ul');
+                    rules.className = 'couvercle-regles';
+                    game.rules.forEach(rule => {
+                        const item = document.createElement('li');
+                        item.textContent = rule;
+                        rules.appendChild(item);
+                    });
+                    back.appendChild(rules);
+                }
+
                 back.appendChild(play);
                 card.appendChild(face);
                 card.appendChild(back);
