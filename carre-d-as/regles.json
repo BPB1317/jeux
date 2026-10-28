@@ -44,10 +44,20 @@
             ".write": "auth != null && auth.uid === $uid && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000",
             ".validate": "newData.hasChildren(['pseudo', 'couleur'])",
             "pseudo": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16" },
-            "couleur": { ".validate": "newData.isString() && newData.val().matches(/^#[0-9A-Fa-f]{6}$/)" },
+            // La couleur doit être réservée à son nom dans « couleurs » (écrites ensemble)
+            "couleur": { ".validate": "newData.isString() && newData.val().matches(/^#[0-9A-F]{6}$/) && newData.parent().parent().parent().child('couleurs/' + newData.val().replace('#', '')).val() === auth.uid" },
             "arrive": { ".validate": "newData.isNumber()" },
             "enLigne": { ".validate": "newData.isBoolean()" },
             "$autre": { ".validate": false }
+          }
+        },
+
+        // Une couleur par joueur : on ne réserve qu'une couleur libre, celle de sa fiche, et on ne libère que la sienne
+        "couleurs": {
+          ".read": "auth != null && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000",
+          "$hex": {
+            ".write": "auth != null && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000 && ((!data.exists() && newData.val() === auth.uid && newData.parent().parent().child('joueurs/' + auth.uid + '/couleur').val() === '#' + $hex) || (data.val() === auth.uid && !newData.exists()))",
+            ".validate": "$hex.matches(/^[0-9A-F]{6}$/)"
           }
         },
 

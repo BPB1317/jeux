@@ -399,7 +399,7 @@
 
     <script type="module">
         import { db, connexion, heureServeur, COINS, formeSVG, PALETTE_JOUEURS, rangDe, ordinal, echapper, lireStockage, ecrireStockage, CLE_JOUEUR } from './commun.js';
-        import { ref, set, update, get, remove, onValue, onDisconnect, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+        import { ref, set, update, get, onValue, onDisconnect, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
         const $ = id => document.getElementById(id);
 
@@ -454,7 +454,7 @@
             if (codeUrl) $('champCode').value = codeUrl.toUpperCase().slice(0, 4);
             rendrePalette();
             if ($('champCode').value.length === 4) {
-                chargerCouleursPrises();
+                suivreCouleurs($('champCode').value);
                 $('champPseudo').focus();
             }
         }
@@ -467,19 +467,24 @@
                     aria-pressed="${c.hex === couleur}" ${couleursPrises.has(c.hex) ? 'disabled' : ''}></button>`).join('');
         }
 
-        async function chargerCouleursPrises() {
-            try {
-                const tous = (await get(ref(db, `parties/${$('champCode').value}/joueurs`))).val() || {};
-                couleursPrises = new Set(Object.entries(tous).filter(([id]) => id !== uid).map(([, j]) => j.couleur));
-            } catch {
-                couleursPrises = new Set();
-            }
+        // Couleurs réservées dans la partie, suivies en direct : une couleur prise se grise aussitôt
+        let arreterCouleurs = null;
+        function suivreCouleurs(c) {
+            if (arreterCouleurs) arreterCouleurs();
+            arreterCouleurs = null;
+            couleursPrises = new Set();
             rendrePalette();
+            if (c.length !== 4) return;
+            arreterCouleurs = onValue(ref(db, `parties/${c}/couleurs`), s => {
+                const reservees = s.val() || {};
+                couleursPrises = new Set(Object.keys(reservees).filter(hex => reservees[hex] !== uid).map(hex => '#' + hex));
+                rendrePalette();
+            }, () => { couleursPrises = new Set(); rendrePalette(); });
         }
 
         $('champCode').addEventListener('input', e => {
             e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
-            if (e.target.value.length === 4) chargerCouleursPrises();
+            suivreCouleurs(e.target.value);
         });
 
         $('palette').addEventListener('click', e => {
@@ -505,12 +510,23 @@
                 $('btnRejoindre').disabled = false;
                 return erreur('Aucune partie avec ce code.');
             }
+            // La fiche et la réservation de la couleur sont écrites ensemble :
+            // si quelqu'un vient de prendre la couleur, Firebase refuse les deux.
+            // (La palette en direct peut changer « couleur » entre-temps : on garde celle demandée.)
+            const tentee = couleur;
             try {
-                await set(ref(db, `parties/${c}/joueurs/${uid}`), { pseudo, couleur, arrive: serverTimestamp(), enLigne: true });
+                await update(ref(db, `parties/${c}`), {
+                    [`joueurs/${uid}`]: { pseudo, couleur: tentee, arrive: serverTimestamp(), enLigne: true },
+                    [`couleurs/${tentee.slice(1)}`]: uid
+                });
+                if (arreterCouleurs) arreterCouleurs();
+                arreterCouleurs = null;
                 entrer(c);
             } catch {
                 $('btnRejoindre').disabled = false;
-                erreur('Impossible de rejoindre la partie.');
+                // La réservation de l'autre joueur arrive par le suivi en direct : on lui laisse un instant
+                for (let i = 0; i < 15 && !couleursPrises.has(tentee); i++) await new Promise(r => setTimeout(r, 100));
+                erreur(couleursPrises.has(tentee) ? 'Cette couleur vient d\'être prise, choisis-en une autre.' : 'Impossible de rejoindre la partie.');
             }
         });
 
@@ -672,7 +688,10 @@
 
         $('btnQuitter').addEventListener('click', async () => {
             ecrireStockage(CLE_JOUEUR, null);
-            try { await remove(ref(db, `parties/${code}/joueurs/${uid}`)); } catch { /* tant pis */ }
+            // On libère aussi sa couleur pour les suivants
+            try {
+                await update(ref(db, `parties/${code}`), { [`joueurs/${uid}`]: null, [`couleurs/${moi.couleur.slice(1)}`]: null });
+            } catch { /* tant pis */ }
             location.href = 'joueur.html';
         });
 
