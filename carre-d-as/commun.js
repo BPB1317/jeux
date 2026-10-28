@@ -1,4 +1,4 @@
-// Quatre Coins — code partagé entre l'écran TV (index.html) et les téléphones (joueur.html)
+// Carré d'As — code partagé entre l'écran TV (index.html) et les téléphones (joueur.html)
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { initializeAuth, browserLocalPersistence, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
@@ -22,8 +22,8 @@ onValue(ref(db, '.info/serverTimeOffset'), s => { decalage = s.val() || 0; });
 export const heureServeur = () => Date.now() + decalage;
 
 // Clés localStorage
-export const CLE_HOTE = 'quatreCoins.hote';
-export const CLE_JOUEUR = 'quatreCoins.partie';
+export const CLE_HOTE = 'carreDAs.hote';
+export const CLE_JOUEUR = 'carreDAs.partie';
 
 export function lireStockage(cle) {
     try { return localStorage.getItem(cle); } catch { return null; }
@@ -36,7 +36,7 @@ export function ecrireStockage(cle, valeur) {
     } catch { /* navigation privée : la reconnexion repose alors sur l'identifiant Firebase seul */ }
 }
 
-// Les quatre coins : une couleur et une forme chacun, pour répondre sans lire
+// Les quatre réponses : une couleur et une forme chacun, pour répondre sans lire
 export const COINS = [
     { nom: 'Rond', couleur: '#C8401F', texte: '#F1E7D0', forme: '<circle cx="24" cy="24" r="16"/>' },
     { nom: 'Carré', couleur: '#E3A21A', texte: '#221C15', forme: '<rect x="9" y="9" width="30" height="30"/>' },

@@ -1,5 +1,5 @@
 {
-  // Règles de sécurité de Quatre Coins.
+  // Règles de sécurité de Carré d'As.
   // À coller dans la console Firebase : Realtime Database > Règles > Publier.
   "rules": {
     "parties": {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quatre Coins</title>
+    <title>Carré d'As</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="../commun.css">
@@ -564,7 +564,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square" aria-hidden="true"><path d="M15 4l-8 8 8 8"/></svg>
                 Hub
             </a>
-            <h1 class="titre-jeu">Quatre Coins</h1>
+            <h1 class="titre-jeu">Carré d'As</h1>
         </header>
         <div class="config carte">
             <div class="champ">
@@ -597,7 +597,7 @@
     </section>
 
     <section id="ecranSalle" class="ecran">
-        <h1 class="tampon logo">Quatre Coins</h1>
+        <h1 class="tampon logo">Carré d'As</h1>
         <div class="salle">
             <div class="invitation carte">
                 <p class="surtitre">Scanne pour jouer</p>
@@ -688,7 +688,7 @@
         // ---------- Sons : synthétisés avec WebAudio, aucun fichier à charger ----------
 
         const son = {
-            actif: lireStockage('quatreCoins.son') !== 'non',
+            actif: lireStockage('carreDAs.son') !== 'non',
             ctx: null,
             // Le navigateur n'autorise le son qu'après un geste (clic, touche)
             debloquer() {
@@ -1131,7 +1131,7 @@
             if (action === 'abandonner') abandonner();
             if (action === 'son') {
                 son.actif = !son.actif;
-                ecrireStockage('quatreCoins.son', son.actif ? null : 'non');
+                ecrireStockage('carreDAs.son', son.actif ? null : 'non');
                 majBoutonSon();
             }
         });

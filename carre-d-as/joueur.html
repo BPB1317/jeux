@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#D8C7A3">
-    <title>Quatre Coins</title>
+    <title>Carré d'As</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="../commun.css">
@@ -26,8 +26,7 @@
         .ecran {
             display: none;
             min-height: 100dvh;
-            padding: 1rem;
-            padding-bottom: max(1rem, env(safe-area-inset-bottom));
+            padding: 1rem max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
         }
 
         .ecran.actif {
@@ -65,6 +64,8 @@
         /* ---------- Rejoindre ---------- */
 
         .rejoindre {
+            width: min(26rem, 100%);
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
             gap: 1.1rem;
@@ -77,33 +78,40 @@
 
         #champCode {
             font-family: var(--police-titre);
-            font-size: 2.4rem;
+            font-size: 1.6rem;
             letter-spacing: 0.25em;
             text-transform: uppercase;
             text-align: center;
             padding: 0.2em;
         }
 
+        /* Le pseudo est le champ principal : grand, en police de titre */
         #champPseudo {
-            font-size: 1.3rem;
+            font-family: var(--police-titre);
+            font-weight: 400;
+            font-size: 2rem;
+            padding: 0.3em 0.45em;
         }
 
+        /* Les couleurs : une ligne de petites pastilles */
         .palette {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 0.6rem;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0.4rem;
         }
 
         .palette button {
             aspect-ratio: 1;
+            max-width: 2.6rem;
             border: var(--trait-fin) solid var(--encre);
             border-radius: var(--rayon);
             cursor: pointer;
         }
 
         .palette button[aria-pressed="true"] {
-            outline: 4px solid var(--encre);
-            outline-offset: 3px;
+            outline: 3px solid var(--encre);
+            outline-offset: 2px;
+            transform: scale(1.12);
         }
 
         .palette button:disabled {
@@ -129,18 +137,39 @@
             overflow: hidden;
         }
 
+        /* Le chrono occupe le haut de l'écran, les boutons restent en bas, à portée de pouce */
+        .zone-chrono {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         #chronoJoueur {
             font-family: var(--police-titre);
-            font-size: 1.4rem;
+            font-size: clamp(3rem, 16vw, 6rem);
+            line-height: 1;
         }
 
         .boutons {
-            flex: 1;
-            min-height: 0;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
+            /* Presque carrés, sans jamais déborder sur un écran court */
+            grid-auto-rows: min(calc((100vw - 2.8rem) / 2 * 1.1), calc((100dvh - 7rem) / 2));
             gap: 0.8rem;
+        }
+
+        /* Téléphone à l'horizontale : les 4 boutons sur une ligne, presque carrés */
+        @media (orientation: landscape) {
+            #chronoJoueur {
+                font-size: clamp(1.8rem, 12dvh, 4rem);
+            }
+
+            .boutons {
+                grid-template-columns: repeat(4, 1fr);
+                grid-auto-rows: min(calc((100vw - 4.4rem) / 4 * 1.15), calc(100dvh - 7rem));
+            }
         }
 
         .boutons button {
@@ -277,6 +306,48 @@
             line-height: 1.1;
             word-break: break-word;
         }
+
+        /* À l'horizontale, la hauteur manque : formulaire sur deux colonnes, carte plus compacte */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .rejoindre {
+                width: min(46rem, 100%);
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.8rem 1.5rem;
+                align-items: end;
+            }
+
+            .rejoindre > * {
+                min-width: 0;
+            }
+
+            .rejoindre h1.tampon {
+                grid-column: 1 / -1;
+                justify-self: start;
+                font-size: 1.5rem;
+                margin: 0;
+            }
+
+            .rejoindre .erreur {
+                grid-column: 1 / -1;
+            }
+
+            .carte-joueur {
+                flex-direction: row;
+                gap: 1rem;
+                padding: 0.8rem 1.5rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .carte-joueur .pastille {
+                width: 2.6rem;
+                height: 2.6rem;
+            }
+
+            .grand-message {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -288,7 +359,7 @@
 
     <section id="ecranRejoindre" class="ecran">
         <form class="rejoindre" id="formRejoindre" autocomplete="off">
-            <h1 class="tampon">Quatre Coins</h1>
+            <h1 class="tampon">Carré d'As</h1>
             <div class="champ">
                 <label for="champCode">Code affiché sur la TV</label>
                 <input type="text" id="champCode" maxlength="4" inputmode="text" autocapitalize="characters" spellcheck="false">
@@ -316,7 +387,8 @@
     </section>
 
     <section id="ecranBoutons" class="ecran">
-        <div class="bandeau"><span id="numJoueur"></span><span class="droite" id="chronoJoueur"></span></div>
+        <div class="bandeau"><span id="numJoueur"></span></div>
+        <div class="zone-chrono"><span id="chronoJoueur"></span></div>
         <div class="boutons" id="boutons"></div>
     </section>
 
