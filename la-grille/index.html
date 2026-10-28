@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Grille</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --stage: #181829;
+            --ink: #20202f;
+            --ink-soft: #3a3a4a;
+            --cream: #fdf6e9;
+            --card: #fffaf0;
+            --ui-blue: #3498db;
+            --ui-blue-ink: #1b5e82;
+            --ui-red: #ef5b50;
+            --ui-red-ink: #a53125;
+            --ui-yellow: #f1c40f;
+            --ui-yellow-ink: #8a6d0a;
+            --ui-green: #2ecc71;
+            --ui-green-ink: #1f7a3d;
+            --font-display: 'Baloo 2', cursive;
+            --font-body: 'Nunito', 'Segoe UI', Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--stage);
+            color: var(--cream);
+            padding: 24px 20px 60px;
+        }
+
+        .container {
+            text-align: center;
+            width: min(94vw, 1100px);
+            transition: width 0.2s;
+        }
+
+        .container.wide {
+            width: min(97vw, 1900px);
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .hub-link {
+            color: var(--cream);
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 700;
+            padding: 7px 16px;
+            border: 2px solid var(--cream);
+            border-radius: 20px;
+            background: transparent;
+            transition: all 0.2s;
+        }
+
+        .hub-link:hover {
+            background: var(--cream);
+            color: var(--ink);
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 2.6em;
+            font-weight: 800;
+            margin-bottom: 0;
+            color: #ffffff;
+            text-shadow: 5px 5px 0 var(--ui-blue);
+        }
+
+        .container > h1::after {
+            content: '';
+            display: block;
+            width: 160px;
+            height: 6px;
+            margin: 10px auto 14px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #ffffff, var(--ui-blue), var(--ui-red), var(--ui-yellow), var(--ui-green));
+        }
+
+        /* Onglets */
+        .tabs {
+            display: inline-flex;
+            gap: 8px;
+            margin: 0 auto 16px;
+            padding: 6px;
+            background: rgba(0,0,0,0.25);
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+        }
+
+        .tab {
+            background: transparent;
+            color: var(--cream);
+            border: none;
+            padding: 12px 28px;
+            font-family: var(--font-display);
+            font-size: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 700;
+        }
+
+        .tab.active {
+            background: var(--ui-blue);
+            color: var(--ink);
+            box-shadow: 0 3px 0 rgba(0,0,0,0.35);
+        }
+
+        .tab:nth-child(2).active {
+            background: var(--ui-yellow);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(255,255,255,0.12);
+            color: #ffffff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .config-panel {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .config-panel > h2 {
+            font-family: var(--font-display);
+            font-size: 1.7em;
+            text-align: center;
+            margin-bottom: 0;
+            color: var(--cream);
+        }
+
+        .config-panel > h2::after {
+            content: '';
+            display: block;
+            width: 120px;
+            height: 5px;
+            margin: 10px auto 22px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #ffffff, var(--ui-blue), var(--ui-red), var(--ui-yellow), var(--ui-green));
+        }
+
+        .config-section {
+            margin-bottom: 26px;
+            background: var(--card);
+            border: 3px solid var(--ink);
+            border-radius: 14px;
+            box-shadow: 6px 6px 0 rgba(10,10,20,0.45);
+            overflow: hidden;
+        }
+
+        .config-section h3 {
+            font-family: var(--font-display);
+            font-size: 1.25em;
+            padding: 12px 20px;
+            color: var(--ink);
+            border-bottom: 3px solid var(--ink);
+        }
+
+        .config-section--blue h3 { background: var(--ui-blue); }
+        .config-section--yellow h3 { background: var(--ui-yellow); }
+        .config-section--green h3 { background: var(--ui-green); }
+        .config-section--rainbow h3 { background: linear-gradient(90deg, #ffffff, var(--ui-blue), var(--ui-red), var(--ui-yellow), var(--ui-green)); }
+
+        #colorInputsContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 12px;
+        }
+
+        .config-section > *:not(h3) {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .config-section > h3 + * {
+            margin-top: 18px;
+        }
+
+        .config-section > *:last-child {
+            padding-bottom: 20px;
+        }
+
+        .config-row {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .config-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .config-item label {
+            margin-bottom: 6px;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--ink);
+        }
+
+        .config-section--blue .config-item label { color: var(--ui-blue-ink); }
+        .config-section--yellow .config-item label { color: var(--ui-yellow-ink); }
+        .config-section--green .config-item label { color: var(--ui-green-ink); }
+
+        .config-item input {
+            padding: 9px 12px;
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            font-size: 16px;
+            width: 150px;
+            background: #ffffff;
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        .config-item input:focus {
+            outline: none;
+            border-color: var(--ui-blue);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+
+        .color-input-group {
+            display: flex;
+            gap: 15px;
+            padding: 12px;
+            background: #ffffff;
+            border: 2px solid var(--ink);
+            border-radius: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .color-input-group label {
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            min-width: 70px;
+            color: var(--ink-soft);
+        }
+
+        .color-input-group input[type="text"] {
+            padding: 7px 10px;
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 100px;
+            background: #ffffff;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .color-input-group input[type="text"]:focus {
+            outline: none;
+            border-color: var(--ui-red);
+        }
+
+        .color-input-group input[type="color"] {
+            width: 54px;
+            height: 40px;
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .btn {
+            background: var(--ui-blue);
+            color: var(--ink);
+            border: 3px solid var(--ink);
+            padding: 15px 30px;
+            font-family: var(--font-display);
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 8px;
+            box-shadow: 4px 4px 0 rgba(10,10,20,0.45);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 rgba(10,10,20,0.45);
+        }
+
+        .btn:active {
+            transform: translate(0, 0);
+            box-shadow: 2px 2px 0 rgba(10,10,20,0.45);
+        }
+
+        .btn-positive { background: var(--ui-green); }
+        .btn-neutral { background: var(--ui-blue); }
+        .btn-destructive { background: var(--ui-red); }
+        .btn-info { background: var(--ui-yellow); }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+            margin: 5px;
+            border-width: 2px;
+            box-shadow: 3px 3px 0 rgba(10,10,20,0.4);
+        }
+
+        .game-area {
+            display: none;
+        }
+
+        .game-area.active {
+            display: block;
+        }
+
+        .info {
+            background: var(--card);
+            border: 3px solid var(--ink);
+            padding: 12px;
+            border-radius: 14px;
+            margin-bottom: 14px;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--ink);
+            box-shadow: 5px 5px 0 rgba(10,10,20,0.4);
+        }
+
+        #timer {
+            color: var(--ui-red-ink);
+            font-size: 24px;
+        }
+
+        #grid {
+            display: grid;
+            gap: 10px;
+            justify-content: center;
+            background: var(--stage);
+            border: 3px solid var(--ink);
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: 5px 5px 0 rgba(10,10,20,0.4);
+            margin: 0 auto 20px;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(13px, 1.6vw, 24px);
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 3px solid rgba(0,0,0,0.5);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+            color: white;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000,
+                0 0 5px rgba(0,0,0,0.5);
+        }
+
+        .cell.flipped {
+            background: #0e0e1c !important;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .cell.flipped::before {
+            content: attr(data-number);
+            color: white;
+            text-shadow: none;
+            font-size: 24px;
+        }
+
+        .cell:hover {
+            transform: scale(1.06) rotate(-1deg);
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+        }
+
+        .legend {
+            background: var(--card);
+            border: 3px solid var(--ink);
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: 5px 5px 0 rgba(10,10,20,0.4);
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .legend h3 {
+            font-family: var(--font-display);
+            color: var(--ink);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            text-align: left;
+        }
+
+        .legend-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 20px;
+            flex: 0 1 auto;
+            background: #ffffff;
+            border: 2px solid var(--ink);
+            border-radius: 10px;
+        }
+
+        .legend-color {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            border: 2px solid var(--ink);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+        }
+
+        .legend-text {
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .legend-theme {
+            font-weight: 800;
+            color: var(--ink);
+            font-size: 1.05em;
+        }
+
+        .legend-player {
+            color: var(--ink-soft);
+            font-style: italic;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Classement */
+        .ranking-container {
+            background: var(--card);
+            border: 3px solid var(--ink);
+            padding: 28px;
+            border-radius: 18px;
+            box-shadow: 6px 6px 0 rgba(10,10,20,0.45);
+        }
+
+        .ranking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .ranking-header h2 {
+            font-family: var(--font-display);
+            color: var(--ink);
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .ranking-table th {
+            background: var(--ui-blue);
+            color: var(--ink);
+            padding: 15px;
+            text-align: left;
+            font-size: 16px;
+            font-family: var(--font-display);
+        }
+
+        .ranking-table th:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .ranking-table th:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .ranking-table td {
+            padding: 15px;
+            border-bottom: 2px solid rgba(32,32,47,0.1);
+            color: var(--ink);
+        }
+
+        .ranking-table tr:hover {
+            background: rgba(52, 152, 219, 0.08);
+        }
+
+        .rank-medal {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .player-color-badge {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            border: 2px solid var(--ink);
+            vertical-align: middle;
+        }
+
+        .score-controls {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .score-btn {
+            color: var(--ink);
+            border: 2px solid var(--ink);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 800;
+            transition: all 0.15s;
+            box-shadow: 2px 2px 0 rgba(10,10,20,0.35);
+        }
+
+        .score-btn-plus { background: var(--ui-green); }
+        .score-btn-minus { background: var(--ui-red); }
+
+        .score-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 rgba(10,10,20,0.4);
+        }
+
+        .score-display {
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--ink);
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--ui-green);
+            color: var(--ink);
+            font-weight: 800;
+            padding: 15px 25px;
+            border: 3px solid var(--ink);
+            border-radius: 12px;
+            box-shadow: 5px 5px 0 rgba(10,10,20,0.4);
+            animation: slideIn 0.3s, slideOut 0.3s 2.7s;
+            z-index: 1000;
+            max-width: 350px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+
+        #validationMessage {
+            color: var(--ui-red-ink);
+            font-weight: 800;
+            min-height: 20px;
+        }
+
+        .add-points-section {
+            background: #ffffff;
+            border: 2px solid var(--ink);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .add-points-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .add-points-form select,
+        .add-points-form input[type="number"] {
+            padding: 8px 12px;
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            font-size: 14px;
+            background: #ffffff;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        /* Génération de questions */
+        .generation-step {
+            margin: 15px 0 8px;
+            color: var(--ink);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid var(--ink);
+            font-family: var(--font-display);
+            font-size: 14px;
+            flex-shrink: 0;
+            color: var(--ink);
+        }
+
+        .step-badge-1 { background: var(--ui-blue); }
+        .step-badge-2 { background: var(--ui-green); }
+
+        .prompt-textarea, .response-textarea {
+            width: 100%;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            padding: 12px;
+            border: 2px solid var(--ink);
+            border-radius: 10px;
+            resize: vertical;
+            background: #ffffff;
+            color: var(--ink);
+        }
+
+        .prompt-textarea:focus, .response-textarea:focus {
+            outline: none;
+            border-color: var(--ui-blue);
+        }
+
+        .generation-error {
+            white-space: pre-line;
+            color: var(--ui-red-ink);
+            font-weight: 800;
+            margin-top: 10px;
+        }
+
+        #questionPanel h3 {
+            text-align: left;
+            color: var(--ink);
+        }
+
+        #questionPanel p {
+            text-align: left;
+            color: var(--ink);
+        }
+
+        .turn-banner {
+            background: var(--card);
+            border: 3px solid var(--ink);
+            border-left-width: 10px;
+            border-left-color: var(--ui-blue);
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+            box-shadow: 4px 4px 0 rgba(10,10,20,0.4);
+        }
+
+        .question-overlay-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(10,10,20,0.75);
+            z-index: 900;
+        }
+
+        .question-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 901;
+            max-width: 640px;
+            width: 90vw;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .question-overlay .question-text {
+            font-size: 1.45em;
+            line-height: 1.45;
+        }
+
+        .question-meta {
+            font-weight: 800;
+            margin: 8px 0;
+        }
+
+        .game-layout {
+            display: flex;
+            gap: 48px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .game-main {
+            flex: 1 1 auto;
+            max-width: 900px;
+            min-width: 0;
+        }
+
+        .live-scoreboard {
+            width: 380px;
+            flex-shrink: 0;
+            background: var(--card);
+            border: 3px solid var(--ink);
+            border-radius: 16px;
+            padding: 26px;
+            box-shadow: 6px 6px 0 rgba(10,10,20,0.4);
+            position: sticky;
+            top: 20px;
+            text-align: left;
+        }
+
+        .live-scoreboard h3 {
+            font-family: var(--font-display);
+            color: var(--ink);
+            margin-bottom: 18px;
+            font-size: 1.5em;
+        }
+
+        .live-score-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 2px solid rgba(32,32,47,0.1);
+            font-weight: 700;
+            font-size: 1.15em;
+            color: var(--ink);
+        }
+
+        .live-scoreboard .player-color-badge {
+            width: 32px;
+            height: 32px;
+        }
+
+        .live-score-row:last-child {
+            border-bottom: none;
+        }
+
+        .live-score-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-score-rank {
+            font-size: 16px;
+            color: var(--ink-soft);
+            min-width: 20px;
+        }
+
+        @media (max-width: 800px) {
+            .game-layout {
+                flex-direction: column;
+            }
+
+            .live-scoreboard {
+                width: 100%;
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a class="hub-link" href="../index.html">⬅ Hub</a>
+        </div>
+        <h1>🎲 La Grille</h1>
+
+        <!-- Onglets -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('game')">Jeu</button>
+            <button class="tab" onclick="switchTab('ranking')">🏆 Classement</button>
+        </div>
+
+        <!-- Onglet Jeu -->
+        <div id="gameTab" class="tab-content active">
+            <!-- Panel de configuration -->
+            <div class="config-panel" id="configPanel">
+                <h2>Configuration du jeu</h2>
+
+                <div class="config-section config-section--blue">
+                    <h3>Configuration de la grille</h3>
+                    <div class="config-row">
+                        <div class="config-item">
+                            <label for="nbCases">Nombre de cases</label>
+                            <input type="number" id="nbCases" value="36" min="4" max="100">
+                        </div>
+                        <div class="config-item">
+                            <label for="nbColors">Nombre de joueurs</label>
+                            <input type="number" id="nbColors" value="5" min="2" max="10">
+                        </div>
+                    </div>
+                    <p id="validationMessage"></p>
+                    <p style="font-size: 13px; color: var(--ink-soft);">Un thème "Culture Générale" (ouvert à tous, sans propriétaire) est automatiquement ajouté en plus des thèmes des joueurs. Chaque thème reçoit un tiers de questions faciles, un tiers moyennes et un tiers difficiles, réparties aléatoirement sur la grille.</p>
+                </div>
+
+                <div class="config-section config-section--yellow">
+                    <h3>Durée de mémorisation</h3>
+                    <div class="config-row">
+                        <div class="config-item">
+                            <label for="timerInput">Temps (secondes)</label>
+                            <input type="number" id="timerInput" value="30" min="5" max="300" step="5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-section config-section--rainbow">
+                    <h3>Personnalisation des couleurs et joueurs</h3>
+                    <div id="colorInputsContainer"></div>
+                </div>
+
+                <div class="config-section config-section--green">
+                    <h3>Historique des questions (anti-répétition)</h3>
+                    <p id="historyStats"></p>
+                    <p style="font-size: 13px; color: var(--ink-soft);">L'historique est stocké dans ce navigateur. Utilise Exporter/Importer pour le transporter d'un PC à l'autre.</p>
+                    <div class="controls">
+                        <button class="btn btn-small btn-neutral" onclick="exportHistory()">Exporter</button>
+                        <button class="btn btn-small btn-neutral" onclick="document.getElementById('historyFileInput').click()">Importer</button>
+                        <input type="file" id="historyFileInput" accept="application/json" style="display:none;" onchange="importHistoryFile(this)">
+                        <button class="btn btn-small btn-destructive" onclick="resetHistory()">Réinitialiser</button>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button id="startBtn" class="btn btn-positive">Démarrer le jeu</button>
+                    <button id="previewBtn" class="btn btn-small btn-neutral">👁️ Aperçu de l'interface (sans IA)</button>
+                </div>
+            </div>
+
+            <!-- Panel de génération des questions -->
+            <div class="config-panel" id="generationPanel" style="display:none;">
+                <h2>Génération des questions</h2>
+
+                <p class="generation-step"><span class="step-badge step-badge-1">1</span> Ce prompt a été copié automatiquement dans ton presse-papier. Colle-le dans Claude (claude.ai ou Claude Code) :</p>
+                <textarea id="promptOutput" class="prompt-textarea" readonly rows="10"></textarea>
+                <button class="btn btn-small btn-neutral" onclick="copyPromptAgain()">Recopier le prompt</button>
+
+                <p class="generation-step"><span class="step-badge step-badge-2">2</span> Colle ici la réponse JSON complète renvoyée par l'IA :</p>
+                <textarea id="aiResponseInput" class="response-textarea" rows="10" placeholder="Colle ici la réponse JSON de l'IA..."></textarea>
+
+                <p id="generationError" class="generation-error"></p>
+
+                <div style="text-align: center; margin-top: 15px;">
+                    <button id="importBtn" class="btn btn-positive">Importer et démarrer</button>
+                    <button class="btn btn-small btn-neutral" onclick="cancelGeneration()">Annuler</button>
+                </div>
+            </div>
+
+            <!-- Zone de jeu -->
+            <div class="game-area" id="gameArea">
+                <div class="game-layout">
+                    <div class="game-main">
+                        <div class="info" id="info">Mémorisez les positions ! ⏱️ <span id="timer">30</span>s</div>
+                        <div class="turn-banner" id="turnBanner" style="display:none;"></div>
+                        <div id="grid"></div>
+
+                        <!-- Légende des couleurs -->
+                        <div class="legend" id="legend">
+                            <div class="legend-container" id="legendContainer"></div>
+                        </div>
+
+                        <div class="controls">
+                            <button id="restartBtn" class="btn btn-neutral">Nouvelle grille</button>
+                            <button id="backBtn" class="btn btn-neutral">Configuration</button>
+                        </div>
+                    </div>
+
+                    <!-- Classement en direct -->
+                    <div class="live-scoreboard" id="liveScoreboard">
+                        <h3>🏆 Classement en direct</h3>
+                        <div id="liveScoreboardList"></div>
+                    </div>
+                </div>
+
+                <!-- Panneau de question de la case cliquée (en surimpression) -->
+                <div class="question-overlay-backdrop" id="questionOverlayBackdrop" style="display:none;"></div>
+                <div class="legend question-overlay" id="questionPanel" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Onglet Classement -->
+        <div id="rankingTab" class="tab-content">
+            <div class="ranking-container">
+                <div class="ranking-header">
+                    <h2>🏆 Classement des joueurs</h2>
+                    <button class="btn btn-small btn-destructive" onclick="resetScores()">Réinitialiser les scores</button>
+                </div>
+
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>Rang</th>
+                            <th>Joueur</th>
+                            <th>Thème</th>
+                            <th>Score</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankingTableBody">
+                    </tbody>
+                </table>
+
+                <div class="add-points-section">
+                    <h3 style="font-family: var(--font-display); color: var(--ink); margin-bottom: 12px;">Ajouter des points manuellement</h3>
+                    <div class="add-points-form">
+                        <select id="playerSelect">
+                            <option value="">Choisir un joueur</option>
+                        </select>
+                        <input type="number" id="pointsToAdd" placeholder="Points" value="1" min="-100" max="100">
+                        <button class="btn btn-small btn-positive" onclick="addManualPoints()">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DIFFICULTIES = ['facile', 'moyen', 'difficile'];
+        const DIFFICULTY_POINTS = { facile: 1, moyen: 2, difficile: 3 };
+        const DIFFICULTY_LABELS = { facile: 'Facile', moyen: 'Moyen', difficile: 'Difficile' };
+        const HISTORY_KEY = 'quizQuestionHistory';
+        const CULTURE_GENERALE_NAME = 'Culture Générale';
+        const CULTURE_GENERALE_COLOR = '#FFFFFF';
+
+        let nbCases = 30;
+        let nbColors = 5;
+        let rows, cols;
+        let colors = ['#9b59b6', '#3498db', '#e74c3c', '#f1c40f', '#2ecc71'];
+        let colorNames = ['Violet', 'Bleu', 'Rouge', 'Jaune', 'Vert'];
+        let playerNames = ['Joueur 1', 'Joueur 2', 'Joueur 3', 'Joueur 4', 'Joueur 5'];
+        let playerScores = {};
+        let colorMap = [];
+        let currentRequirements = {};
+        let flippedTime = false;
+        let canFlip = false;
+        let countdownInterval = null;
+        let turnOrder = [];
+        let currentTurnIndex = 0;
+        let gameSessionStarted = false;
+
+        // ===== Scores =====
+
+        function loadScores() {
+            const saved = localStorage.getItem('playerScores');
+            if (saved) {
+                playerScores = JSON.parse(saved);
+            }
+        }
+
+        function saveScores() {
+            localStorage.setItem('playerScores', JSON.stringify(playerScores));
+        }
+
+        function initializeScores() {
+            for (let i = 0; i < nbColors; i++) {
+                const playerName = playerNames[i];
+                if (!(playerName in playerScores)) {
+                    playerScores[playerName] = 0;
+                }
+            }
+            saveScores();
+        }
+
+        // ===== Onglets =====
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            if (tabName === 'game') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('gameTab').classList.add('active');
+            } else if (tabName === 'ranking') {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('rankingTab').classList.add('active');
+                updateRanking();
+            }
+        }
+
+        // ===== Classement =====
+
+        function updateRanking() {
+            const tbody = document.getElementById('rankingTableBody');
+            const select = document.getElementById('playerSelect');
+            tbody.innerHTML = '';
+            select.innerHTML = '<option value="">Choisir un joueur</option>';
+
+            const players = [];
+            for (let i = 0; i < nbColors; i++) {
+                const playerName = playerNames[i];
+                players.push({
+                    name: playerName,
+                    theme: colorNames[i],
+                    color: colors[i],
+                    score: playerScores[playerName] || 0
+                });
+
+                const option = document.createElement('option');
+                option.value = playerName;
+                option.textContent = `${playerName} (${colorNames[i]})`;
+                select.appendChild(option);
+            }
+
+            players.sort((a, b) => b.score - a.score);
+
+            players.forEach((player, index) => {
+                const tr = document.createElement('tr');
+
+                let medal = '';
+                if (index === 0) medal = '🥇';
+                else if (index === 1) medal = '🥈';
+                else if (index === 2) medal = '🥉';
+                else medal = `${index + 1}.`;
+
+                const rankTd = document.createElement('td');
+                const medalSpan = document.createElement('span');
+                medalSpan.className = 'rank-medal';
+                medalSpan.textContent = medal;
+                rankTd.appendChild(medalSpan);
+
+                const nameTd = document.createElement('td');
+                const badge = document.createElement('span');
+                badge.className = 'player-color-badge';
+                badge.style.backgroundColor = player.color;
+                nameTd.appendChild(badge);
+                nameTd.appendChild(document.createTextNode(player.name));
+
+                const themeTd = document.createElement('td');
+                themeTd.textContent = player.theme;
+
+                const scoreTd = document.createElement('td');
+                const scoreControls = document.createElement('div');
+                scoreControls.className = 'score-controls';
+                const minusBtn = document.createElement('button');
+                minusBtn.className = 'score-btn score-btn-minus';
+                minusBtn.textContent = '-';
+                minusBtn.addEventListener('click', () => changeScore(player.name, -1));
+                const scoreSpan = document.createElement('span');
+                scoreSpan.className = 'score-display';
+                scoreSpan.textContent = player.score;
+                const plusBtn = document.createElement('button');
+                plusBtn.className = 'score-btn score-btn-plus';
+                plusBtn.textContent = '+';
+                plusBtn.addEventListener('click', () => changeScore(player.name, 1));
+                scoreControls.appendChild(minusBtn);
+                scoreControls.appendChild(scoreSpan);
+                scoreControls.appendChild(plusBtn);
+                scoreTd.appendChild(scoreControls);
+
+                const actionsTd = document.createElement('td');
+                const resetBtn = document.createElement('button');
+                resetBtn.className = 'btn btn-small btn-destructive';
+                resetBtn.textContent = 'Réinitialiser';
+                resetBtn.addEventListener('click', () => resetPlayerScore(player.name));
+                actionsTd.appendChild(resetBtn);
+
+                tr.appendChild(rankTd);
+                tr.appendChild(nameTd);
+                tr.appendChild(themeTd);
+                tr.appendChild(scoreTd);
+                tr.appendChild(actionsTd);
+                tbody.appendChild(tr);
+            });
+        }
+
+        function changeScore(playerName, delta) {
+            playerScores[playerName] = (playerScores[playerName] || 0) + delta;
+            if (playerScores[playerName] < 0) playerScores[playerName] = 0;
+            saveScores();
+            updateRanking();
+            updateLiveScoreboard();
+            showNotification(`${delta > 0 ? '➕' : '➖'} ${Math.abs(delta)} point(s) pour ${playerName}`);
+        }
+
+        function updateLiveScoreboard() {
+            const list = document.getElementById('liveScoreboardList');
+            if (!list) return;
+            list.innerHTML = '';
+
+            const players = [];
+            for (let i = 0; i < nbColors; i++) {
+                const playerName = playerNames[i];
+                players.push({ name: playerName, color: colors[i], score: playerScores[playerName] || 0 });
+            }
+            players.sort((a, b) => b.score - a.score);
+
+            players.forEach((player, index) => {
+                const row = document.createElement('div');
+                row.className = 'live-score-row';
+
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'live-score-name';
+
+                const rankSpan = document.createElement('span');
+                rankSpan.className = 'live-score-rank';
+                rankSpan.textContent = `${index + 1}.`;
+
+                const badge = document.createElement('span');
+                badge.className = 'player-color-badge';
+                badge.style.backgroundColor = player.color;
+
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = player.name;
+
+                nameDiv.appendChild(rankSpan);
+                nameDiv.appendChild(badge);
+                nameDiv.appendChild(nameSpan);
+
+                const scoreSpan = document.createElement('span');
+                scoreSpan.textContent = player.score;
+
+                row.appendChild(nameDiv);
+                row.appendChild(scoreSpan);
+                list.appendChild(row);
+            });
+        }
+
+        function resetPlayerScore(playerName) {
+            if (confirm(`Voulez-vous vraiment réinitialiser le score de ${playerName} ?`)) {
+                playerScores[playerName] = 0;
+                saveScores();
+                updateRanking();
+                updateLiveScoreboard();
+                showNotification(`Score de ${playerName} réinitialisé`);
+            }
+        }
+
+        function resetScores() {
+            if (confirm('Voulez-vous vraiment réinitialiser tous les scores ?')) {
+                playerScores = {};
+                initializeScores();
+                updateRanking();
+                updateLiveScoreboard();
+                showNotification('Tous les scores ont été réinitialisés');
+            }
+        }
+
+        function addManualPoints() {
+            const playerName = document.getElementById('playerSelect').value;
+            const points = parseInt(document.getElementById('pointsToAdd').value);
+
+            if (!playerName) {
+                alert('Veuillez choisir un joueur');
+                return;
+            }
+
+            if (isNaN(points)) {
+                alert('Veuillez entrer un nombre de points valide');
+                return;
+            }
+
+            changeScore(playerName, points);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ===== Config couleurs / joueurs =====
+
+        function initColorInputs() {
+            const container = document.getElementById('colorInputsContainer');
+            const nbColorsInput = parseInt(document.getElementById('nbColors').value);
+            container.innerHTML = '';
+
+            while (colors.length < nbColorsInput) {
+                colors.push('#' + Math.floor(Math.random()*16777215).toString(16));
+                colorNames.push(`Couleur ${colors.length}`);
+                playerNames.push(`Joueur ${playerNames.length + 1}`);
+            }
+
+            for (let i = 0; i < nbColorsInput; i++) {
+                const group = document.createElement('div');
+                group.className = 'color-input-group';
+
+                const colorInput = document.createElement('input');
+                colorInput.type = 'color';
+                colorInput.id = `color${i}`;
+                colorInput.value = colors[i] || '#000000';
+
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.id = `colorName${i}`;
+                nameInput.value = colorNames[i] || `Couleur ${i + 1}`;
+                nameInput.placeholder = 'Nom du thème';
+
+                const playerInput = document.createElement('input');
+                playerInput.type = 'text';
+                playerInput.id = `playerName${i}`;
+                playerInput.value = playerNames[i] || `Joueur ${i + 1}`;
+                playerInput.placeholder = 'Nom du joueur';
+
+                const label1 = document.createElement('label');
+                label1.textContent = 'Couleur:';
+
+                const label2 = document.createElement('label');
+                label2.textContent = 'Thème:';
+
+                const label3 = document.createElement('label');
+                label3.textContent = 'Joueur:';
+
+                group.appendChild(label1);
+                group.appendChild(colorInput);
+                group.appendChild(label2);
+                group.appendChild(nameInput);
+                group.appendChild(label3);
+                group.appendChild(playerInput);
+                container.appendChild(group);
+            }
+        }
+
+        function readColorsFromInputs() {
+            colors = [];
+            colorNames = [];
+            playerNames = [];
+            for (let i = 0; i < nbColors; i++) {
+                colors.push(document.getElementById(`color${i}`).value);
+                colorNames.push(document.getElementById(`colorName${i}`).value || `Couleur ${i + 1}`);
+                playerNames.push(document.getElementById(`playerName${i}`).value || `Joueur ${i + 1}`);
+            }
+        }
+
+        function createLegend() {
+            const legendContainer = document.getElementById('legendContainer');
+            legendContainer.innerHTML = '';
+
+            for (let i = 0; i < nbColors; i++) {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+
+                const colorBox = document.createElement('div');
+                colorBox.className = 'legend-color';
+                colorBox.style.backgroundColor = colors[i];
+
+                const textDiv = document.createElement('div');
+                textDiv.className = 'legend-text';
+
+                const theme = document.createElement('div');
+                theme.className = 'legend-theme';
+                theme.textContent = colorNames[i];
+
+                const player = document.createElement('div');
+                player.className = 'legend-player';
+                player.textContent = playerNames[i];
+
+                textDiv.appendChild(theme);
+                textDiv.appendChild(player);
+
+                item.appendChild(colorBox);
+                item.appendChild(textDiv);
+                legendContainer.appendChild(item);
+            }
+
+            const generalItem = document.createElement('div');
+            generalItem.className = 'legend-item';
+
+            const generalColorBox = document.createElement('div');
+            generalColorBox.className = 'legend-color';
+            generalColorBox.style.backgroundColor = CULTURE_GENERALE_COLOR;
+
+            const generalTextDiv = document.createElement('div');
+            generalTextDiv.className = 'legend-text';
+
+            const generalTheme = document.createElement('div');
+            generalTheme.className = 'legend-theme';
+            generalTheme.textContent = CULTURE_GENERALE_NAME;
+
+            const generalPlayer = document.createElement('div');
+            generalPlayer.className = 'legend-player';
+            generalPlayer.textContent = 'Tous les joueurs';
+
+            generalTextDiv.appendChild(generalTheme);
+            generalTextDiv.appendChild(generalPlayer);
+
+            generalItem.appendChild(generalColorBox);
+            generalItem.appendChild(generalTextDiv);
+            legendContainer.appendChild(generalItem);
+        }
+
+        // ===== Grille =====
+
+        function calculateGridDimensions(n) {
+            let bestRows = 1;
+            let bestCols = n;
+            let minDiff = Math.abs(bestRows - bestCols);
+
+            for (let r = 1; r <= Math.sqrt(n); r++) {
+                if (n % r === 0) {
+                    let c = n / r;
+                    let diff = Math.abs(r - c);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        bestRows = r;
+                        bestCols = c;
+                    }
+                }
+            }
+
+            return { rows: bestRows, cols: bestCols };
+        }
+
+        function nearestValidCaseCount(value, totalThemes) {
+            const multiple = totalThemes * 3;
+            const maxMultiple = Math.max(multiple, Math.floor(100 / multiple) * multiple);
+            let lower = Math.floor(value / multiple) * multiple;
+            lower = Math.min(Math.max(lower, multiple), maxMultiple);
+            const upper = Math.min(lower + multiple, maxMultiple);
+            return (Math.abs(value - lower) <= Math.abs(upper - value)) ? lower : upper;
+        }
+
+        function validateConfig() {
+            nbCases = parseInt(document.getElementById('nbCases').value);
+            nbColors = parseInt(document.getElementById('nbColors').value);
+
+            const message = document.getElementById('validationMessage');
+            message.style.color = '';
+
+            if (nbCases < 4 || nbCases > 100) {
+                message.textContent = '⚠️ Le nombre de cases doit être entre 4 et 100';
+                return false;
+            }
+
+            if (nbColors < 2 || nbColors > 10) {
+                message.textContent = '⚠️ Le nombre de joueurs doit être entre 2 et 10';
+                return false;
+            }
+
+            const totalThemes = nbColors + 1;
+            const requiredMultiple = totalThemes * 3;
+            if (nbCases % requiredMultiple !== 0) {
+                const adjusted = nearestValidCaseCount(nbCases, totalThemes);
+                nbCases = adjusted;
+                document.getElementById('nbCases').value = adjusted;
+                message.style.color = 'var(--ui-blue-ink)';
+                message.textContent = `ℹ️ Nombre de cases ajusté à ${adjusted} pour répartir également ${totalThemes} thèmes (${nbColors} joueur(s) + Culture Générale) avec un tiers facile/moyen/difficile par thème.`;
+                showNotification(`🔧 Nombre de cases ajusté automatiquement à ${adjusted}`);
+            } else {
+                message.textContent = '';
+            }
+
+            return true;
+        }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function assignDifficulties(n) {
+            const base = Math.floor(n / 3);
+            const rem = n % 3;
+            const counts = [base, base, base];
+            for (let i = 0; i < rem; i++) counts[i]++;
+            let arr = [];
+            DIFFICULTIES.forEach((d, i) => {
+                for (let k = 0; k < counts[i]; k++) arr.push(d);
+            });
+            return shuffleArray(arr);
+        }
+
+        function createGrid() {
+            readColorsFromInputs();
+
+            const dimensions = calculateGridDimensions(nbCases);
+            rows = dimensions.rows;
+            cols = dimensions.cols;
+
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            grid.style.gridTemplateColumns = `repeat(${cols}, clamp(34px, 6vw, 100px))`;
+
+            const totalThemes = nbColors + 1;
+            const casesPerColor = nbCases / totalThemes;
+            let allColors = [];
+
+            for (let i = 0; i < nbColors; i++) {
+                const themeDifficulties = assignDifficulties(casesPerColor);
+                for (let j = 0; j < casesPerColor; j++) {
+                    allColors.push({
+                        color: colors[i],
+                        name: colorNames[i],
+                        player: playerNames[i],
+                        isGeneral: false,
+                        difficulty: themeDifficulties[j]
+                    });
+                }
+            }
+
+            const generalDifficulties = assignDifficulties(casesPerColor);
+            for (let j = 0; j < casesPerColor; j++) {
+                allColors.push({
+                    color: CULTURE_GENERALE_COLOR,
+                    name: CULTURE_GENERALE_NAME,
+                    player: null,
+                    isGeneral: true,
+                    difficulty: generalDifficulties[j]
+                });
+            }
+
+            shuffleArray(allColors);
+
+            colorMap = allColors;
+
+            for (let i = 0; i < nbCases; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.color = allColors[i].color;
+                cell.dataset.colorName = allColors[i].name;
+                cell.dataset.player = allColors[i].player || '';
+                cell.dataset.isGeneral = allColors[i].isGeneral ? 'true' : 'false';
+                cell.dataset.difficulty = allColors[i].difficulty;
+                cell.dataset.number = i + 1;
+                cell.style.backgroundColor = allColors[i].color;
+                cell.textContent = i + 1;
+                grid.appendChild(cell);
+            }
+
+            createLegend();
+        }
+
+        function flipAllCells() {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.classList.add('flipped');
+                cell.textContent = '';
+            });
+            flippedTime = true;
+            canFlip = true;
+            document.getElementById('info').textContent = '🎯 Cliquez sur les cases pour révéler les questions !';
+            startTurnOrder();
+            document.getElementById('turnBanner').style.display = 'block';
+        }
+
+        // ===== Ordre de jeu =====
+
+        function startTurnOrder() {
+            turnOrder = playerNames.slice(0, nbColors);
+            currentTurnIndex = 0;
+            updateTurnBanner();
+        }
+
+        function currentTurnPlayer() {
+            return turnOrder[currentTurnIndex];
+        }
+
+        function advanceTurn() {
+            currentTurnIndex = (currentTurnIndex + 1) % turnOrder.length;
+            updateTurnBanner();
+        }
+
+        function updateTurnBanner() {
+            const banner = document.getElementById('turnBanner');
+            if (!banner) return;
+            const player = currentTurnPlayer();
+            const idx = playerNames.indexOf(player);
+            const color = idx !== -1 ? colors[idx] : '#3498db';
+            banner.style.borderLeftColor = color;
+            banner.textContent = `🎯 Au tour de : ${player}`;
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('cell') && canFlip) {
+                e.target.classList.remove('flipped');
+                const number = e.target.dataset.number;
+                e.target.textContent = number;
+                if (e.target.dataset.answered !== 'true') {
+                    e.target.dataset.answered = 'true';
+                    showQuestionPanel(e.target);
+                }
+            }
+        });
+
+        function showQuestionPanel(cellEl) {
+            const panel = document.getElementById('questionPanel');
+            const backdrop = document.getElementById('questionOverlayBackdrop');
+            panel.innerHTML = '';
+            panel.style.display = 'block';
+            backdrop.style.display = 'block';
+
+            const difficulty = cellEl.dataset.difficulty;
+            const isGeneral = cellEl.dataset.isGeneral === 'true';
+            const basePoints = DIFFICULTY_POINTS[difficulty] || 1;
+            const turnPlayer = currentTurnPlayer();
+            const isOwnTheme = !isGeneral && cellEl.dataset.player === turnPlayer;
+            const bonus = (!isGeneral && !isOwnTheme) ? 1 : 0;
+            const totalPoints = basePoints + bonus;
+
+            const title = document.createElement('h3');
+            const themeLabel = isGeneral ? 'Culture Générale (ouvert à tous)' : `${cellEl.dataset.colorName} (thème de ${cellEl.dataset.player})`;
+            title.textContent = `❓ Case ${cellEl.dataset.number} — ${themeLabel}`;
+            panel.appendChild(title);
+
+            const meta = document.createElement('p');
+            meta.className = 'question-meta';
+            meta.textContent = `Difficulté : ${DIFFICULTY_LABELS[difficulty] || difficulty} — Au tour de : ${turnPlayer} — Bonne réponse = ${totalPoints} pt${totalPoints > 1 ? 's' : ''}${bonus > 0 ? ' (dont +1 bonus hors thème)' : ''}`;
+            panel.appendChild(meta);
+
+            const q = document.createElement('p');
+            q.className = 'question-text';
+            q.style.margin = '12px 0';
+            q.style.fontWeight = 'bold';
+            q.textContent = cellEl.dataset.question || '(Aucune question associée à cette case)';
+            panel.appendChild(q);
+
+            const answerP = document.createElement('p');
+            answerP.style.display = 'none';
+            answerP.style.color = 'var(--ui-blue-ink)';
+            answerP.style.fontWeight = 'bold';
+            answerP.style.marginBottom = '12px';
+            answerP.textContent = cellEl.dataset.reponse || '';
+            panel.appendChild(answerP);
+
+            const showBtn = document.createElement('button');
+            showBtn.className = 'btn btn-small btn-info';
+            showBtn.textContent = '👁️ Afficher la réponse';
+            showBtn.addEventListener('click', () => {
+                answerP.style.display = answerP.style.display === 'none' ? 'block' : 'none';
+            });
+            panel.appendChild(showBtn);
+
+            const actionsDiv = document.createElement('div');
+            actionsDiv.style.marginTop = '14px';
+            actionsDiv.style.display = 'flex';
+            actionsDiv.style.gap = '10px';
+            actionsDiv.style.flexWrap = 'wrap';
+
+            const correctBtn = document.createElement('button');
+            correctBtn.className = 'btn btn-small btn-positive';
+            correctBtn.textContent = `✅ Bonne réponse (+${totalPoints})`;
+
+            const wrongBtn = document.createElement('button');
+            wrongBtn.className = 'btn btn-small btn-destructive';
+            wrongBtn.textContent = '❌ Mauvaise réponse (0)';
+
+            function resolveTurn(pointsAwarded) {
+                correctBtn.disabled = true;
+                wrongBtn.disabled = true;
+                correctBtn.style.opacity = '0.5';
+                wrongBtn.style.opacity = '0.5';
+                if (pointsAwarded > 0) {
+                    changeScore(turnPlayer, pointsAwarded);
+                }
+                advanceTurn();
+                setTimeout(() => {
+                    panel.style.display = 'none';
+                    backdrop.style.display = 'none';
+                }, 400);
+            }
+
+            correctBtn.addEventListener('click', () => resolveTurn(totalPoints));
+            wrongBtn.addEventListener('click', () => resolveTurn(0));
+
+            actionsDiv.appendChild(correctBtn);
+            actionsDiv.appendChild(wrongBtn);
+            panel.appendChild(actionsDiv);
+        }
+
+        // ===== Historique des questions (anti-répétition) =====
+
+        function themeKey(name) {
+            return (name || '').toString().trim().toLowerCase().replace(/\s+/g, ' ');
+        }
+
+        function normalizeQuestionText(s) {
+            return (s || '').toString().trim().toLowerCase().replace(/\s+/g, ' ');
+        }
+
+        function loadHistory() {
+            try {
+                return JSON.parse(localStorage.getItem(HISTORY_KEY)) || {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveHistory(history) {
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+        }
+
+        function getHistoryStats(history) {
+            let total = 0;
+            Object.values(history).forEach(byDiff => {
+                DIFFICULTIES.forEach(d => { total += (byDiff[d] || []).length; });
+            });
+            return total;
+        }
+
+        function updateHistoryStats() {
+            const el = document.getElementById('historyStats');
+            if (!el) return;
+            const total = getHistoryStats(loadHistory());
+            el.textContent = `${total} question(s) déjà utilisée(s) au total (tous thèmes confondus).`;
+        }
+
+        function exportHistory() {
+            const data = JSON.stringify(loadHistory(), null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const date = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `historique-questions-${date}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('💾 Historique exporté');
+        }
+
+        function mergeHistories(a, b) {
+            const merged = JSON.parse(JSON.stringify(a));
+            Object.keys(b || {}).forEach(tKey => {
+                if (!merged[tKey]) merged[tKey] = { facile: [], moyen: [], difficile: [] };
+                DIFFICULTIES.forEach(d => {
+                    merged[tKey][d] = merged[tKey][d] || [];
+                    const existingNorm = new Set(merged[tKey][d].map(q => normalizeQuestionText(q.question)));
+                    (b[tKey][d] || []).forEach(entry => {
+                        const norm = normalizeQuestionText(entry.question);
+                        if (!existingNorm.has(norm)) {
+                            merged[tKey][d].push(entry);
+                            existingNorm.add(norm);
+                        }
+                    });
+                });
+            });
+            return merged;
+        }
+
+        function importHistoryFile(fileInput) {
+            const file = fileInput.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    const current = loadHistory();
+                    const merged = mergeHistories(current, imported);
+                    saveHistory(merged);
+                    updateHistoryStats();
+                    showNotification('📂 Historique importé et fusionné avec succès');
+                } catch (err) {
+                    alert("⚠️ Fichier invalide : impossible d'importer l'historique.\n" + err.message);
+                }
+            };
+            reader.readAsText(file);
+            fileInput.value = '';
+        }
+
+        function resetHistory() {
+            if (confirm("Voulez-vous vraiment effacer tout l'historique des questions déjà posées ? Cette action est irréversible.")) {
+                localStorage.removeItem(HISTORY_KEY);
+                updateHistoryStats();
+                showNotification('🗑️ Historique des questions réinitialisé');
+            }
+        }
+
+        // ===== Génération des questions (prompt + import) =====
+
+        function computeRequirements(colorMapArg) {
+            const req = {};
+            colorMapArg.forEach(c => {
+                if (!req[c.name]) req[c.name] = { facile: 0, moyen: 0, difficile: 0 };
+                req[c.name][c.difficulty]++;
+            });
+            return req;
+        }
+
+        function buildPrompt(requirements, history) {
+            let lines = [];
+            lines.push("Tu es un générateur de questions de quiz pour un jeu de plateau entre joueurs.");
+            lines.push("");
+            lines.push("EXIGENCE ABSOLUE : L'EXACTITUDE FACTUELLE PASSE AVANT TOUT AUTRE CRITÈRE.");
+            lines.push("- Si tu as accès à la recherche web, UTILISE-LA pour vérifier chaque fait (dates, noms, chiffres) avant de l'inclure. Ne te fie pas uniquement à ta mémoire.");
+            lines.push("- Pour CHAQUE question, avant de la finaliser, relis-la et demande-toi : \"Suis-je certain à 100% que cette réponse est exacte et non ambiguë ?\". Si le moindre doute existe, ABANDONNE cette question et remplace-la par une autre dont tu es pleinement certain.");
+            lines.push("- Préfère systématiquement des faits largement documentés et consensuels plutôt que des détails obscurs, des chiffres qui varient selon les sources, ou des records/dates disputés.");
+            lines.push("- N'invente JAMAIS un fait, un chiffre ou un nom pour combler une question : il vaut mieux choisir un sujet légèrement différent mais vérifié dans le même thème.");
+            lines.push("- La réponse doit être courte, unique et sans ambiguïté (pas de \"cela dépend\" ni de formulation approximative).");
+            lines.push("- Il vaut mieux une question facile mais garantie vraie qu'une question difficile potentiellement fausse.");
+            lines.push("");
+            lines.push("Pour chaque thème ci-dessous, génère EXACTEMENT le nombre de questions demandé, pour chaque niveau de difficulté :");
+            lines.push("");
+
+            Object.keys(requirements).forEach(theme => {
+                const req = requirements[theme];
+                const parts = DIFFICULTIES.filter(d => req[d] > 0).map(d => `${req[d]} question(s) niveau "${d}"`);
+                if (parts.length > 0) {
+                    lines.push(`- Thème "${theme}" : ${parts.join(', ')}`);
+                }
+            });
+
+            lines.push("");
+            lines.push('Niveaux de difficulté : "facile" = grand public, "moyen" = bonne culture générale sur le sujet, "difficile" = réservé aux connaisseurs/passionnés du sujet.');
+
+            const exclusionLines = [];
+            Object.keys(requirements).forEach(theme => {
+                const key = themeKey(theme);
+                const hist = history[key];
+                if (hist) {
+                    DIFFICULTIES.forEach(d => {
+                        (hist[d] || []).forEach(entry => {
+                            exclusionLines.push(`- [${theme} / ${d}] ${entry.question}`);
+                        });
+                    });
+                }
+            });
+
+            if (exclusionLines.length > 0) {
+                lines.push("");
+                lines.push("IMPORTANT : ces questions ont déjà été posées lors de parties précédentes. NE LES RÉUTILISE PAS et ne pose pas de question trop similaire :");
+                lines.push(...exclusionLines);
+            }
+
+            lines.push("");
+            lines.push("Avant d'envoyer ta réponse finale, relis une dernière fois chaque question/réponse une par une pour repérer toute erreur factuelle, puis corrige-la ou remplace la question si besoin.");
+            lines.push("");
+            lines.push("Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant/après, sans balises markdown, exactement dans ce format :");
+            lines.push('[');
+            lines.push('  {"theme": "Nom du thème exact", "difficulte": "facile", "question": "...", "reponse": "..."},');
+            lines.push('  ...');
+            lines.push(']');
+
+            return lines.join("\n");
+        }
+
+        async function copyPromptAgain() {
+            const text = document.getElementById('promptOutput').value;
+            try {
+                await navigator.clipboard.writeText(text);
+                showNotification('📋 Prompt recopié dans le presse-papier');
+            } catch (e) {
+                showNotification('⚠️ Copie automatique impossible, sélectionne le texte manuellement');
+            }
+        }
+
+        function parseAiResponse(rawText) {
+            let text = rawText.trim();
+            text = text.replace(/^```(json)?/i, '').replace(/```$/, '').trim();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                const match = text.match(/\[[\s\S]*\]/);
+                if (!match) {
+                    throw new Error("Impossible de trouver un tableau JSON valide dans le texte collé. Vérifie que tu as bien copié toute la réponse de l'IA.");
+                }
+                try {
+                    data = JSON.parse(match[0]);
+                } catch (e2) {
+                    throw new Error("Le JSON collé est mal formé. Vérifie que rien n'a été coupé lors du copier-coller.");
+                }
+            }
+            if (!Array.isArray(data)) {
+                throw new Error("La réponse doit être un tableau JSON de questions.");
+            }
+            return data;
+        }
+
+        function validateAndAssignQuestions(rawText, requirements, colorMapArg) {
+            const data = parseAiResponse(rawText);
+            const history = loadHistory();
+            const validDifficulties = new Set(DIFFICULTIES);
+
+            const requiredThemeKeys = {};
+            Object.keys(requirements).forEach(theme => { requiredThemeKeys[themeKey(theme)] = theme; });
+
+            const buckets = {};
+            let malformedCount = 0;
+            let unknownThemeCount = 0;
+
+            data.forEach(item => {
+                if (!item || typeof item.theme !== 'string' || typeof item.difficulte !== 'string' ||
+                    typeof item.question !== 'string' || typeof item.reponse !== 'string' ||
+                    !item.question.trim() || !item.reponse.trim()) {
+                    malformedCount++;
+                    return;
+                }
+                const diff = item.difficulte.trim().toLowerCase();
+                if (!validDifficulties.has(diff)) {
+                    malformedCount++;
+                    return;
+                }
+                const tKey = themeKey(item.theme);
+                if (!requiredThemeKeys[tKey]) {
+                    unknownThemeCount++;
+                    return;
+                }
+                buckets[tKey] = buckets[tKey] || { facile: [], moyen: [], difficile: [] };
+                buckets[tKey][diff].push({ question: item.question.trim(), reponse: item.reponse.trim() });
+            });
+
+            let droppedDuplicateBatch = 0;
+            let droppedDuplicateHistory = 0;
+            const finalBuckets = {};
+
+            Object.keys(buckets).forEach(tKey => {
+                finalBuckets[tKey] = {};
+                DIFFICULTIES.forEach(d => {
+                    const seen = new Set();
+                    const histSet = new Set(((history[tKey] && history[tKey][d]) || []).map(e => normalizeQuestionText(e.question)));
+                    const filtered = [];
+                    buckets[tKey][d].forEach(entry => {
+                        const norm = normalizeQuestionText(entry.question);
+                        if (seen.has(norm)) { droppedDuplicateBatch++; return; }
+                        if (histSet.has(norm)) { droppedDuplicateHistory++; return; }
+                        seen.add(norm);
+                        filtered.push(entry);
+                    });
+                    finalBuckets[tKey][d] = filtered;
+                });
+            });
+
+            const missing = [];
+            Object.keys(requirements).forEach(theme => {
+                const tKey = themeKey(theme);
+                const req = requirements[theme];
+                DIFFICULTIES.forEach(d => {
+                    const need = req[d] || 0;
+                    if (need === 0) return;
+                    const have = ((finalBuckets[tKey] && finalBuckets[tKey][d]) || []).length;
+                    if (have < need) {
+                        missing.push(`- "${theme}" (${d}) : ${have}/${need} question(s) valable(s)`);
+                    }
+                });
+            });
+
+            if (missing.length > 0) {
+                let msg = "⚠️ Pas assez de questions valables et uniques :\n" + missing.join("\n");
+                if (droppedDuplicateHistory > 0) msg += `\n\n(${droppedDuplicateHistory} question(s) ignorée(s) car déjà posée(s) précédemment)`;
+                if (droppedDuplicateBatch > 0) msg += `\n(${droppedDuplicateBatch} doublon(s) dans la réponse collée)`;
+                if (malformedCount > 0) msg += `\n(${malformedCount} entrée(s) mal formée(s) ignorée(s))`;
+                if (unknownThemeCount > 0) msg += `\n(${unknownThemeCount} entrée(s) avec un thème non reconnu ignorée(s))`;
+                msg += "\n\nRegénère le prompt (bouton ci-dessus) en demandant explicitement plus de questions, ou colle une réponse complémentaire.";
+                throw new Error(msg);
+            }
+
+            const assignments = {};
+            Object.keys(finalBuckets).forEach(tKey => {
+                assignments[tKey] = {};
+                DIFFICULTIES.forEach(d => {
+                    assignments[tKey][d] = shuffleArray(finalBuckets[tKey][d].slice());
+                });
+            });
+
+            const usedForHistory = {};
+            colorMapArg.forEach(cell => {
+                const tKey = themeKey(cell.name);
+                const queue = assignments[tKey][cell.difficulty];
+                const entry = queue.shift();
+                cell.question = entry.question;
+                cell.reponse = entry.reponse;
+                usedForHistory[tKey] = usedForHistory[tKey] || { facile: [], moyen: [], difficile: [] };
+                usedForHistory[tKey][cell.difficulty].push({ question: entry.question, reponse: entry.reponse });
+            });
+
+            Object.keys(usedForHistory).forEach(tKey => {
+                history[tKey] = history[tKey] || { facile: [], moyen: [], difficile: [] };
+                DIFFICULTIES.forEach(d => {
+                    history[tKey][d] = (history[tKey][d] || []).concat(usedForHistory[tKey][d]);
+                });
+            });
+            saveHistory(history);
+
+            return { droppedDuplicateBatch, droppedDuplicateHistory, malformedCount, unknownThemeCount };
+        }
+
+        function onImportQuestions() {
+            const textarea = document.getElementById('aiResponseInput');
+            const errorBox = document.getElementById('generationError');
+            errorBox.textContent = '';
+
+            try {
+                const result = validateAndAssignQuestions(textarea.value, currentRequirements, colorMap);
+
+                const cells = document.querySelectorAll('#grid .cell');
+                cells.forEach((cellEl, i) => {
+                    cellEl.dataset.question = colorMap[i].question;
+                    cellEl.dataset.reponse = colorMap[i].reponse;
+                });
+
+                const ignored = result.droppedDuplicateBatch + result.droppedDuplicateHistory + result.malformedCount + result.unknownThemeCount;
+                showNotification('✅ Questions importées avec succès' + (ignored > 0 ? ` (${ignored} entrée(s) ignorée(s))` : ''));
+                updateHistoryStats();
+                launchGameArea();
+            } catch (err) {
+                errorBox.textContent = err.message;
+            }
+        }
+
+        function cancelGeneration() {
+            document.getElementById('generationPanel').style.display = 'none';
+            document.getElementById('configPanel').style.display = 'block';
+        }
+
+        // ===== Démarrage / cycle de jeu =====
+
+        async function startGame() {
+            if (!validateConfig()) return;
+
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+
+            if (!gameSessionStarted) {
+                playerScores = {};
+                gameSessionStarted = true;
+            }
+
+            createGrid();
+            initializeScores();
+
+            currentRequirements = computeRequirements(colorMap);
+            const promptText = buildPrompt(currentRequirements, loadHistory());
+
+            document.getElementById('promptOutput').value = promptText;
+            document.getElementById('aiResponseInput').value = '';
+            document.getElementById('generationError').textContent = '';
+
+            try {
+                await navigator.clipboard.writeText(promptText);
+                showNotification('📋 Prompt copié — colle-le dans Claude !');
+            } catch (e) {
+                showNotification('⚠️ Copie automatique impossible, copie le prompt manuellement');
+            }
+
+            document.getElementById('configPanel').style.display = 'none';
+            document.getElementById('generationPanel').style.display = 'block';
+        }
+
+        function launchGameArea() {
+            document.getElementById('generationPanel').style.display = 'none';
+            document.getElementById('gameArea').classList.add('active');
+            document.querySelector('.container').classList.add('wide');
+
+            const questionPanel = document.getElementById('questionPanel');
+            questionPanel.style.display = 'none';
+            questionPanel.innerHTML = '';
+            document.getElementById('questionOverlayBackdrop').style.display = 'none';
+            document.getElementById('turnBanner').style.display = 'none';
+            updateLiveScoreboard();
+
+            let timeLeft = parseInt(document.getElementById('timerInput').value) || 30;
+            document.getElementById('info').innerHTML = `Mémorisez les positions ! ⏱️ <span id="timer">${timeLeft}</span>s`;
+
+            flippedTime = false;
+            canFlip = false;
+
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    flipAllCells();
+                }
+            }, 1000);
+        }
+
+        function restart() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            flippedTime = false;
+            canFlip = false;
+            document.getElementById('gameArea').classList.remove('active');
+            startGame();
+        }
+
+        function backToConfig() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            document.getElementById('configPanel').style.display = 'block';
+            document.getElementById('gameArea').classList.remove('active');
+            document.querySelector('.container').classList.remove('wide');
+            canFlip = false;
+            flippedTime = false;
+        }
+
+        // ===== Aperçu sans IA (pour visualiser l'interface rapidement) =====
+
+        function previewGame() {
+            if (!validateConfig()) return;
+
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+
+            createGrid();
+            initializeScores();
+
+            colorMap.forEach(cell => {
+                cell.question = `Exemple de question (${DIFFICULTY_LABELS[cell.difficulty] || cell.difficulty})`;
+                cell.reponse = 'Exemple de réponse';
+            });
+
+            document.querySelectorAll('#grid .cell').forEach((cellEl, i) => {
+                cellEl.dataset.question = colorMap[i].question;
+                cellEl.dataset.reponse = colorMap[i].reponse;
+            });
+
+            document.getElementById('configPanel').style.display = 'none';
+            document.getElementById('generationPanel').style.display = 'none';
+            document.getElementById('gameArea').classList.add('active');
+            document.querySelector('.container').classList.add('wide');
+
+            document.getElementById('questionPanel').style.display = 'none';
+            document.getElementById('questionPanel').innerHTML = '';
+            document.getElementById('questionOverlayBackdrop').style.display = 'none';
+
+            updateLiveScoreboard();
+            flipAllCells();
+            document.getElementById('info').textContent = '👁️ Mode aperçu — questions factices, aucun appel IA';
+        }
+
+        document.getElementById('nbColors').addEventListener('input', initColorInputs);
+
+        document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('previewBtn').addEventListener('click', previewGame);
+        document.getElementById('restartBtn').addEventListener('click', restart);
+        document.getElementById('backBtn').addEventListener('click', backToConfig);
+        document.getElementById('importBtn').addEventListener('click', onImportQuestions);
+
+        loadScores();
+        initColorInputs();
+        updateRanking();
+        updateHistoryStats();
+    </script>
+</body>
+</html>
