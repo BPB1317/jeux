@@ -81,7 +81,7 @@
     },
     {
         "question": "Comment distinguer facilement le drapeau de l'Australie de celui de la Nouvelle-Zélande ?",
-        "reponses": ["L'Australie n'a pas l'Union Jack", "Les 4 étoiles néo-zélandaises sont rouges bordées de blanc", "Le fond néo-zélandais est noir", "L'Australie a un kangourou au centre"],
+        "reponses": ["L'Australie n'a pas l'Union Jack", "Les étoiles néo-zélandaises sont rouges", "Le fond néo-zélandais est noir", "L'Australie a un kangourou au centre"],
         "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
         "explication": "L'Australie a 6 étoiles blanches.",
         "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_New_Zealand.svg?width=960", "imageApres": true

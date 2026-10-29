@@ -116,7 +116,7 @@
     },
     {
         "question": "Cet oiseau, emblème national de l'Ouganda, est :",
-        "reponses": ["La Grue royale (grue couronnée)", "Le Flamant rose", "La Grande Aigrette", "Le Touraco géant"],
+        "reponses": ["La Grue royale", "Le Flamant rose", "La Grande Aigrette", "Le Touraco géant"],
         "bonne": 0, "theme": "Animaux", "difficulte": 1,
         "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Grey_crowned_crane_(Balearica_regulorum_gibbericeps).jpg?width=960"
     },
@@ -151,13 +151,14 @@
     },
     {
         "question": "Qu'est-ce qui distingue facilement l'éléphant d'Afrique de son cousin d'Asie ?",
-        "reponses": ["Ses oreilles bien plus grandes, en forme de continent africain", "Il n'a pas de défenses", "Il a une bosse sur le dos", "Il est beaucoup plus petit"],
+        "reponses": ["Des oreilles bien plus grandes", "Il n'a pas de défenses", "Il a une bosse sur le dos", "Il est beaucoup plus petit"],
         "bonne": 0, "theme": "Animaux", "difficulte": 1
     },
     {
         "question": "Pourquoi l'hippopotame semble-t-il parfois « suer du sang » ?",
-        "reponses": ["Il saigne souvent à travers ses pores", "Sa peau sécrète un liquide rougeâtre qui sert de crème solaire et d'antiseptique", "C'est la poussière de terre rouge", "C'est le reflet de l'argile des rivières"],
-        "bonne": 1, "theme": "Animaux", "difficulte": 2
+        "reponses": ["Il saigne souvent à travers ses pores", "Sa peau sécrète un liquide rouge protecteur", "C'est la poussière de terre rouge", "C'est le reflet de l'argile des rivières"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "explication": "Ce liquide lui sert à la fois de crème solaire et d'antiseptique."
     },
     {
         "question": "Quel serpent est réputé le plus rapide du monde et le plus craint d'Afrique ?",
@@ -187,7 +188,7 @@
     },
     {
         "question": "Quelle particularité ont les griffes du guépard, contrairement aux autres grands félins ?",
-        "reponses": ["Elles sont transparentes", "Elles ne se rétractent pas complètement et servent de crampons", "Elles tombent et repoussent chaque mois", "Elles sécrètent du venin"],
+        "reponses": ["Elles sont transparentes", "Elles ne se rétractent pas complètement", "Elles tombent et repoussent chaque mois", "Elles sécrètent du venin"],
         "bonne": 1, "theme": "Animaux", "difficulte": 2
     },
     {
@@ -218,7 +219,7 @@
     },
     {
         "question": "Que peut faire le cobra cracheur africain ?",
-        "reponses": ["Cracher seulement vers le sol", "Projeter son venin dans les yeux de sa cible jusqu'à 2 à 3 mètres", "Cracher des boules de salive enflammée", "Il ne mord jamais ses proies"],
+        "reponses": ["Cracher seulement vers le sol", "Projeter son venin dans les yeux", "Cracher des boules de salive enflammée", "Il ne mord jamais ses proies"],
         "bonne": 1, "theme": "Animaux", "difficulte": 2
     },
     {
@@ -249,7 +250,7 @@
     },
     {
         "question": "Quelle antilope du désert, très résistante à la soif, a des cornes droites en forme de lances pouvant dépasser un mètre ?",
-        "reponses": ["L'Impala", "L'Oryx gazelle (gemsbok)", "Le Topi", "Le Springbok"],
+        "reponses": ["L'Impala", "L'Oryx gazelle", "Le Topi", "Le Springbok"],
         "bonne": 1, "theme": "Animaux", "difficulte": 2
     }
 ]

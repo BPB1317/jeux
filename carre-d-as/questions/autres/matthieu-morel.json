@@ -12,7 +12,7 @@
     },
     {
         "question": "Cet explorateur britannique est célèbre pour avoir :",
-        "reponses": ["Découvert le manuscrit au Tibet", "Publié la première traduction anglaise du Kâmasûtra (1883)", "Censuré et brûlé le texte original", "Écrit une suite au Kâmasûtra"],
+        "reponses": ["Découvert le manuscrit au Tibet", "Traduit le Kâmasûtra en anglais (1883)", "Censuré et brûlé le texte original", "Écrit une suite au Kâmasûtra"],
         "bonne": 1, "theme": "Matthieu Morel", "difficulte": 2,
         "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Richard_Francis_Burton_by_Rischgitz,_1864.jpg?width=960",
         "explication": "Sir Richard Francis Burton, avec Forster Arbuthnot."
@@ -25,8 +25,9 @@
     },
     {
         "question": "Quel nom Vâtsyâyana donne-t-il à l'étreinte debout où la femme s'enroule autour de l'homme comme une plante autour d'un arbre ?",
-        "reponses": ["La Liane grimpante (Lataveshtitaka)", "Le Saut du léopard", "Le Bambou courbé", "La Vague du Gange"],
-        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+        "reponses": ["La Liane grimpante", "Le Saut du léopard", "Le Bambou courbé", "La Vague du Gange"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "explication": "Lataveshtitaka en sanskrit."
     },
     {
         "question": "Dans quelle langue le Kâmasûtra a-t-il été rédigé ?",
@@ -92,8 +93,9 @@
     },
     {
         "question": "Parmi les marques d'ongles décrites par Vâtsyâyana, l'une est poétiquement nommée :",
-        "reponses": ["Le Croissant de lune (Ardhachandra)", "La Griffe du tigre", "L'Éclair d'orage", "La Branche brisée"],
-        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+        "reponses": ["Le Croissant de lune", "La Griffe du tigre", "L'Éclair d'orage", "La Branche brisée"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "explication": "Ardhachandra en sanskrit."
     },
     {
         "question": "Que signifie littéralement « Kâmasûtra » en sanskrit ?",
@@ -169,12 +171,12 @@
     },
     {
         "question": "Quels oiseaux le citadin raffiné garde-t-il en cage pour leur apprendre à parler ?",
-        "reponses": ["Des perroquets et des mainates", "Des éperviers", "Des hiboux", "Des colombes"],
+        "reponses": ["Des perroquets et des mainates", "Des éperviers et des faucons", "Des hiboux et des chouettes", "Des colombes et des paons"],
         "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
     },
     {
         "question": "Pourquoi Vâtsyâyana décrit-il la séduction des femmes d'autrui ?",
-        "reponses": ["Pour que les maris sachent protéger leurs épouses", "Pour encourager l'infidélité", "Pour préconiser la vengeance", "Pour en interdire la lecture"],
+        "reponses": ["Pour que les maris sachent protéger leurs épouses", "Pour encourager l'infidélité de ses lecteurs", "Pour préconiser la vengeance des maris", "Pour mieux en interdire la pratique"],
         "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
     },
     {
@@ -199,7 +201,7 @@
     },
     {
         "question": "Qu'est-ce que l'Ananga Ranga, écrit par Kalyana Malla ?",
-        "reponses": ["Un manuel pour préserver l'harmonie des couples mariés", "Un recueil de chants militaires", "Un traité de médecine des yeux", "Une critique religieuse du Kâmasûtra"],
+        "reponses": ["Un manuel pour préserver l'harmonie des couples mariés", "Un recueil de chants militaires et de batailles", "Un traité de médecine consacré aux yeux", "Une critique religieuse du Kâmasûtra"],
         "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3
     },
     {

@@ -162,7 +162,7 @@
     },
     {
         "question": "Contrairement au lapin de garenne, le lièvre d'Europe :",
-        "reponses": ["Creuse des galeries très profondes", "Vit exclusivement dans les arbres", "Met bas à même le sol des petits déjà poilus, les yeux ouverts", "Hiberne tout l'hiver"],
+        "reponses": ["Creuse des galeries très profondes", "Vit exclusivement dans les arbres", "Met bas des petits poilus aux yeux ouverts", "Hiberne tout l'hiver"],
         "bonne": 2, "theme": "Animaux", "difficulte": 3
     },
     {
@@ -215,7 +215,7 @@
     },
     {
         "question": "Quel petit insecte rouge et noir des jardins est un grand mangeur de pucerons ?",
-        "reponses": ["Le Doryphore", "Le Gendarme", "La Coccinelle à sept points", "Le Hanneton"],
+        "reponses": ["Le Doryphore", "Le Gendarme", "La Coccinelle", "Le Hanneton"],
         "bonne": 2, "theme": "Animaux", "difficulte": 1
     },
     {

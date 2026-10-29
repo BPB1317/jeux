@@ -135,7 +135,7 @@
     },
     {
         "question": "Quel événement du 11 septembre 2001 a bouleversé la géopolitique mondiale ?",
-        "reponses": ["L'invasion de l'Irak", "Les attentats du World Trade Center et du Pentagone", "Le séisme de Fukushima", "La crise des subprimes"],
+        "reponses": ["L'invasion de l'Irak", "Les attentats du World Trade Center", "Le séisme de Fukushima", "La crise des subprimes"],
         "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
     },
     {

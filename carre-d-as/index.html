@@ -412,9 +412,10 @@
             justify-content: center;
         }
 
-        /* Image qui porte toute la question (dessin à reconnaître) : elle prend la place des réponses */
+        /* Image qui porte toute la question (dessin à reconnaître) : elle prend de la place aux réponses,
+           seulement si l'écran est assez haut pour qu'elles restent lisibles */
         .zone-image.grande {
-            height: 46vh;
+            height: clamp(38vh, 100vh - 583px, 46vh);
         }
 
         /* Extrait musical : égaliseur pendant la question, pochette à la révélation */
@@ -1808,7 +1809,9 @@
             $('voilePause').hidden = !enPause;
             $('btnPause').hidden = !etat || !PHASES_PAUSABLES.includes(etat.phase);
             if (enPause) lecteur.pause();
-            else if (extraitJoue && lecteur.paused && lecteur.src && !lecteur.ended) lecteur.play().catch(() => {});
+            else if (extraitJoue && lecteur.paused && lecteur.src && !lecteur.ended) {
+                lecteur.play().then(() => { $('zoneAudio').querySelector('[data-action="extrait"]').hidden = true; }).catch(() => {});
+            }
         }
 
         setInterval(tic, 200);

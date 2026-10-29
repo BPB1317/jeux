@@ -202,7 +202,7 @@
     },
     {
         "question": "Dans « La Terre est ronde » d'Orelsan : « Au fond j'crois qu'la Terre est ronde pour une seule bonne raison… »",
-        "reponses": ["Pour qu'on puisse en faire le tour", "Après avoir fait le tour du monde, tout c'qu'on veut c'est être à la maison", "Pour que le soleil tourne autour", "Parce que personne ne trouve son chemin"],
+        "reponses": ["Pour qu'on puisse en faire le tour sans jamais s'arrêter", "Après avoir fait le tour du monde, tout c'qu'on veut c'est être à la maison", "Pour que le soleil tourne autour et nous réchauffe", "Parce que personne ne trouve son chemin tout seul"],
         "bonne": 1, "theme": "Chansons", "difficulte": 2
     },
     {
