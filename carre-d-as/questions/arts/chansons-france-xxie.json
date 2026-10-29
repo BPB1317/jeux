@@ -1,0 +1,344 @@
+[
+    {
+        "question": "Quel artiste belge a conquis l'Europe en 2009 avec ce tube ?",
+        "reponses": ["Damso", "Stromae", "Angèle", "Loïc Nottet"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1,
+        "itunes": 1440520983
+    },
+    {
+        "question": "« J'aimerais trop qu'elle m'aime… » Complétez la suite : « Mais elle est tellement… »",
+        "reponses": ["Jolie", "Petite", "Snob", "Timide"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 2,
+        "explication": "Keen'V, « J'aimerais trop » (2011).",
+        "itunes": 603574204, "audioApres": true
+    },
+    {
+        "question": "Quel est le titre de ce tube de Gims sorti en 2015 ?",
+        "reponses": ["Bella", "Est-ce que tu m'aimes ?", "Sapés comme jamais", "J'me tire"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 1,
+        "itunes": 1041473132
+    },
+    {
+        "question": "Révélée par l'émission Graines de star, qui chante ce premier single sorti en 2000 ?",
+        "reponses": ["Lorie", "Alizée", "Jenifer", "Priscilla Betti"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1,
+        "itunes": 1391459931
+    },
+    {
+        "question": "Quel chanteur et guitariste a cartonné en 2014 avec ce titre ?",
+        "reponses": ["Julien Doré", "Vianney", "Amir", "Claudio Capéo"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1,
+        "explication": "« Pas là ».",
+        "itunes": 1446926026
+    },
+    {
+        "question": "Vainqueur de The Voice en 2014, qui interprète ce titre ?",
+        "reponses": ["Slimane", "Kendji Girac", "Fréro Delavega", "Amir"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1,
+        "explication": "« Color Gitano ».",
+        "itunes": 1440815072
+    },
+    {
+        "question": "Qui chante en duo avec sa sœur Angèle sur ce morceau de 2018 ?",
+        "reponses": ["Roméo Elvis", "Orelsan", "Lomepal", "Damso"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 2,
+        "explication": "« Tout oublier ».",
+        "itunes": 1434408435
+    },
+    {
+        "question": "Dans « Jeune Demoiselle » de Diam's (2006), qu'est-ce que doit avoir le « mec mortel » ?",
+        "reponses": ["Du style", "Du charme", "Des sous", "Du cœur"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2,
+        "itunes": 696155473, "audioApres": true
+    },
+    {
+        "question": "Quel groupe français a sorti cet hymne écologiste en 2003 ?",
+        "reponses": ["Louise Attaque", "Mickey 3D", "Matmatah", "Tryo"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2,
+        "explication": "« Respire ».",
+        "itunes": 693715685
+    },
+    {
+        "question": "Quelle chanteuse est devenue une star internationale grâce à ce tube de 2018 ?",
+        "reponses": ["Wejdene", "Aya Nakamura", "Marwa Loud", "Imen Es"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1,
+        "explication": "« Djadja ».",
+        "itunes": 1439806289
+    },
+    {
+        "question": "Quel est le titre de ce morceau de Tayc sorti en 2020 ?",
+        "reponses": ["N'y pense plus", "Le Temps", "Dodo", "Comme toi"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 3,
+        "itunes": 1560635916
+    },
+    {
+        "question": "Quel auteur-compositeur, révélé par l'album Repenti (2006), entend-on ici ?",
+        "reponses": ["Renan Luce", "Bénabar", "Cali", "Vincent Delerm"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 3,
+        "explication": "« La Lettre ».",
+        "itunes": 1442655294
+    },
+    {
+        "question": "Quel chanteur a sorti ce tube en 2002 ?",
+        "reponses": ["Pascal Obispo", "Calogero", "Marc Lavoine", "Emmanuel Moire"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2,
+        "explication": "« En apesanteur ».",
+        "itunes": 1442503988
+    },
+    {
+        "question": "Quel titre de Diam's et Vitaa (2006) écoute-t-on ?",
+        "reponses": ["Confessions nocturnes", "À fleur de toi", "Game Over", "Tu peux choisir"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 2,
+        "itunes": 693379485
+    },
+    {
+        "question": "Quel duo de rap, deux frères des Tarterêts à Corbeil-Essonnes, entend-on ?",
+        "reponses": ["Bigflo & Oli", "PNL", "Djadja & Dinaz", "DTF"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2,
+        "explication": "« Le monde ou rien » (2015).",
+        "itunes": 1048964883
+    },
+    {
+        "question": "Quel est le titre de cette chanson qui a révélé Zaz en 2010 ?",
+        "reponses": ["On ira", "Éblouie par la nuit", "Je veux", "Si jamais j'oublie"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 1,
+        "itunes": 693461512
+    },
+    {
+        "question": "Sorti en 2002, ce morceau a relancé la carrière de quel groupe mythique ?",
+        "reponses": ["Téléphone", "Indochine", "Kyo", "Noir Désir"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1,
+        "explication": "« J'ai demandé à la lune ».",
+        "itunes": 253594530
+    },
+    {
+        "question": "Quel groupe ivoirien chante ce tube de l'été 2014 ?",
+        "reponses": ["Magic System", "La Compagnie Créole", "Kassav'", "Touré Kunda"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 1,
+        "explication": "« Magic in the Air ».",
+        "itunes": 1423267562
+    },
+    {
+        "question": "Quelle chanteuse a connu un succès mondial en 2013 avec ce titre ?",
+        "reponses": ["Louane", "Indila", "Tal", "Shy'm"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1,
+        "explication": "« Dernière danse ».",
+        "itunes": 1440830407
+    },
+    {
+        "question": "Quel groupe bordelais mené par Bertrand Cantat a sorti ce classique en 2001 ?",
+        "reponses": ["Eiffel", "Matmatah", "Noir Désir", "Luke"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 2,
+        "explication": "« Le vent nous portera ».",
+        "itunes": 1440863472
+    },
+    {
+        "question": "Dans « Basique » (2017) d'Orelsan, quel mot revient sans cesse avec « basique » ?",
+        "reponses": ["Simple", "Facile", "Logique", "Évident"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 1,
+        "explication": "« Simple, basique ».",
+        "itunes": 1788305433, "audioApres": true
+    },
+    {
+        "question": "Dans « Je veux » de Zaz : « Donnez-moi une suite au Ritz, je n'en veux pas ! Des bijoux de chez… »",
+        "reponses": ["Cartier", "Chanel", "Tiffany", "Boucheron"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2,
+        "itunes": 693461512, "audioApres": true
+    },
+    {
+        "question": "En quelle année « Jeune Demoiselle » de Diam's est-il sorti ?",
+        "reponses": ["2002", "2004", "2006", "2009"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 3,
+        "itunes": 696155473
+    },
+    {
+        "question": "Révélée par The Voice et le film La Famille Bélier, qui chante ce titre ?",
+        "reponses": ["Louane", "Marina Kaye", "Camille Lellouche", "Hoshi"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 1,
+        "explication": "« Jour 1 ».",
+        "itunes": 1799766694
+    },
+    {
+        "question": "Qui chante ce morceau sorti en 2018 ?",
+        "reponses": ["Hoshi", "Clara Luciani", "Juliette Armanet", "Pomme"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 2,
+        "explication": "« Ta marinière ».",
+        "itunes": 1444207131
+    },
+    {
+        "question": "Ce morceau culte est le titre phare de quelle chanteuse ?",
+        "reponses": ["Clara Luciani", "Christine and the Queens", "Juliette Armanet", "Suzane"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 2,
+        "explication": "« La Grenade ».",
+        "itunes": 1358422134
+    },
+    {
+        "question": "Quel groupe de rock français des années 2000 chante ce titre ?",
+        "reponses": ["Pleymo", "Superbus", "Kyo", "BB Brunes"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 2,
+        "explication": "« Dernière danse ».",
+        "itunes": 254228761
+    },
+    {
+        "question": "Quel est ce titre de Chimène Badi sorti en 2004 ?",
+        "reponses": ["Entre nous", "Je viens du sud", "Dis-moi que tu m'aimes", "Parlez-moi de lui"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 3,
+        "itunes": 1444032127
+    },
+    {
+        "question": "Ce morceau de 2022, devenu viral, est chanté par :",
+        "reponses": ["Pierre de Maere", "Eddy de Pretto", "Hervé", "Malik Djoudi"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 3,
+        "explication": "« Un jour je marierai un ange ».",
+        "itunes": 1653147063
+    },
+    {
+        "question": "Quel duo de frères rappeurs toulousains a connu un immense succès avec l'album La Vraie Vie en 2017 ?",
+        "reponses": ["Djadja & Dinaz", "PNL", "Bigflo & Oli", "Casseurs Flowters"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 1
+    },
+    {
+        "question": "Quelle jeune chanteuse proclamait « J'ai pas vingt ans » en 2003 ?",
+        "reponses": ["Lorie", "Alizée", "Leslie", "Emma Daumas"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2
+    },
+    {
+        "question": "Quel titre des BB Brunes a fait danser les ados français en 2007 ?",
+        "reponses": ["Coups et Blessures", "Dis-moi", "Le Gang", "Nico Teen Love"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 3
+    },
+    {
+        "question": "Quel candidat surnommé « la Tortue » a remporté la Nouvelle Star en 2006 ?",
+        "reponses": ["Julien Doré", "Christophe Willem", "Steeve Estatof", "Jonatan Cerrada"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2,
+        "explication": "Le premier gagnant, en 2003, était Jonatan Cerrada."
+    },
+    {
+        "question": "Complétez ce tube de Lorie (2002) : « J'ai besoin d'amour, de bisous, de câlins, j'en veux tous les jours… »",
+        "reponses": ["Du soir au matin", "J'en veux sans fin", "Sur mon chemin", "Jusqu'à demain"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 3
+    },
+    {
+        "question": "Dans « La Terre est ronde » d'Orelsan : « Au fond j'crois qu'la Terre est ronde pour une seule bonne raison… »",
+        "reponses": ["Pour qu'on puisse en faire le tour", "Après avoir fait le tour du monde, tout c'qu'on veut c'est être à la maison", "Pour que le soleil tourne autour", "Parce que personne ne trouve son chemin"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2
+    },
+    {
+        "question": "Quel chanteur a cartonné en 2018 avec l'album Cure et des titres comme « Fête de trop » ?",
+        "reponses": ["Eddy de Pretto", "Tim Dup", "Aloïse Sauvage", "Terrenoire"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 2
+    },
+    {
+        "question": "Quel chanteur québécois a fait danser la France en 2004 avec « Femme Like U » ?",
+        "reponses": ["Corneille", "K-Maro", "Garou", "Roch Voisine"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2
+    },
+    {
+        "question": "Quelle comédie musicale du début des années 2000 comprenait le tube « Les Rois du monde » ?",
+        "reponses": ["Les Dix Commandements", "Roméo et Juliette", "Notre-Dame de Paris", "Le Roi Soleil"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1
+    },
+    {
+        "question": "Qui a représenté la France à l'Eurovision 2021 avec « Voilà », décrochant la 2e place ?",
+        "reponses": ["Louane", "Barbara Pravi", "La Zarra", "Bilal Hassani"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2
+    },
+    {
+        "question": "Quel collectif de rappeurs marseillais (Jul, SCH, Kofs, Soso Maness…) a signé le tube « Bande organisée » en 2020 ?",
+        "reponses": ["13 Organisé", "Psy 4 de la Rime", "Guérilla Poubelle", "Mafia K'1 Fry"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 1
+    },
+    {
+        "question": "Dans quel clip de 2019 les deux frères de PNL rappent-ils au sommet de la tour Eiffel vide ?",
+        "reponses": ["Deux frères", "Au DD", "À l'ammoniaque", "Onizuka"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 3
+    },
+    {
+        "question": "En 2004, quelle candidate éliminée de la Nouvelle Star a conquis les charts avec « Ma philosophie » ?",
+        "reponses": ["Myriam Abel", "Miss Dominique", "Amel Bent", "Camélia Jordana"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 1
+    },
+    {
+        "question": "Qui a remporté la toute première Star Academy, sur TF1 en janvier 2002 ?",
+        "reponses": ["Nolwenn Leroy", "Jenifer", "Élodie Frégé", "Grégory Lemarchal"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2
+    },
+    {
+        "question": "Quel titre de Renaud, en duo avec Axelle Red (2002), évoque les attentats du 11 septembre ?",
+        "reponses": ["Manhattan-Kaboul", "Docteur Renaud, Mister Renard", "Mon bistrot préféré", "Elle a vu le loup"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 1
+    },
+    {
+        "question": "Quel groupe mené par Jennifer Ayache a cartonné au milieu des années 2000 avec « Butterfly » et « Lola » ?",
+        "reponses": ["Kyo", "Superbus", "Vegastar", "Matmatah"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2
+    },
+    {
+        "question": "De quel tube de Tragédie (2003) vient la réplique culte « Est-ce que tu m'entends ? Hey ho ! » ?",
+        "reponses": ["Hey Oh", "Sexy pour moi", "Éternellement", "Bye Bye"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 1
+    },
+    {
+        "question": "Quel album de Stromae (2013) contenait « Papaoutai », « Tous les mêmes » et « Formidable » ?",
+        "reponses": ["Cheese", "Racine carrée", "Multitude", "Formidable"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2
+    },
+    {
+        "question": "Quel rappeur parisien s'est imposé en 2015 avec ses freestyles « Afro Trap » ?",
+        "reponses": ["Ninho", "MHD", "Niska", "Gradur"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 2
+    },
+    {
+        "question": "Quel label participatif en ligne a financé l'album de Grégoire (« Toi + Moi », 2008) grâce aux internautes ?",
+        "reponses": ["KissKissBankBank", "My Major Company", "Ulule", "Spinnin' Records"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 3
+    },
+    {
+        "question": "Quelle chanteuse a fait sensation en 2021 avec l'album disco Brûler le feu et « Le Dernier Jour du disco » ?",
+        "reponses": ["Juliette Armanet", "Clara Luciani", "Fishbach", "Yelle"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 2
+    },
+    {
+        "question": "Quel humoriste se cachait derrière le rappeur parodique Fatal Bazooka (« Fous ta cagoule », 2006) ?",
+        "reponses": ["Gad Elmaleh", "Michaël Youn", "Franck Dubosc", "Élie Semoun"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1
+    },
+    {
+        "question": "Quel tube de Christophe Maé est extrait de son premier album, Mon paradis (2007) ?",
+        "reponses": ["On s'attache", "Il est où le bonheur", "Dingue, dingue, dingue", "Je veux du bonheur"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 3
+    },
+    {
+        "question": "Quelle chanteuse révélée sur TikTok à 16 ans a créé le phénomène « Anissa » en 2020 ?",
+        "reponses": ["Eva Queen", "Wejdene", "Marwa Loud", "Ronisia"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1,
+        "explication": "Avec sa phrase devenue culte : « Tu hors de ma vue »."
+    },
+    {
+        "question": "Qui a chanté « Un automne à Paris » (2016), hommage aux victimes des attentats du 13 novembre ?",
+        "reponses": ["Louane", "Francis Cabrel", "Vianney", "Cali"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 2,
+        "explication": "Texte d'Amin Maalouf, musique d'Ibrahim Maalouf."
+    },
+    {
+        "question": "Quel duo électro casqué a sorti en 2013 l'album Random Access Memories, récompensé par 5 Grammy Awards ?",
+        "reponses": ["Justice", "Cassius", "Daft Punk", "Air"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 1
+    },
+    {
+        "question": "Quel est le vrai prénom du rappeur Jul ?",
+        "reponses": ["Julien", "Jules", "Jordan", "Jérémy"],
+        "bonne": 0, "theme": "Chansons", "difficulte": 2,
+        "explication": "Julien Mari."
+    },
+    {
+        "question": "Avec quelle chanteuse Pascal Obispo a-t-il chanté le duo « 1980 » (2005) ?",
+        "reponses": ["Zazie", "Natasha St-Pier", "Melissa Mars", "Isabelle Boulay"],
+        "bonne": 2, "theme": "Chansons", "difficulte": 3
+    },
+    {
+        "question": "Quel gagnant de The Voice, représentant de la France à l'Eurovision 2024 avec « Mon amour », forme aussi un duo avec Vitaa ?",
+        "reponses": ["Kendji Girac", "Slimane", "Amir", "Keen'V"],
+        "bonne": 1, "theme": "Chansons", "difficulte": 1
+    }
+]

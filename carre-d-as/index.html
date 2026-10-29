@@ -407,6 +407,65 @@
             justify-content: center;
         }
 
+        /* Extrait musical : égaliseur pendant la question, pochette à la révélation */
+        .zone-audio {
+            flex: 0 0 auto;
+            position: relative;
+            height: 38vh;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            background: var(--encre);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+        }
+
+        #ecranQuestion:not(.revele) .zone-audio.apres {
+            display: none;
+        }
+
+        .egaliseur {
+            display: flex;
+            align-items: flex-end;
+            gap: 6%;
+            width: 60%;
+            height: 50%;
+        }
+
+        .egaliseur i {
+            flex: 1;
+            height: 100%;
+            background: var(--jeu);
+            transform-origin: bottom;
+            animation: egaliseur 0.9s ease-in-out infinite alternate;
+        }
+
+        .egaliseur i:nth-child(2) { animation-delay: -0.3s; background: var(--ocre); }
+        .egaliseur i:nth-child(3) { animation-delay: -0.6s; background: var(--carton); }
+        .egaliseur i:nth-child(4) { animation-delay: -0.15s; background: var(--prune); }
+        .egaliseur i:nth-child(5) { animation-delay: -0.45s; background: var(--ciel); }
+
+        @keyframes egaliseur {
+            from { transform: scaleY(0.15); }
+            to { transform: scaleY(1); }
+        }
+
+        .zone-audio img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: apparait 0.6s ease-out both;
+        }
+
+        #ecranQuestion:not(.revele) .zone-audio img {
+            display: none;
+        }
+
         /* Image réservée à la révélation (elle donnerait la réponse) */
         #ecranQuestion:not(.revele) .zone-image.apres {
             display: none;
@@ -859,6 +918,11 @@
                 <p id="explication" class="explication" hidden></p>
             </div>
             <div id="zoneImage" class="zone-image" hidden></div>
+            <div id="zoneAudio" class="zone-audio" hidden>
+                <div class="egaliseur" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                <button type="button" class="btn btn-small" data-action="extrait" hidden>Lancer l'extrait</button>
+                <img alt="">
+            </div>
         </div>
         <ul id="reponsesTV"></ul>
         <div class="actions-tv">
@@ -1176,6 +1240,11 @@
                     }
                 }
                 if (q.explication) propre.explication = String(q.explication);
+                // Extrait musical : identifiant iTunes du morceau (l'extrait officiel de 30 s est récupéré à la partie)
+                if (Number.isInteger(q.itunes)) {
+                    propre.itunes = q.itunes;
+                    if (q.audioApres) propre.audioApres = true;
+                }
                 return propre;
             });
         }
@@ -1263,6 +1332,8 @@
 
         function rendre() {
             if (!etat) return;
+            // La musique ne déborde jamais sur le classement
+            if (etat.phase !== 'question' && etat.phase !== 'revelation') arreterExtrait();
             if (etat.phase === 'salle') rendreSalle();
             else if (etat.phase === 'question' || etat.phase === 'revelation') rendreQuestion();
             else if (etat.phase === 'classement') rendreClassement();
@@ -1336,7 +1407,10 @@
             if (imageRendue !== etat.q) {
                 imageRendue = etat.q;
                 rendreImage(question);
+                preparerExtrait(question);
             }
+            // Extrait musical : pendant la question (ou seulement à la révélation s'il donnerait la réponse)
+            if (question.itunes && (revele || !question.audioApres)) jouerExtrait(question);
             $('explication').hidden = !(revele && question.explication);
             $('explication').textContent = question.explication || '';
             const maxVotes = revele ? Math.max(1, ...res.votes) : 1;
@@ -1360,7 +1434,7 @@
                 }, DELAI_CLASSEMENT);
             }
             if (revele) son.revelation();
-            else son.question();
+            else if (!question.itunes) son.question();
             dernierTic = null;
             tic();
         }
@@ -1390,9 +1464,68 @@
             zone.querySelector('img').addEventListener('error', () => { zone.hidden = true; });
         }
 
-        // Charge l'image de la prochaine question pendant le classement, pour qu'elle s'affiche sans délai
+        // Charge l'image (ou l'extrait) de la prochaine question pendant le classement, pour qu'elle s'affiche sans délai
         function precharger(question) {
             if (question && question.image) new Image().src = question.image;
+            if (question && question.itunes) chercherExtrait(question.itunes).then(e => { if (e) new Image().src = e.pochette; });
+        }
+
+        // ---------- Extraits musicaux : l'extrait officiel iTunes de 30 s, et la pochette pour la révélation ----------
+
+        const lecteur = new Audio();
+        const extraits = {};        // identifiant iTunes → promesse de { audio, pochette } (ou null)
+        let extraitJoue = null;
+
+        // L'API iTunes est appelée en JSONP : elle n'autorise pas les appels directs depuis une autre page
+        function chercherExtrait(id) {
+            if (!extraits[id]) {
+                extraits[id] = new Promise(resolve => {
+                    const rappel = `itunes${id}`;
+                    const script = document.createElement('script');
+                    const fin = valeur => { delete window[rappel]; script.remove(); resolve(valeur); };
+                    window[rappel] = r => {
+                        const t = r && r.results && r.results[0];
+                        fin(t && t.previewUrl ? { audio: t.previewUrl, pochette: (t.artworkUrl100 || '').replace('100x100bb', '600x600bb') } : null);
+                    };
+                    script.onerror = () => fin(null);
+                    script.src = `https://itunes.apple.com/lookup?id=${id}&country=fr&entity=song&callback=${rappel}`;
+                    document.head.appendChild(script);
+                });
+            }
+            return extraits[id];
+        }
+
+        // Pendant la question : un égaliseur animé ; à la révélation : la pochette du disque
+        function preparerExtrait(question) {
+            const zone = $('zoneAudio');
+            const pochette = zone.querySelector('img');
+            zone.hidden = !question.itunes || !!question.image;
+            zone.classList.toggle('apres', !!question.audioApres);
+            zone.querySelector('[data-action="extrait"]').hidden = true;
+            pochette.hidden = true;
+            pochette.removeAttribute('src');
+            if (!question.itunes) return;
+            chercherExtrait(question.itunes).then(e => {
+                if (!e || !e.pochette || imageRendue !== etat.q) return;
+                pochette.onload = () => { pochette.hidden = false; };
+                pochette.src = e.pochette;
+            });
+        }
+
+        async function jouerExtrait(question) {
+            if (extraitJoue === question.itunes) return;    // déjà en cours : la musique continue de la question à la révélation
+            extraitJoue = question.itunes;
+            const extrait = await chercherExtrait(question.itunes);
+            if (extraitJoue !== question.itunes || !extrait) return;
+            lecteur.src = extrait.audio;
+            lecteur.volume = son.actif ? 1 : 0;
+            // Après un rechargement de la TV, le navigateur exige un clic avant de jouer du son
+            lecteur.play().catch(() => { $('zoneAudio').querySelector('[data-action="extrait"]').hidden = false; });
+        }
+
+        function arreterExtrait() {
+            extraitJoue = null;
+            lecteur.pause();
         }
 
         function lignesScore(liste, decalage = 0) {
@@ -1535,7 +1668,9 @@
             $('chrono').classList.toggle('urgent', urgent);
             $('jauge').classList.toggle('urgent', urgent);
             $('jauge').style.transform = `scaleX(${Math.min(Math.max(reste / (etat.duree * 1000), 0), 1)})`;
-            if (urgent && secondes > 0 && secondes !== dernierTic) son.tic(secondes === 1);
+            // Pas de tic-tac par-dessus un extrait musical
+            const musique = !!questions[Number(etat.q)]?.itunes;
+            if (urgent && secondes > 0 && secondes !== dernierTic && !musique) son.tic(secondes === 1);
             dernierTic = secondes;
             const presents = Object.keys(joueurs).filter(id => !horsLigneDepuis[id] || Date.now() - horsLigneDepuis[id] < 10000);
             const tousOntRepondu = presents.length > 0 && presents.every(id => reponses[id]);
@@ -1550,8 +1685,12 @@
             const action = e.target.closest('[data-action]')?.dataset.action;
             if (action === 'suivant') suivant();
             if (action === 'abandonner') abandonner();
+            if (action === 'extrait') {
+                lecteur.play().then(() => { $('zoneAudio').querySelector('[data-action="extrait"]').hidden = true; }).catch(() => {});
+            }
             if (action === 'son') {
                 son.actif = !son.actif;
+                lecteur.volume = son.actif ? 1 : 0;
                 ecrireStockage('carreDAs.son', son.actif ? null : 'non');
                 majBoutonSon();
             }

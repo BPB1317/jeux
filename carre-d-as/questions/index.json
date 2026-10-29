@@ -17,5 +17,11 @@
         "sujets": [
             { "fichier": "culture-generale/xxie-siecle.json", "titre": "XXIe siècle" }
         ]
+    },
+    {
+        "theme": "Arts",
+        "sujets": [
+            { "fichier": "arts/chansons-france-xxie.json", "titre": "Chansons françaises du XXIe siècle" }
+        ]
     }
 ]
