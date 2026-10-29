@@ -16,6 +16,11 @@
             overflow-x: hidden;
         }
 
+        /* Un élément caché reste caché, même s'il a un display: flex (zones image et audio, boutons) */
+        [hidden] {
+            display: none !important;
+        }
+
         .ecran {
             display: none;
             min-height: 100vh;
@@ -631,12 +636,12 @@
         }
 
         /* Barre qui se remplit jusqu'au passage automatique au classement (durée : DELAI_CLASSEMENT) */
-        #btnQuestion.decompte {
+        .btn.decompte {
             position: relative;
             overflow: hidden;
         }
 
-        #btnQuestion.decompte::after {
+        .btn.decompte::after {
             content: '';
             position: absolute;
             left: 0;
@@ -650,6 +655,60 @@
 
         @keyframes decompte {
             from { transform: scaleX(0); }
+        }
+
+        /* ---------- Pause ---------- */
+
+        .bouton-pause {
+            position: fixed;
+            left: clamp(1rem, 2.5vw, 2.5rem);
+            bottom: clamp(1rem, 2.5vw, 2rem);
+            z-index: 50;
+            font-family: var(--police-texte);
+            font-weight: 900;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--encre-douce);
+            background: transparent;
+            border: var(--trait-fin) solid currentColor;
+            padding: 0.45em 0.9em;
+            opacity: 0.55;
+            cursor: pointer;
+        }
+
+        .bouton-pause:hover {
+            opacity: 1;
+        }
+
+        .voile-pause {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            background: rgba(34, 28, 21, 0.88);
+        }
+
+        .voile-pause[hidden] {
+            display: none;
+        }
+
+        .voile-pause .tampon {
+            font-size: clamp(3rem, 8vw, 7rem);
+        }
+
+        .voile-pause .surtitre {
+            color: var(--carton);
+        }
+
+        /* Tout ce qui défile s'arrête pendant la pause */
+        body.en-pause *,
+        body.en-pause *::after {
+            animation-play-state: paused !important;
         }
 
         .actions-tv {
@@ -765,7 +824,7 @@
         /* Le podium se dévoile du 3e au 1er */
         .marche .socle {
             transform-origin: bottom;
-            animation: monte 0.7s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation: monte 0.5s cubic-bezier(.3, 1.3, .5, 1) both;
             animation-delay: var(--delai);
         }
 
@@ -775,7 +834,7 @@
             align-items: center;
             gap: 0.3rem;
             animation: tombe 0.5s cubic-bezier(.3, 1.6, .5, 1) both;
-            animation-delay: calc(var(--delai) + 0.6s);
+            animation-delay: calc(var(--delai) + 0.4s);
         }
 
         .marche .nom .pastille {
@@ -801,7 +860,7 @@
         }
 
         #autresFin {
-            animation: apparait 0.5s 3.6s both;
+            animation: apparait 0.5s 1.8s both;
         }
 
         /* Confettis en papier aux couleurs des encres, sans halo */
@@ -949,6 +1008,14 @@
             <button class="btn btn-geant" data-action="abandonner">Nouvelle partie</button>
         </div>
     </section>
+
+    <!-- Pause : bouton discret pendant la partie, voile plein écran tant que la partie est en pause -->
+    <button id="btnPause" class="bouton-pause" data-action="pause" hidden>Pause</button>
+    <div id="voilePause" class="voile-pause" hidden>
+        <span class="tampon">Pause</span>
+        <button class="btn btn-geant" data-action="pause">Reprendre</button>
+        <p class="surtitre">ou touche P</p>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script type="module">
@@ -1338,6 +1405,7 @@
             else if (etat.phase === 'question' || etat.phase === 'revelation') rendreQuestion();
             else if (etat.phase === 'classement') rendreClassement();
             else if (etat.phase === 'fin') rendreFin();
+            rendrePause();
         }
 
         function pastille(couleur) {
@@ -1424,24 +1492,37 @@
             $('chrono').hidden = revele;
             $('btnQuestion').textContent = revele ? 'Classement' : 'Révéler maintenant';
             $('btnQuestion').className = revele ? 'btn btn-geant decompte' : 'btn btn-small';
-            $('btnQuestion').style.setProperty('--delai', `${DELAI_CLASSEMENT}ms`);
             // Après la révélation, le classement s'affiche tout seul (le bouton permet d'y aller plus tôt)
-            clearTimeout(minuteurClassement);
-            if (revele) {
-                const q = etat.q;
-                minuteurClassement = setTimeout(() => {
-                    if (etat.phase === 'revelation' && etat.q === q) suivant();
-                }, DELAI_CLASSEMENT);
-            }
+            programmerSuite(revele ? DELAI_CLASSEMENT : null);
             if (revele) son.revelation();
             else if (!question.itunes) son.question();
             dernierTic = null;
             tic();
         }
 
-        // Durée d'affichage de la bonne réponse avant le passage automatique au classement
-        const DELAI_CLASSEMENT = 3000;
-        let minuteurClassement = null;
+        // Enchaînements automatiques : la bonne réponse reste affichée DELAI_CLASSEMENT avant le classement,
+        // puis le classement DELAI_SUIVANT avant la question suivante (ou le podium). Les boutons permettent d'aller plus vite.
+        const DELAI_CLASSEMENT = 5000;
+        const DELAI_SUIVANT = 5000;
+        let echeanceSuite = null;       // heure locale du prochain enchaînement automatique (repoussée pendant une pause)
+        let dernierTicSuite = Date.now();
+
+        function programmerSuite(delai) {
+            echeanceSuite = delai ? Date.now() + delai : null;
+            document.querySelectorAll('.decompte').forEach(b => b.style.setProperty('--delai', `${delai}ms`));
+        }
+
+        function ticSuite() {
+            const maintenant = Date.now();
+            if (etat && etat.pauseDepuis && echeanceSuite) echeanceSuite += maintenant - dernierTicSuite;
+            dernierTicSuite = maintenant;
+            if (echeanceSuite && maintenant >= echeanceSuite && etat && !etat.pauseDepuis) {
+                echeanceSuite = null;
+                suivant();
+            }
+        }
+
+        setInterval(ticSuite, 200);
 
         // L'image reste la même entre la question et la révélation : seul le zoom, le masque ou le flou s'en va
         let imageRendue = null;
@@ -1553,6 +1634,11 @@
             $('autresClassement').textContent = autres > 0 ? `et ${autres} ${autres > 1 ? 'autres joueurs' : 'autre joueur'} en embuscade` : '';
             const derniere = Number(etat.q) + 1 >= etat.total;
             $('btnClassement').textContent = derniere ? 'Voir le podium' : 'Question suivante';
+            // Relance la barre de décompte (l'élément est réutilisé d'un classement à l'autre)
+            $('btnClassement').classList.remove('decompte');
+            $('btnClassement').offsetWidth;
+            $('btnClassement').classList.add('decompte');
+            programmerSuite(DELAI_SUIVANT);
             precharger(questions[Number(etat.q) + 1]);
             son.classement();
         }
@@ -1560,9 +1646,10 @@
         function rendreFin() {
             afficher('ecranFin');
             if (!nouvelleEtape('fin')) return;
+            programmerSuite(null);
             const liste = classementAvecRangs();
-            // Ordre de dévoilement : 3e, puis 2e, puis 1er
-            const delais = { 3: 0.3, 2: 1.3, 1: 2.5 };
+            // Ordre de dévoilement, rapide : 3e, puis 2e, puis 1er (le nom tombe 0,4 s après sa marche)
+            const delais = { 3: 0, 2: 0.5, 1: 1 };
             const marche = (s, place) => {
                 if (!s) return '';
                 const j = joueurs[s.id] || { pseudo: '?', couleur: '#CDBB94' };
@@ -1573,8 +1660,8 @@
             };
             $('podium').innerHTML = marche(liste[1], 2) + marche(liste[0], 1) + marche(liste[2], 3);
             $('autresFin').innerHTML = lignesScore(liste.slice(3));
-            [3, 2].forEach(p => { if (liste[p - 1]) setTimeout(() => son.podium(p), (delais[p] + 0.6) * 1000); });
-            setTimeout(() => { son.fanfare(); lancerConfettis(); }, (delais[1] + 0.6) * 1000);
+            [3, 2].forEach(p => { if (liste[p - 1]) setTimeout(() => son.podium(p), (delais[p] + 0.4) * 1000); });
+            setTimeout(() => { son.fanfare(); lancerConfettis(); }, (delais[1] + 0.4) * 1000);
         }
 
         function lancerConfettis() {
@@ -1613,7 +1700,7 @@
                     const juste = !!r && r.choix === question.bonne;
                     if (juste) {
                         serie = (avant.serie || 0) + 1;
-                        points = pointsRapidite(r.a - etat.debut, etat.duree * 1000);
+                        points = pointsRapidite(tempsDeReponse(r.a), etat.duree * 1000);
                         bonus = bonusSerie(serie);
                     }
                     maj[`scores/${id}`] = {
@@ -1632,7 +1719,7 @@
 
         // Un double appui sur la même étape est ignoré ; l'étape suivante répond tout de suite
         async function suivant() {
-            if (!etat || (etat.phase === 'salle' && !Object.keys(joueurs).length)) return;
+            if (!etat || etat.pauseDepuis || (etat.phase === 'salle' && !Object.keys(joueurs).length)) return;
             const cle = `${etat.phase}:${etat.q}`;
             if (derniereAction === cle) return;
             derniereAction = cle;
@@ -1661,7 +1748,8 @@
         // Un joueur déconnecté depuis plus de 10 s n'est plus attendu ; en deçà, il est peut-être en train de recharger
         function tic() {
             if (!etat || etat.phase !== 'question') return;
-            const reste = etat.debut + etat.duree * 1000 - heureServeur();
+            // En pause, le chrono reste figé sur le temps restant au moment de la pause
+            const reste = etat.debut + etat.duree * 1000 - (etat.pauseDepuis || heureServeur());
             const secondes = Math.max(0, Math.ceil(reste / 1000));
             const urgent = secondes <= 5;
             $('chrono').textContent = secondes;
@@ -1674,7 +1762,46 @@
             dernierTic = secondes;
             const presents = Object.keys(joueurs).filter(id => !horsLigneDepuis[id] || Date.now() - horsLigneDepuis[id] < 10000);
             const tousOntRepondu = presents.length > 0 && presents.every(id => reponses[id]);
-            if (reste <= 0 || tousOntRepondu) reveler();
+            if (!etat.pauseDepuis && (reste <= 0 || tousOntRepondu)) reveler();
+        }
+
+        // ---------- Pause : fige le chrono, les téléphones, la musique et les enchaînements ----------
+
+        const PHASES_PAUSABLES = ['question', 'revelation', 'classement'];
+
+        async function basculerPause() {
+            if (!etat || !PHASES_PAUSABLES.includes(etat.phase)) return;
+            const refEtat = ref(db, `parties/${code}/etat`);
+            if (!etat.pauseDepuis) {
+                await update(refEtat, { pauseDepuis: serverTimestamp() });
+                return;
+            }
+            const duree = Math.max(0, heureServeur() - etat.pauseDepuis);
+            const maj = { pauseDepuis: null };
+            if (etat.phase === 'question') {
+                // Le début de la question est décalé de la durée de la pause : le chrono et la règle Firebase
+                // (qui borne l'heure des réponses) repartent d'où ils en étaient. Les pauses sont gardées
+                // pour retirer leur durée du temps de réponse des joueurs qui avaient déjà répondu.
+                maj.debutOrigine = etat.debutOrigine || etat.debut;
+                maj.debut = etat.debut + duree;
+                maj.pauses = [...(etat.pauses || []), { de: etat.pauseDepuis, duree }];
+            }
+            await update(refEtat, maj);
+        }
+
+        // Temps de réponse réel : depuis le vrai début de la question, sans les pauses survenues avant la réponse
+        function tempsDeReponse(a) {
+            const pauses = (etat.pauses || []).filter(p => p.de < a).reduce((total, p) => total + p.duree, 0);
+            return a - (etat.debutOrigine || etat.debut) - pauses;
+        }
+
+        function rendrePause() {
+            const enPause = !!(etat && etat.pauseDepuis && PHASES_PAUSABLES.includes(etat.phase));
+            document.body.classList.toggle('en-pause', enPause);
+            $('voilePause').hidden = !enPause;
+            $('btnPause').hidden = !etat || !PHASES_PAUSABLES.includes(etat.phase);
+            if (enPause) lecteur.pause();
+            else if (extraitJoue && lecteur.paused && lecteur.src && !lecteur.ended) lecteur.play().catch(() => {});
         }
 
         setInterval(tic, 200);
@@ -1685,6 +1812,7 @@
             const action = e.target.closest('[data-action]')?.dataset.action;
             if (action === 'suivant') suivant();
             if (action === 'abandonner') abandonner();
+            if (action === 'pause') basculerPause();
             if (action === 'extrait') {
                 lecteur.play().then(() => { $('zoneAudio').querySelector('[data-action="extrait"]').hidden = true; }).catch(() => {});
             }
@@ -1700,8 +1828,19 @@
 
         document.addEventListener('keydown', e => {
             son.debloquer();
-            if (!etat || e.target.closest('input, select, button')) return;
-            if (['Enter', ' ', 'ArrowRight'].includes(e.key)) {
+            if (!etat || e.target.closest('input, select')) return;
+            // P met en pause ou reprend, même si un bouton a le focus
+            if (e.key === 'p' || e.key === 'P') {
+                e.preventDefault();
+                basculerPause();
+                return;
+            }
+            // Entrée ou espace sur un bouton : c'est le bouton qui agit (pas de double action)
+            if (e.target.closest('button')) return;
+            if (etat.pauseDepuis && e.key === 'Enter') {
+                e.preventDefault();
+                basculerPause();
+            } else if (['Enter', ' ', 'ArrowRight'].includes(e.key)) {
                 e.preventDefault();
                 suivant();
             }

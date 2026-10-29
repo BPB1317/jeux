@@ -248,11 +248,6 @@
         "bonne": 1, "theme": "Animaux", "difficulte": 1
     },
     {
-        "question": "Pourquoi les zèbres se serrent-ils en troupeau face aux lions ?",
-        "reponses": ["Leurs rayures mêlées empêchent le prédateur d'isoler une cible", "Ils font monter la température de l'air pour aveugler le lion", "Ils imitent ensemble le cri d'un éléphant", "Pour que les mâles s'enfuient en premier"],
-        "bonne": 0, "theme": "Animaux", "difficulte": 2
-    },
-    {
         "question": "Quelle antilope du désert, très résistante à la soif, a des cornes droites en forme de lances pouvant dépasser un mètre ?",
         "reponses": ["L'Impala", "L'Oryx gazelle (gemsbok)", "Le Topi", "Le Springbok"],
         "bonne": 1, "theme": "Animaux", "difficulte": 2

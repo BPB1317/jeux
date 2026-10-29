@@ -6,13 +6,6 @@
         "itunes": 1440520983
     },
     {
-        "question": "« J'aimerais trop qu'elle m'aime… » Complétez la suite : « Mais elle est tellement… »",
-        "reponses": ["Jolie", "Petite", "Snob", "Timide"],
-        "bonne": 2, "theme": "Chansons", "difficulte": 2,
-        "explication": "Keen'V, « J'aimerais trop » (2011).",
-        "itunes": 603574204, "audioApres": true
-    },
-    {
         "question": "Quel est le titre de ce tube de Gims sorti en 2015 ?",
         "reponses": ["Bella", "Est-ce que tu m'aimes ?", "Sapés comme jamais", "J'me tire"],
         "bonne": 2, "theme": "Chansons", "difficulte": 1,
@@ -44,12 +37,6 @@
         "bonne": 0, "theme": "Chansons", "difficulte": 2,
         "explication": "« Tout oublier ».",
         "itunes": 1434408435
-    },
-    {
-        "question": "Dans « Jeune Demoiselle » de Diam's (2006), qu'est-ce que doit avoir le « mec mortel » ?",
-        "reponses": ["Du style", "Du charme", "Des sous", "Du cœur"],
-        "bonne": 1, "theme": "Chansons", "difficulte": 2,
-        "itunes": 696155473, "audioApres": true
     },
     {
         "question": "Quel groupe français a sorti cet hymne écologiste en 2003 ?",
@@ -212,11 +199,6 @@
         "reponses": ["Julien Doré", "Christophe Willem", "Steeve Estatof", "Jonatan Cerrada"],
         "bonne": 1, "theme": "Chansons", "difficulte": 2,
         "explication": "Le premier gagnant, en 2003, était Jonatan Cerrada."
-    },
-    {
-        "question": "Complétez ce tube de Lorie (2002) : « J'ai besoin d'amour, de bisous, de câlins, j'en veux tous les jours… »",
-        "reponses": ["Du soir au matin", "J'en veux sans fin", "Sur mon chemin", "Jusqu'à demain"],
-        "bonne": 0, "theme": "Chansons", "difficulte": 3
     },
     {
         "question": "Dans « La Terre est ronde » d'Orelsan : « Au fond j'crois qu'la Terre est ronde pour une seule bonne raison… »",

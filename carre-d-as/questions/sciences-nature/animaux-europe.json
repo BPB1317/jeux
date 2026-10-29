@@ -247,11 +247,5 @@
         "question": "Quel insecte social fabrique des nids en « carton » de bois mâché sous les toits ou dans les troncs ?",
         "reponses": ["Le Frelon européen", "L'Abeille domestique", "Le Bourdon terrestre", "Le Scarabée rhinocéros"],
         "bonne": 0, "theme": "Animaux", "difficulte": 2
-    },
-    {
-        "question": "Qu'est-ce qui aide le renard roux à repérer les rongeurs sous un mètre de neige ?",
-        "reponses": ["Une crête thermique sur le front", "Une ouïe très fine et la perception du champ magnétique terrestre", "Des moustaches qui touchent le sol", "Des sabots résonateurs"],
-        "bonne": 1, "theme": "Animaux", "difficulte": 3,
-        "explication": "Selon une étude de 2011, il bondit de préférence orienté vers le nord-est : c'est le « mulotage »."
     }
 ]

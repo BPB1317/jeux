@@ -612,6 +612,11 @@
             if (!etat || !moi || !code) return;
             rendreBandeaux();
             const total = scores[uid]?.total ?? 0;
+            // Pause décidée sur la TV : plus de boutons, le chrono est figé
+            if (etat.pauseDepuis && ['question', 'revelation', 'classement'].includes(etat.phase)) {
+                info('', `<p class="grand-message">Pause</p><p class="detail">La partie reprend dans un instant.</p>`);
+                return;
+            }
             if (etat.phase === 'salle') {
                 afficher('ecranAttente');
             } else if (etat.phase === 'question') {
@@ -663,7 +668,7 @@
         });
 
         async function repondre(k) {
-            if (!etat || etat.phase !== 'question' || maReponse) return;
+            if (!etat || etat.phase !== 'question' || etat.pauseDepuis || maReponse) return;
             const q = etat.q;
             if (navigator.vibrate) navigator.vibrate(60);
             maReponse = { choix: k };
@@ -680,7 +685,7 @@
 
         function ticJoueur() {
             if (!etat || etat.phase !== 'question') return;
-            const reste = etat.debut + etat.duree * 1000 - heureServeur();
+            const reste = etat.debut + etat.duree * 1000 - (etat.pauseDepuis || heureServeur());
             $('chronoJoueur').textContent = Math.max(0, Math.ceil(reste / 1000));
         }
 
