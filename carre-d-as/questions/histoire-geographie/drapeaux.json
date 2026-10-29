@@ -1,0 +1,293 @@
+[
+    {
+        "question": "Quel est le seul pays au monde dont le drapeau national n'est ni rectangulaire ni carré ?",
+        "reponses": ["Le Vatican", "Le Népal", "Le Bhoutan", "Saint-Marin"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 1,
+        "explication": "Il est formé de deux triangles superposés.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Nepal.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel arbre est représenté au centre du drapeau du Liban ?",
+        "reponses": ["Un chêne", "Un olivier", "Un cèdre", "Un palmier"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Lebanon.svg?width=960", "masque": [0.3, 0.22, 0.4, 0.56]
+    },
+    {
+        "question": "Quelle devise est inscrite sur la bande blanche du drapeau brésilien ?",
+        "reponses": ["Liberté, Égalité, Fraternité", "Ordem e Progresso", "Viva o Brasil", "Paz e Amor"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 1,
+        "explication": "« Ordre et Progrès ».",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Brazil.svg?width=960", "masque": [0.3, 0.2, 0.4, 0.6]
+    },
+    {
+        "question": "Quels sont les deux seuls États souverains au monde à avoir un drapeau officiel carré ?",
+        "reponses": ["Monaco et Malte", "La Suisse et le Vatican", "L'Islande et la Norvège", "Le Liechtenstein et le Luxembourg"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Vatican_City.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel célèbre temple figure au centre du drapeau du Cambodge ?",
+        "reponses": ["Borobudur", "Angkor Vat", "Bagan", "Wat Phra Kaeo"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Cambodia.svg?width=960", "masque": [0.27, 0.26, 0.46, 0.5]
+    },
+    {
+        "question": "Combien d'étoiles compte le drapeau actuel des États-Unis ?",
+        "reponses": ["48", "50", "52", "13"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 1,
+        "explication": "Une par État. Les 13 bandes représentent les colonies d'origine.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_the_United_States.svg?width=960", "masque": [0, 0, 0.4, 0.54]
+    },
+    {
+        "question": "Quelle feuille figure au centre du drapeau du Canada ?",
+        "reponses": ["Une feuille de platane", "Une feuille de vigne", "Une feuille d'érable", "Une feuille de chêne"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Canada_(Pantone).svg?width=960", "masque": [0.27, 0.08, 0.46, 0.84]
+    },
+    {
+        "question": "Quel animal légendaire est représenté sur le drapeau du Bhoutan ?",
+        "reponses": ["Un phénix", "Une licorne", "Un griffon", "Un dragon"],
+        "bonne": 3, "theme": "Drapeaux", "difficulte": 1,
+        "explication": "Le Druk, dragon du tonnerre.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Bhutan.svg?width=960", "masque": [0.12, 0.12, 0.76, 0.76]
+    },
+    {
+        "question": "Quel pays a au centre de son drapeau le « Soleil de Mai », un soleil à visage humain ?",
+        "reponses": ["L'Argentine", "Le Mexique", "Le Pérou", "La Colombie"],
+        "bonne": 0, "theme": "Drapeaux", "difficulte": 1,
+        "explication": "L'Uruguay a aussi un soleil à visage, mais dans le coin supérieur gauche.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Argentina.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel pays a inspiré la croix décentrée présente sur tous les drapeaux nordiques ?",
+        "reponses": ["La Suède", "La Norvège", "Le Danemark", "La Finlande"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 1,
+        "explication": "Le Dannebrog est l'un des plus vieux drapeaux du monde encore en usage.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Denmark.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quels deux pays ont des drapeaux presque impossibles à distinguer (bandes verticales bleue, jaune, rouge) ?",
+        "reponses": ["Le Tchad et la Roumanie", "Le Mali et la Guinée", "La Colombie et l'Équateur", "La Pologne et l'Indonésie"],
+        "bonne": 0, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "Seule une nuance infime de bleu les différencie.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Chad.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Le drapeau de la Côte d'Ivoire est souvent confondu avec celui de :",
+        "reponses": ["L'Italie", "L'Irlande", "L'Inde", "Le Niger"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "Côte d'Ivoire : orange, blanc, vert. Irlande : vert, blanc, orange.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_C%C3%B4te_d%27Ivoire.svg?width=960"
+    },
+    {
+        "question": "Comment distinguer facilement le drapeau de l'Australie de celui de la Nouvelle-Zélande ?",
+        "reponses": ["L'Australie n'a pas l'Union Jack", "Les 4 étoiles néo-zélandaises sont rouges bordées de blanc", "Le fond néo-zélandais est noir", "L'Australie a un kangourou au centre"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "L'Australie a 6 étoiles blanches.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_New_Zealand.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel pays a exactement le même drapeau rouge sur blanc que l'Indonésie, avec des proportions différentes ?",
+        "reponses": ["Singapour", "La Pologne", "Monaco", "Malte"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "La Pologne, elle, a le blanc au-dessus du rouge.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Monaco.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quelle nation du Royaume-Uni n'est PAS représentée sur l'Union Jack ?",
+        "reponses": ["L'Écosse", "L'Angleterre", "L'Irlande du Nord", "Le pays de Galles"],
+        "bonne": 3, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "Le pays de Galles était déjà rattaché à l'Angleterre lors de la création du drapeau.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_the_United_Kingdom.svg?width=960"
+    },
+    {
+        "question": "Qu'est-ce qui différencie le drapeau des Pays-Bas de celui du Luxembourg ?",
+        "reponses": ["La nuance de bleu", "L'ordre des couleurs", "Un lion sur celui des Pays-Bas", "Une bande jaune au milieu"],
+        "bonne": 0, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "Bleu ciel pour le Luxembourg, bleu outremer pour les Pays-Bas.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Luxembourg.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel oiseau dévore un serpent sur un cactus au centre du drapeau mexicain ?",
+        "reponses": ["Un condor", "Un aigle royal", "Un faucon", "Un pélican"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Mexico.svg?width=960", "masque": [0.35, 0.2, 0.3, 0.6]
+    },
+    {
+        "question": "Quel pays a un drapeau à bandes horizontales jaune, bleue, rouge, le jaune occupant la moitié supérieure ?",
+        "reponses": ["La Bolivie", "Le Chili", "La Colombie", "Le Costa Rica"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Colombia.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Combien de couleurs composent le drapeau officiel de l'Afrique du Sud ?",
+        "reponses": ["4", "5", "6", "7"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "Noir, jaune, vert, blanc, rouge et bleu.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_South_Africa.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel symbole figure au centre du drapeau de l'Inde ?",
+        "reponses": ["Une fleur de lotus", "Une roue à 24 rayons", "Un tigre du Bengale", "Un soleil levant"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "L'Ashoka Chakra.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_India.svg?width=960", "masque": [0.39, 0.32, 0.22, 0.36]
+    },
+    {
+        "question": "Quel est aujourd'hui le seul drapeau national qui ne contient ni blanc, ni bleu, ni rouge ?",
+        "reponses": ["Le Nigeria", "La Jamaïque", "L'Arabie saoudite", "La Zambie"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 3,
+        "explication": "Vert, noir et jaune doré seulement, depuis que la Mauritanie a ajouté du rouge en 2017.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Jamaica.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel pays a un drapeau dont le recto et le verso sont différents ?",
+        "reponses": ["Le Paraguay", "L'Uruguay", "Le Suriname", "Le Guyana"],
+        "bonne": 0, "theme": "Drapeaux", "difficulte": 3,
+        "explication": "Le blason national d'un côté, le sceau du Trésor de l'autre.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Paraguay.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel pays a un fusil d'assaut (une kalachnikov) sur son drapeau officiel ?",
+        "reponses": ["L'Angola", "Le Mozambique", "Le Zimbabwe", "Le Yémen"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 3,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Mozambique.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Le violet est rarissime sur les drapeaux. Sur lequel en trouve-t-on, sur un perroquet ?",
+        "reponses": ["La Dominique", "Les Fidji", "Les Bahamas", "Trinité-et-Tobago"],
+        "bonne": 0, "theme": "Drapeaux", "difficulte": 3,
+        "explication": "Le perroquet sisserou a des plumes violettes.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Dominica.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Comment s'appelle le symbole à trois jambes pliées au centre du drapeau de l'île de Man ?",
+        "reponses": ["L'Aegishjalmur", "La Trinacria", "Les Trois Jambes de Man", "La Croix celtique"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 3,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_the_Isle_of_Man.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel est le seul pays dont le drapeau comporte une Bible ouverte ?",
+        "reponses": ["Le Vatican", "La République dominicaine", "Le Salvador", "L'Éthiopie"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 3,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_the_Dominican_Republic.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel pays a sur son drapeau une frégate volant au-dessus d'un soleil levant et de vagues ?",
+        "reponses": ["Kiribati", "Les Maldives", "Les Seychelles", "Palaos"],
+        "bonne": 0, "theme": "Drapeaux", "difficulte": 3,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Kiribati.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel pays d'Europe a un drapeau à 5 bandes horizontales bleue, blanche, rouge, blanche, bleue, avec un blason décentré ?",
+        "reponses": ["La Croatie", "La Slovaquie", "Aucun, c'est le Costa Rica", "La Serbie"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 3,
+        "explication": "Piège classique : ce drapeau n'est pas européen.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Costa_Rica_(state).svg?width=960", "imageApres": true
+    },
+    {
+        "question": "Quel animal marin figure sur le drapeau de la Papouasie-Nouvelle-Guinée ?",
+        "reponses": ["Un requin", "Une tortue", "Une raie manta", "Aucun, c'est un oiseau de paradis"],
+        "bonne": 3, "theme": "Drapeaux", "difficulte": 3,
+        "explication": "Avec la constellation de la Croix du Sud.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Papua_New_Guinea.svg?width=960", "masque": [0.48, 0.04, 0.5, 0.52]
+    },
+    {
+        "question": "Quelle règle s'applique au drapeau de l'Arabie saoudite ?",
+        "reponses": ["Il n'est jamais mis en berne", "Il est toujours cousu à la main", "Il ne peut pas être en tissu synthétique", "Sa nuance de vert change chaque siècle"],
+        "bonne": 0, "theme": "Drapeaux", "difficulte": 3,
+        "explication": "Il porte la chahada, la profession de foi de l'islam.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Saudi_Arabia.svg?width=960", "imageApres": true
+    },
+    {
+        "question": "À quel drapeau européen appartient cet emblème royal ?",
+        "reponses": ["Monaco", "Le Liechtenstein", "Le Luxembourg", "Andorre"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 3,
+        "explication": "La couronne a été ajoutée en 1937 pour ne plus confondre ce drapeau avec celui d'Haïti.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Liechtenstein.svg?width=960", "zoom": { "x": 0.2, "y": 0.25, "fois": 4 }
+    },
+    {
+        "question": "Ce soleil appartient au drapeau de quel pays d'Amérique du Sud ?",
+        "reponses": ["L'Argentine", "Le Pérou", "L'Uruguay", "Le Paraguay"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 3,
+        "explication": "L'Argentine a son soleil au centre, l'Uruguay dans le coin supérieur gauche.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Uruguay.svg?width=960", "zoom": { "x": 0.185, "y": 0.278, "fois": 3.5 }
+    },
+    {
+        "question": "Ce symbole d'une machette et d'une demi-roue dentée figure sur le drapeau de :",
+        "reponses": ["L'Angola", "Cuba", "Le Vietnam", "La Corée du Nord"],
+        "bonne": 0, "theme": "Drapeaux", "difficulte": 3,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Angola.svg?width=960", "zoom": { "x": 0.5, "y": 0.5, "fois": 2.5 }
+    },
+    {
+        "question": "Vous observez la Croix du Sud sur un drapeau. De quel pays s'agit-il ?",
+        "reponses": ["L'Australie", "La Nouvelle-Zélande", "Les Samoa", "Le Brésil"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 3,
+        "explication": "4 étoiles rouges bordées de blanc. Celles de l'Australie sont blanches.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_New_Zealand.svg?width=960", "zoom": { "x": 0.667, "y": 0.5, "fois": 1.5 }
+    },
+    {
+        "question": "Ce blason, avec ses volcans et ses navires, orne le drapeau de :",
+        "reponses": ["L'Islande", "L'Équateur", "Le Costa Rica", "L'Indonésie"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 3,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Costa_Rica_(state).svg?width=960", "zoom": { "x": 0.29, "y": 0.5, "fois": 3.5 }
+    },
+    {
+        "question": "Quel animal doré tient une épée sur la partie masquée de ce drapeau ?",
+        "reponses": ["Un tigre", "Un lion", "Un léopard", "Un éléphant"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "Le lion de Kandy, sur le drapeau du Sri Lanka.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Sri_Lanka.svg?width=960", "masque": [0.32, 0.06, 0.64, 0.88]
+    },
+    {
+        "question": "Sur ce drapeau égyptien, quel oiseau se cache sous le point d'interrogation ?",
+        "reponses": ["Un faucon", "Un aigle", "Un ibis", "Un condor"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "L'aigle de Saladin.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Egypt.svg?width=960", "masque": [0.38, 0.34, 0.24, 0.32]
+    },
+    {
+        "question": "Quel motif rouge et bleu a été effacé au centre du drapeau de la Corée du Sud ?",
+        "reponses": ["Un dragon et un tigre", "Le taegeuk (yin et yang)", "Une fleur de lotus", "Deux flèches circulaires"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_South_Korea.svg?width=960", "masque": [0.32, 0.22, 0.36, 0.56]
+    },
+    {
+        "question": "Quels symboles jaunes sont cachés dans le carré bleu du drapeau de la Malaisie ?",
+        "reponses": ["Un soleil et un sabre", "Un croissant de lune et une étoile", "Une colombe et une palme", "Trois étoiles"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Malaysia.svg?width=960", "masque": [0, 0, 0.5, 0.572]
+    },
+    {
+        "question": "Ce motif de rayures appartient au drapeau de :",
+        "reponses": ["La Grèce", "L'Uruguay", "La Finlande", "Saint-Marin"],
+        "bonne": 0, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "9 bandes, pour les 9 syllabes de la devise nationale. Celles de l'Uruguay commencent par du blanc.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Greece.svg?width=960", "masque": [0, 0, 0.37, 0.556]
+    },
+    {
+        "question": "Ce drapeau est celui d'un archipel européen autonome. Lequel ?",
+        "reponses": ["Les îles Féroé", "Les Açores", "Les îles Baléares", "La Sardaigne"],
+        "bonne": 2, "theme": "Drapeaux", "difficulte": 2,
+        "explication": "Les bandes catalanes et le château de Palma.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_the_Balearic_Islands.svg?width=960"
+    },
+    {
+        "question": "Ce drapeau aux rayons colorés en éventail est celui :",
+        "reponses": ["De la Jamaïque", "Des Seychelles", "De Maurice", "Des Maldives"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Seychelles.svg?width=960"
+    },
+    {
+        "question": "Ne confondez pas avec l'Italie ! Quel est ce pays ?",
+        "reponses": ["Le Mexique", "L'Iran", "La Bulgarie", "La Hongrie"],
+        "bonne": 0, "theme": "Drapeaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Mexico.svg?width=960", "flou": [0.35, 0.18, 0.3, 0.64]
+    },
+    {
+        "question": "Ce drapeau à 5 croix appartient à quel pays du Caucase ?",
+        "reponses": ["L'Arménie", "La Géorgie", "L'Azerbaïdjan", "La Moldavie"],
+        "bonne": 1, "theme": "Drapeaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Georgia.svg?width=960"
+    }
+]

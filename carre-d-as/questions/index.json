@@ -1,3 +1,14 @@
 [
-    { "fichier": "exemple.json", "titre": "Culture générale (exemple)" }
+    {
+        "theme": "Histoire-Géographie",
+        "sujets": [
+            { "fichier": "histoire-geographie/drapeaux.json", "titre": "Drapeaux" }
+        ]
+    },
+    {
+        "theme": "Culture générale",
+        "sujets": [
+            { "fichier": "exemple.json", "titre": "Questions d'exemple" }
+        ]
+    }
 ]

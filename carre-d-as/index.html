@@ -53,6 +53,29 @@
             gap: 1.3rem;
         }
 
+        .config-gauche,
+        .config-droite {
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+            min-width: 0;
+        }
+
+        /* Grand écran : les thèmes à gauche, les réglages et le bouton à droite, tout tient sans défiler */
+        @media (min-width: 1000px) {
+            .config {
+                width: min(76rem, 100%);
+                display: grid;
+                grid-template-columns: 1.15fr 1fr;
+                gap: 2.5rem;
+                align-items: start;
+            }
+
+            .config .themes {
+                max-height: calc(100vh - 21rem);
+            }
+        }
+
         .config-ligne {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -66,6 +89,100 @@
         #etatFichier {
             font-weight: 700;
             color: var(--encre-douce);
+        }
+
+        /* ---------- Liste des thèmes ---------- */
+
+        .themes {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 46vh;
+            overflow-y: auto;
+            padding: 0.2rem 0.4rem 0.4rem 0;
+        }
+
+        .titre-theme {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-family: var(--police-titre);
+            font-size: 1.25rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .sujets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding-left: 1rem;
+            border-left: var(--trait) solid var(--filet);
+        }
+
+        .theme {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-family: var(--police-texte);
+            font-size: 1rem;
+            font-weight: 900;
+            text-align: left;
+            color: var(--encre);
+            background: #FFFDF7;
+            border: var(--trait-fin) solid var(--encre);
+            border-radius: var(--rayon);
+            padding: 0.6em 0.8em;
+            cursor: pointer;
+        }
+
+        .theme:hover:not(:disabled):not(.choisi) {
+            background: var(--kraft);
+        }
+
+        .theme.choisi {
+            color: var(--carton);
+            background: var(--encre);
+        }
+
+        .theme:disabled {
+            opacity: 0.55;
+            cursor: default;
+        }
+
+        .theme-titre {
+            flex: 1;
+        }
+
+        .theme-compte {
+            font-weight: 700;
+            font-size: 0.85em;
+        }
+
+        .a-completer {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--encre);
+            background: var(--ocre);
+            border: 2px solid var(--encre);
+            padding: 0.2em 0.5em;
+        }
+
+        #btnRemiseAZero {
+            align-self: flex-start;
+            margin-top: -0.9rem;
+        }
+
+        .alerte {
+            font-weight: 900;
+            color: var(--encre);
+            background: var(--ocre);
+            border: var(--trait-fin) solid var(--encre);
+            box-shadow: 4px 4px 0 var(--encre);
+            padding: 0.6em 0.9em;
         }
 
         /* ---------- Salle d'attente ---------- */
@@ -265,13 +382,95 @@
             from { transform: translateY(0.4em); opacity: 0; }
         }
 
-        #imageQuestion {
+        /* ---------- Image de la question : zoom, masque ou flou, dévoilés à la révélation ---------- */
+
+        /* La question et son image côte à côte : l'image garde sa taille, même avec une longue question */
+        .bloc-question {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(1.5rem, 3vw, 3.5rem);
+        }
+
+        .textes-question {
             flex: 1;
-            min-height: 0;
-            max-height: 32vh;
-            object-fit: contain;
-            align-self: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .zone-image {
+            flex: 0 0 auto;
+            height: 38vh;
+            max-width: 50%;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Image réservée à la révélation (elle donnerait la réponse) */
+        #ecranQuestion:not(.revele) .zone-image.apres {
+            display: none;
+        }
+
+        .cadre-image {
+            position: relative;
+            height: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            background: var(--carton);
             border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+        }
+
+        .cadre-image img {
+            display: block;
+            height: 100%;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            transform: var(--zoom, none);
+            transition: transform 1s cubic-bezier(.3, .8, .3, 1);
+        }
+
+        .cadre-image .masque,
+        .cadre-image .flou {
+            position: absolute;
+            transition: opacity 0.7s ease-out;
+        }
+
+        .cadre-image .masque {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--police-titre);
+            font-size: clamp(2rem, 6vh, 4.5rem);
+            line-height: 1;
+            color: var(--carton);
+            background: var(--encre);
+        }
+
+        .cadre-image .flou {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        #ecranQuestion.revele .cadre-image img {
+            transform: none;
+        }
+
+        #ecranQuestion.revele .cadre-image .masque,
+        #ecranQuestion.revele .cadre-image .flou {
+            opacity: 0;
+        }
+
+        .explication {
+            text-align: center;
+            text-wrap: balance;
+            font-weight: 700;
+            font-size: clamp(1.1rem, 1.9vw, 2rem);
+            color: var(--encre-douce);
+            animation: apparait 0.5s 0.4s ease-out both;
         }
 
         #reponsesTV {
@@ -290,7 +489,7 @@
             align-items: center;
             gap: 0.6em;
             font-weight: 900;
-            font-size: clamp(1.4rem, 2.6vw, 3.2rem);
+            font-size: clamp(1.1rem, min(2.6vw, 4.4vh), 3.2rem);
             line-height: 1.15;
             color: var(--coin-texte);
             background: var(--coin);
@@ -567,15 +766,20 @@
             <h1 class="titre-jeu">Carré d'As</h1>
         </header>
         <div class="config carte">
-            <div class="champ">
-                <label for="choixFichier">Questions</label>
-                <select id="choixFichier"></select>
+            <div class="config-gauche">
+                <div class="champ">
+                    <span class="etiquette-champ">Thème et sujet</span>
+                    <ul class="themes" id="listeThemes"></ul>
+                </div>
+                <div class="champ">
+                    <label for="fichierLocal">Ou un fichier de l'ordinateur</label>
+                    <input type="file" id="fichierLocal" accept=".json,application/json">
+                </div>
             </div>
-            <div class="champ">
-                <label for="fichierLocal">Ou un fichier de l'ordinateur</label>
-                <input type="file" id="fichierLocal" accept=".json,application/json">
-            </div>
+            <div class="config-droite">
             <p id="etatFichier">Chargement des questions…</p>
+            <button type="button" class="btn-lien" id="btnRemiseAZero" hidden>Tout remettre en jeu</button>
+            <p id="alerteFichier" class="alerte" role="alert" hidden></p>
             <div class="config-ligne">
                 <div class="champ">
                     <label for="duree">Temps par question</label>
@@ -593,6 +797,7 @@
             </div>
             <button id="btnCreer" class="btn btn-geant" disabled>Créer la partie</button>
             <p id="erreurConfig" class="erreur" hidden></p>
+            </div>
         </div>
     </section>
 
@@ -626,8 +831,13 @@
             <span id="chrono"></span>
         </div>
         <div class="jauge"><div id="jauge"></div></div>
-        <h2 id="texteQuestion"></h2>
-        <img id="imageQuestion" alt="" hidden>
+        <div class="bloc-question">
+            <div class="textes-question">
+                <h2 id="texteQuestion"></h2>
+                <p id="explication" class="explication" hidden></p>
+            </div>
+            <div id="zoneImage" class="zone-image" hidden></div>
+        </div>
         <ul id="reponsesTV"></ul>
         <div class="actions-tv">
             <button class="btn" data-action="suivant" id="btnQuestion"></button>
@@ -749,7 +959,9 @@
             try {
                 const meta = (await get(ref(db, `parties/${c}/meta`))).val();
                 if (!meta || meta.hote !== uid) return false;
-                questions = (await get(ref(db, `parties/${c}/secret/questions`))).val() || [];
+                const secret = (await get(ref(db, `parties/${c}/secret`))).val() || {};
+                questions = secret.questions || [];
+                cleBanque = secret.fichier || null;
                 code = c;
                 ecouter();
                 return true;
@@ -760,37 +972,144 @@
 
         // ---------- Réglages ----------
 
+        // Les questions sont rangées en grands thèmes (Histoire…) qui contiennent des sujets (Rois de France…).
+        // Un sujet = un fichier de questions, jouable seul, avec son propre stock. Voir questions/index.json.
+        let sujets = [];        // { theme, titre, cle, banque, erreur }
+        let sujetChoisi = null;
+
         async function preparerConfig() {
             afficher('ecranConfig');
             try {
                 const liste = await (await fetch('questions/index.json')).json();
-                $('choixFichier').innerHTML = liste.map(f => `<option value="${echapper(f.fichier)}">${echapper(f.titre)}</option>`).join('');
-                await chargerFichierListe();
+                // Une entrée est soit un thème avec ses sujets, soit un sujet isolé (rangé dans « Autres »)
+                const aCharger = liste.flatMap(e => e.sujets
+                    ? e.sujets.map(s => ({ ...s, theme: e.theme }))
+                    : [{ ...e, theme: 'Autres' }]);
+                // Tous les sujets sont chargés d'emblée, pour afficher le stock de chacun
+                sujets = await Promise.all(aCharger.map(async s => {
+                    const url = new URL('questions/' + s.fichier, location.href);
+                    const sujet = { theme: s.theme, titre: s.titre, cle: 'liste:' + s.fichier, banque: [] };
+                    try {
+                        sujet.banque = validerQuestions(await (await fetch(url)).json(), url);
+                    } catch (e) {
+                        sujet.erreur = e instanceof SyntaxError || !e.message ? 'Fichier illisible.' : e.message;
+                    }
+                    return sujet;
+                }));
+                choisirSujet(sujets.find(s => !s.erreur) || null);
             } catch {
-                $('etatFichier').textContent = 'Impossible de lire la liste des fichiers de questions.';
+                $('etatFichier').textContent = 'Impossible de lire la liste des thèmes (questions/index.json).';
             }
         }
 
-        async function chargerFichierListe() {
-            const url = new URL('questions/' + $('choixFichier').value, location.href);
-            try {
-                utiliserBanque(await (await fetch(url)).json(), url);
-            } catch {
-                utiliserBanque(null);
-            }
-        }
-
-        function utiliserBanque(donnees, base) {
-            try {
-                banque = validerQuestions(donnees, base);
-                $('etatFichier').textContent = `${banque.length} questions dans le fichier.`;
+        function choisirSujet(sujet) {
+            sujetChoisi = sujet;
+            banque = sujet && !sujet.erreur ? sujet.banque : [];
+            cleBanque = sujet ? sujet.cle : null;
+            if (banque.length) {
                 $('nbQuestions').max = banque.length;
                 $('nbQuestions').value = Math.min(banque.length, Number($('nbQuestions').value) || 10);
-            } catch (e) {
-                banque = [];
-                $('etatFichier').textContent = e.message;
             }
+            rendreSujets();
             $('btnCreer').disabled = banque.length === 0;
+        }
+
+        function neuvesDe(sujet) {
+            const posees = lirePosees(sujet.cle);
+            return sujet.banque.filter(q => !posees.has(idQuestion(q)));
+        }
+
+        // Sous ce seuil de questions jamais posées, le sujet est signalé « À compléter »
+        const SEUIL_ALERTE = 20;
+        const aCompleter = s => !s.erreur && neuvesDe(s).length < SEUIL_ALERTE;
+
+        function rendreSujets() {
+            const themes = [...new Set(sujets.map(s => s.theme))];
+            $('listeThemes').innerHTML = themes.map(theme => {
+                const siens = sujets.filter(s => s.theme === theme);
+                const nbACompleter = siens.filter(aCompleter).length;
+                return `<li class="groupe-theme">
+                    <div class="titre-theme">
+                        <span>${echapper(theme)}</span>
+                        ${nbACompleter ? `<span class="a-completer">${nbACompleter} ${nbACompleter > 1 ? 'sujets' : 'sujet'} à compléter</span>` : ''}
+                    </div>
+                    <ul class="sujets">${siens.map(s => boutonSujet(s, sujets.indexOf(s))).join('')}</ul>
+                </li>`;
+            }).join('');
+            majEtatFichier();
+        }
+
+        function boutonSujet(s, i) {
+            if (s.erreur) {
+                return `<li><button type="button" class="theme" disabled>
+                    <span class="theme-titre">${echapper(s.titre)}</span><span class="theme-compte">${echapper(s.erreur)}</span>
+                </button></li>`;
+            }
+            const choisi = s === sujetChoisi;
+            return `<li><button type="button" class="theme ${choisi ? 'choisi' : ''}" data-sujet="${i}" aria-pressed="${choisi}">
+                <span class="theme-titre">${echapper(s.titre)}</span>
+                ${aCompleter(s) ? '<span class="a-completer">À compléter</span>' : ''}
+                <span class="theme-compte">${neuvesDe(s).length} / ${s.banque.length}</span>
+            </button></li>`;
+        }
+
+        function majEtatFichier() {
+            $('btnRemiseAZero').hidden = true;
+            $('alerteFichier').hidden = true;
+            if (!sujetChoisi) return;
+            if (sujetChoisi.erreur) {
+                $('etatFichier').textContent = sujetChoisi.erreur;
+                return;
+            }
+            const neuves = questionsNeuves().length;
+            $('etatFichier').textContent = neuves === banque.length
+                ? `${banque.length} questions dans ce sujet, aucune encore posée.`
+                : `${banque.length} questions dans ce sujet, dont ${neuves} jamais posées.`;
+            $('btnRemiseAZero').hidden = neuves === banque.length;
+            if (neuves < SEUIL_ALERTE) {
+                $('alerteFichier').textContent = neuves === 0
+                    ? `Toutes les questions « ${sujetChoisi.titre} » ont été posées : la prochaine partie les remettra en jeu. Pense à en ajouter.`
+                    : `Plus que ${neuves} ${neuves > 1 ? 'questions neuves' : 'question neuve'} en « ${sujetChoisi.titre} » : pense à en ajouter.`;
+                $('alerteFichier').hidden = false;
+            }
+        }
+
+        // ---------- Questions déjà posées : mémorisées sur la TV, fichier par fichier ----------
+        // Chaque question n'est posée qu'une fois. Quand tout le fichier y est passé, on repart de zéro.
+
+        let cleBanque = null;   // identifie le fichier de questions de la partie
+        const clePosees = cle => `carreDAs.posees.${cle}`;
+        const idQuestion = q => q.question.trim().toLowerCase();
+
+        function lirePosees(cle) {
+            try { return new Set(JSON.parse(lireStockage(clePosees(cle)) || '[]')); } catch { return new Set(); }
+        }
+
+        function ecrirePosees(cle, posees) {
+            ecrireStockage(clePosees(cle), posees.size ? JSON.stringify([...posees]) : null);
+        }
+
+        function questionsNeuves() {
+            if (!cleBanque) return banque;
+            const posees = lirePosees(cleBanque);
+            return banque.filter(q => !posees.has(idQuestion(q)));
+        }
+
+        // Une question ne compte comme posée qu'une fois affichée : une partie abandonnée ne « brûle » pas les suivantes
+        function marquerPosee(question) {
+            if (!cleBanque || !question) return;
+            const posees = lirePosees(cleBanque);
+            posees.add(idQuestion(question));
+            ecrirePosees(cleBanque, posees);
+        }
+
+        function choisirQuestions(nb) {
+            const neuves = melanger(questionsNeuves());
+            if (neuves.length >= nb) return neuves.slice(0, nb);
+            // Fichier presque épuisé : on prend les dernières neuves, puis on repart de zéro pour compléter, sans doublon
+            const restantes = new Set(neuves);
+            if (cleBanque) ecrirePosees(cleBanque, new Set());
+            return [...neuves, ...melanger(banque.filter(q => !restantes.has(q)))].slice(0, nb);
         }
 
         function validerQuestions(donnees, base) {
@@ -800,7 +1119,17 @@
                     && Number.isInteger(q.bonne) && q.bonne >= 0 && q.bonne <= 3;
                 if (!ok) throw new Error(`Question ${i + 1} mal formée : il faut « question », 4 « reponses » et « bonne » entre 0 et 3.`);
                 const propre = { question: q.question, reponses: q.reponses.map(String), bonne: q.bonne, theme: String(q.theme || ''), difficulte: Number(q.difficulte) || 1 };
-                if (q.image) propre.image = base ? new URL(q.image, base).href : String(q.image);
+                if (q.image) {
+                    propre.image = base ? new URL(q.image, base).href : String(q.image);
+                    if (q.imageApres) propre.imageApres = true;
+                    const zone = r => Array.isArray(r) && r.length === 4 && r.every(n => typeof n === 'number');
+                    if (zone(q.masque)) propre.masque = q.masque;
+                    if (zone(q.flou)) propre.flou = q.flou;
+                    if (q.zoom && [q.zoom.x, q.zoom.y, q.zoom.fois].every(n => typeof n === 'number')) {
+                        propre.zoom = { x: q.zoom.x, y: q.zoom.y, fois: q.zoom.fois };
+                    }
+                }
+                if (q.explication) propre.explication = String(q.explication);
                 return propre;
             });
         }
@@ -818,7 +1147,7 @@
             $('erreurConfig').hidden = true;
             const nb = Math.max(1, Math.min(banque.length, Number($('nbQuestions').value) || banque.length));
             const duree = Number($('duree').value);
-            const liste = melanger([...banque]).slice(0, nb);
+            const liste = choisirQuestions(nb);
             nettoyerVieillesParties();
             // Le code est réservé par la règle de sécurité : si une partie récente l'occupe, l'écriture est refusée
             for (let essai = 0; essai < 10; essai++) {
@@ -826,7 +1155,7 @@
                 try {
                     await set(ref(db, `parties/${c}`), {
                         meta: { hote: uid, creeLe: serverTimestamp(), nbQuestions: nb, duree },
-                        secret: { questions: liste },
+                        secret: cleBanque ? { questions: liste, fichier: cleBanque } : { questions: liste },
                         etat: { phase: 'salle', duree, total: nb }
                     });
                     code = c;
@@ -900,6 +1229,7 @@
 
         function rendreSalle() {
             afficher('ecranSalle');
+            precharger(questions[0]);
             $('code').textContent = code;
             const url = new URL(`joueur.html?code=${code}`, location.href).href;
             if (qrAffiche !== url) {
@@ -957,8 +1287,12 @@
                 $('texteQuestion').offsetWidth;
                 $('texteQuestion').style.animation = '';
             }
-            $('imageQuestion').hidden = !question.image;
-            if (question.image && $('imageQuestion').getAttribute('src') !== question.image) $('imageQuestion').src = question.image;
+            if (imageRendue !== etat.q) {
+                imageRendue = etat.q;
+                rendreImage(question);
+            }
+            $('explication').hidden = !(revele && question.explication);
+            $('explication').textContent = question.explication || '';
             const maxVotes = revele ? Math.max(1, ...res.votes) : 1;
             $('reponsesTV').innerHTML = question.reponses.map((r, k) => `
                 <li class="coin ${revele ? (k === res.bonne ? 'bonne' : 'fausse') : ''}" style="--i:${k};--coin:${COINS[k].couleur};--coin-texte:${COINS[k].texte}">
@@ -974,6 +1308,31 @@
             else son.question();
             dernierTic = null;
             tic();
+        }
+
+        // L'image reste la même entre la question et la révélation : seul le zoom, le masque ou le flou s'en va
+        let imageRendue = null;
+        function rendreImage(question) {
+            const zone = $('zoneImage');
+            zone.hidden = !question.image;
+            zone.classList.toggle('apres', !!question.imageApres);
+            if (!question.image) {
+                zone.innerHTML = '';
+                return;
+            }
+            const z = question.zoom;
+            const zoom = z ? `scale(${z.fois}) translate(${(0.5 - z.x) * 100}%, ${(0.5 - z.y) * 100}%)` : 'none';
+            const rect = (r, classe, contenu = '') => r
+                ? `<div class="${classe}" style="left:${r[0] * 100}%;top:${r[1] * 100}%;width:${r[2] * 100}%;height:${r[3] * 100}%">${contenu}</div>`
+                : '';
+            zone.innerHTML = `<div class="cadre-image"><img alt="" src="${echapper(question.image)}" style="--zoom:${zoom}">${rect(question.masque, 'masque', '?')}${rect(question.flou, 'flou')}</div>`;
+            // Image introuvable : la question se joue sans
+            zone.querySelector('img').addEventListener('error', () => { zone.hidden = true; });
+        }
+
+        // Charge l'image de la prochaine question pendant le classement, pour qu'elle s'affiche sans délai
+        function precharger(question) {
+            if (question && question.image) new Image().src = question.image;
         }
 
         function lignesScore(liste, decalage = 0) {
@@ -1001,6 +1360,7 @@
             $('autresClassement').textContent = autres > 0 ? `et ${autres} ${autres > 1 ? 'autres joueurs' : 'autre joueur'} en embuscade` : '';
             const derniere = Number(etat.q) + 1 >= etat.total;
             $('btnClassement').textContent = derniere ? 'Voir le podium' : 'Question suivante';
+            precharger(questions[Number(etat.q) + 1]);
             son.classement();
         }
 
@@ -1036,6 +1396,7 @@
         // ---------- Déroulé ----------
 
         function lancerQuestion(i) {
+            marquerPosee(questions[i]);
             return set(ref(db, `parties/${code}/etat`), {
                 phase: 'question', q: String(i), debut: serverTimestamp(), duree: etat.duree, total: etat.total
             });
@@ -1147,18 +1508,29 @@
             }
         });
 
-        $('choixFichier').addEventListener('change', chargerFichierListe);
+        $('listeThemes').addEventListener('click', e => {
+            const bouton = e.target.closest('[data-sujet]');
+            if (bouton) choisirSujet(sujets[Number(bouton.dataset.sujet)]);
+        });
+        // Un fichier de l'ordinateur devient un sujet de plus dans la liste (le temps de la session)
         $('fichierLocal').addEventListener('change', async e => {
             const fichier = e.target.files[0];
             if (!fichier) return;
+            const sujet = { theme: "Fichiers de l'ordinateur", titre: fichier.name.replace(/\.json$/i, ''), cle: 'local:' + fichier.name, banque: [] };
             try {
-                utiliserBanque(JSON.parse(await fichier.text()), null);
-            } catch {
-                utiliserBanque(null);
-                $('etatFichier').textContent = `« ${fichier.name} » n'est pas un fichier JSON valide.`;
+                sujet.banque = validerQuestions(JSON.parse(await fichier.text()), null);
+            } catch (err) {
+                sujet.erreur = err instanceof SyntaxError ? `« ${fichier.name} » n'est pas un fichier JSON valide.` : err.message;
             }
+            sujets = sujets.filter(s => s.cle !== sujet.cle).concat(sujet);
+            choisirSujet(sujet);
         });
         $('btnCreer').addEventListener('click', creerPartie);
+        $('btnRemiseAZero').addEventListener('click', () => {
+            if (!confirm(`Remettre toutes les questions « ${sujetChoisi.titre} » en jeu ?`)) return;
+            ecrirePosees(cleBanque, new Set());
+            rendreSujets();
+        });
 
         demarrer();
     </script>
