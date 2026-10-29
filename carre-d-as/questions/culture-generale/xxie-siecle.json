@@ -1,0 +1,255 @@
+[
+    {
+        "question": "Cette célèbre keynote de janvier 2007 a marqué le lancement :",
+        "reponses": ["De l'iPad", "Du premier iPhone", "De l'iPod nano", "De l'Apple Watch"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Steve_Jobs_presents_iPhone_(cropped).jpg?width=960",
+        "masque": [[0, 0, 1, 0.34], [0, 0.57, 1, 0.2]]
+    },
+    {
+        "question": "L'affiche « HOPE » de Shepard Fairey a marqué la campagne présidentielle américaine de :",
+        "reponses": ["Joe Biden (2020)", "Al Gore (2000)", "Barack Obama (2008)", "Donald Trump (2016)"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 2
+    },
+    {
+        "question": "Inaugurée en 2010 à Dubaï, culminant à 828 mètres, quelle est la plus haute tour du monde ?",
+        "reponses": ["La Tour de Shanghai", "Le Burj Khalifa", "Taipei 101", "Les Tours Petronas"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Burj_Khalifa_(worlds_tallest_building)_and_the_Dubai_skyline_(25781049892).jpg?width=960"
+    },
+    {
+        "question": "En 2018, la toile « Fille au ballon » s'est autodétruite dans un broyeur caché, en pleine vente aux enchères. Qui en est l'auteur ?",
+        "reponses": ["Banksy", "Invader", "JR", "KAWS"],
+        "bonne": 0, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Dévoilée en avril 2019 par l'Event Horizon Telescope, que montre cette image historique ?",
+        "reponses": ["L'explosion d'une supernova", "La première photo d'un trou noir", "L'atmosphère de Jupiter", "La surface du Soleil en rayons X"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "explication": "Le trou noir M87*, au cœur de la galaxie Messier 87.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Black_hole_-_Messier_87_crop_max_res.jpg?width=960"
+    },
+    {
+        "question": "De quelle série sud-coréenne de 2021 viennent ces gardes masqués ?",
+        "reponses": ["All of Us Are Dead", "La Casa de Papel", "Squid Game", "Alice in Borderland"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cosplay_of_Squid_Game_Guards_at_Sutera_Cosplay_Fest_2021.jpg?width=960"
+    },
+    {
+        "question": "Ce logo de réseau social a été remplacé en 2023 par quelle lettre ?",
+        "reponses": ["Y", "Z", "X", "W"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1,
+        "explication": "Twitter a été racheté puis renommé X par Elon Musk.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Logo_of_Twitter.svg?width=960"
+    },
+    {
+        "question": "Fondateur de SpaceX et de Tesla, qui est ce milliardaire ?",
+        "reponses": ["Jeff Bezos", "Elon Musk", "Peter Thiel", "Mark Zuckerberg"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Elon_Musk_-_54820081119_(3x4_cropped,_Rule_of_thirds).jpg?width=960"
+    },
+    {
+        "question": "Figure de proue des grèves scolaires pour le climat dès 2018, il s'agit de :",
+        "reponses": ["Malala Yousafzai", "Greta Thunberg", "Vanessa Nakate", "Autumn Peltier"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Greta_Thunberg_4.jpg?width=960"
+    },
+    {
+        "question": "Créée en Suède en 2006, quelle plateforme de streaming a révolutionné l'industrie musicale ?",
+        "reponses": ["Deezer", "Spotify", "Tidal", "SoundCloud"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Spotify_App_Logo.svg?width=960"
+    },
+    {
+        "question": "Ce sprinteur jamaïcain détient les records du monde du 100 m et du 200 m, établis à Berlin en 2009. Qui est-ce ?",
+        "reponses": ["Asafa Powell", "Usain Bolt", "Tyson Gay", "Yohan Blake"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Usain_Bolt_smiling_Berlin_2009.JPG?width=960",
+        "masque": [0.47, 0.41, 0.3, 0.24]
+    },
+    {
+        "question": "Lancée en mars 2017 par Nintendo, quelle est cette console ?",
+        "reponses": ["La Wii U", "La Nintendo 3DS", "La Nintendo Switch", "La PlayStation Portal"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Nintendo-Switch-Console-Docked-wJoyConRB.jpg?width=960"
+    },
+    {
+        "question": "Qui est ce président ukrainien élu en 2019 ?",
+        "reponses": ["Volodymyr Zelensky", "Petro Porochenko", "Viktor Ianoukovitch", "Denys Chmyhal"],
+        "bonne": 0, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/New_Year's_Eve_from_President_of_Ukraine_Volodymyr_Zelensky_(31-12-2025)_(cropped).jpg?width=960"
+    },
+    {
+        "question": "Quelle chaîne de cafés américaine, au logo de sirène verte, a envahi les grandes villes du monde ?",
+        "reponses": ["Costa Coffee", "Dunkin'", "Starbucks", "Tim Hortons"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "En quelle année cet incendie a-t-il ravagé Notre-Dame de Paris ?",
+        "reponses": ["2017", "2018", "2019", "2020"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1,
+        "explication": "Le 15 avril 2019.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Incendie_Notre_Dame_de_Paris.jpg?width=960"
+    },
+    {
+        "question": "Le clip de « Gangnam Style » (2012) a été le premier de l'histoire à franchir :",
+        "reponses": ["100 millions de vues sur YouTube", "500 millions de vues sur YouTube", "1 milliard de vues sur YouTube", "5 milliards de vues sur YouTube"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 2,
+        "explication": "Par le chanteur sud-coréen PSY.",
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Psy_performing_Gangnam_Style_in_George_Town,_Penang_in_2013.jpg?width=960"
+    },
+    {
+        "question": "Créé par Markus « Notch » Persson en 2009, quel est ce jeu, le plus vendu de tous les temps ?",
+        "reponses": ["Roblox", "Minecraft", "Terraria", "Fortnite"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Minecraft_Cosplay_@_Comiket_84_-_Summer_2013_@_Tokyo_Big_Sight_(9490347671).jpg?width=960"
+    },
+    {
+        "question": "Lancé à Noël 2021 pour succéder à Hubble, quel est ce télescope spatial ?",
+        "reponses": ["Kepler", "James Webb", "Spitzer", "Euclid"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/JWST_spacecraft_model_3.png?width=960"
+    },
+    {
+        "question": "Ce chef d'Al-Qaïda, traqué après le 11 septembre 2001, a été tué au Pakistan en 2011 :",
+        "reponses": ["Ayman al-Zawahiri", "Oussama ben Laden", "Abou Bakr al-Baghdadi", "Le mollah Omar"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Osama_bin_Laden_portrait.jpg?width=960"
+    },
+    {
+        "question": "Lancé en 2008 avec Iron Man, quel univers de films de super-héros a dominé le box-office des années 2010 ?",
+        "reponses": ["Le DCEU (DC Extended Universe)", "Le MCU (Marvel Cinematic Universe)", "Le MonsterVerse", "Le Wizarding World"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Omniprésent au quotidien (menus, passes sanitaires, paiements), quel est ce code-barres en 2D ?",
+        "reponses": ["Le code DataMatrix", "Le QR code", "Le code EAN-13", "La puce RFID"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/QR_code_for_mobile_English_Wikipedia.svg?width=960"
+    },
+    {
+        "question": "Considérée comme la plus grande gymnaste de l'histoire, quelle est cette superstar américaine ?",
+        "reponses": ["Simone Biles", "Aly Raisman", "Gabby Douglas", "Nadia Comăneci"],
+        "bonne": 0, "theme": "XXIe siècle", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Simone_Biles_National_Team_2024.jpg?width=960"
+    },
+    {
+        "question": "Quel événement du 11 septembre 2001 a bouleversé la géopolitique mondiale ?",
+        "reponses": ["L'invasion de l'Irak", "Les attentats du World Trade Center et du Pentagone", "Le séisme de Fukushima", "La crise des subprimes"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "En quelle année les pièces et billets en euros ont-ils été mis en circulation ?",
+        "reponses": ["1999", "2000", "2002", "2004"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Quelle encyclopédie en ligne gratuite et collaborative est née en janvier 2001 ?",
+        "reponses": ["Encarta", "Wikipédia", "Wikileaks", "Quora"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Quel film de James Cameron sorti en 2009 est le plus grand succès de l'histoire au box-office mondial ?",
+        "reponses": ["Titanic", "Avengers: Endgame", "Avatar", "Interstellar"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 2
+    },
+    {
+        "question": "Comment appelle-t-on la crise financière de 2007-2008, née des prêts immobiliers à risque aux États-Unis ?",
+        "reponses": ["La bulle Internet", "La crise des subprimes", "Le Jeudi noir", "Le choc pétrolier"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "En novembre 2022, quelle entreprise a rendu public l'agent conversationnel ChatGPT ?",
+        "reponses": ["Google DeepMind", "OpenAI", "Meta AI", "Anthropic"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Quel pays a voté en juin 2016 pour quitter l'Union européenne ?",
+        "reponses": ["La Grèce", "L'Irlande", "Le Royaume-Uni", "Le Danemark"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Quelle cryptomonnaie créée en 2009 par le mystérieux Satoshi Nakamoto a popularisé la blockchain ?",
+        "reponses": ["L'Ethereum", "Le Bitcoin", "Le Dogecoin", "Le Ripple"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Quel accord de 2015 vise à limiter le réchauffement climatique sous la barre des 2 °C ?",
+        "reponses": ["Le protocole de Kyoto", "L'accord de Paris", "Le traité de Copenhague", "La convention de Genève"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1,
+        "explication": "Négocié lors de la COP21."
+    },
+    {
+        "question": "Qui a été le premier président afro-américain des États-Unis, élu en 2008 ?",
+        "reponses": ["Colin Powell", "Barack Obama", "Jesse Jackson", "Kamala Harris"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Quel footballeur argentin a gagné la Coupe du monde 2022 et un record de 8 Ballons d'or ?",
+        "reponses": ["Diego Maradona", "Cristiano Ronaldo", "Lionel Messi", "Sergio Agüero"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Quel virus apparu fin 2019 a provoqué une pandémie et des confinements dans le monde entier ?",
+        "reponses": ["Le H1N1", "Le SARS-CoV-2 (Covid-19)", "Le virus Ebola", "Le MERS"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Quelle reine a fêté en 2022 ses 70 ans de règne, avant de s'éteindre à 96 ans ?",
+        "reponses": ["Victoria", "Élisabeth Iʳᵉ", "Élisabeth II", "Marie II"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Quelle application chinoise de vidéos courtes (ByteDance) est devenue l'une des plus téléchargées au monde vers 2020 ?",
+        "reponses": ["Vine", "Snapchat", "TikTok", "BeReal"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Qui est devenue en 2014, à 17 ans, la plus jeune lauréate du prix Nobel de la paix ?",
+        "reponses": ["Nadia Murad", "Malala Yousafzai", "Tawakkol Karman", "Shirin Ebadi"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 2,
+        "explication": "Pour son combat en faveur de l'éducation des filles au Pakistan."
+    },
+    {
+        "question": "Lancé en 2016, quel jeu mobile en réalité augmentée a fait descendre des millions de joueurs dans les rues ?",
+        "reponses": ["Angry Birds", "Pokémon GO", "Candy Crush", "Clash of Clans"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Sous quel président le mandat présidentiel français est-il passé de 7 à 5 ans ?",
+        "reponses": ["François Mitterrand", "Jacques Chirac", "Nicolas Sarkozy", "François Hollande"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 2,
+        "explication": "Référendum de 2000, appliqué dès 2002."
+    },
+    {
+        "question": "Dans quel État américain se trouve La Nouvelle-Orléans, inondée à 80 % par l'ouragan Katrina en 2005 ?",
+        "reponses": ["La Floride", "Le Texas", "La Louisiane", "La Caroline du Nord"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Qui a été la première personne à dépasser 100 millions d'abonnés sur Twitter, en 2017 ?",
+        "reponses": ["Justin Bieber", "Katy Perry", "Barack Obama", "Taylor Swift"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 3
+    },
+    {
+        "question": "Quel pays est devenu en 2010 la deuxième économie mondiale en dépassant le Japon ?",
+        "reponses": ["L'Inde", "La Chine", "L'Allemagne", "Le Brésil"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 2
+    },
+    {
+        "question": "Quel dirigeant cubain a cédé le pouvoir à son frère Raúl en 2008, avant de mourir en 2016 à 90 ans ?",
+        "reponses": ["Che Guevara", "Fulgencio Batista", "Fidel Castro", "Miguel Díaz-Canel"],
+        "bonne": 2, "theme": "XXIe siècle", "difficulte": 1
+    },
+    {
+        "question": "Quel accélérateur de particules de 27 km, sous la frontière franco-suisse, a confirmé l'existence du boson de Higgs en 2012 ?",
+        "reponses": ["Le James Webb", "Le LHC du CERN", "Le VLT", "Le tokamak ITER"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 2,
+        "explication": "LHC : Grand collisionneur de hadrons."
+    },
+    {
+        "question": "Quelle chanteuse américaine a marqué les années 2020 avec sa tournée géante « The Eras Tour » ?",
+        "reponses": ["Beyoncé", "Taylor Swift", "Billie Eilish", "Dua Lipa"],
+        "bonne": 1, "theme": "XXIe siècle", "difficulte": 1
+    }
+]

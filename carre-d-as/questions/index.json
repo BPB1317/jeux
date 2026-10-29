@@ -15,7 +15,7 @@
     {
         "theme": "Culture générale",
         "sujets": [
-            { "fichier": "exemple.json", "titre": "Questions d'exemple" }
+            { "fichier": "culture-generale/xxie-siecle.json", "titre": "XXIe siècle" }
         ]
     }
 ]

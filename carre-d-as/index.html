@@ -1117,6 +1117,14 @@
             return banque.filter(q => !posees.has(idQuestion(q)));
         }
 
+        // Premier nombre d'une réponse, « millions » et « milliards » compris (« 1 milliard » > « 500 millions ») ; null si aucun
+        function valeurNumerique(texte) {
+            const m = texte.match(/(\d+(?:[.,]\d+)?)\s*(milliards?|millions?)?/i);
+            if (!m) return null;
+            const multiple = !m[2] ? 1 : /milliard/i.test(m[2]) ? 1e9 : 1e6;
+            return parseFloat(m[1].replace(',', '.')) * multiple;
+        }
+
         // Une question ne compte comme posée qu'une fois affichée : une partie abandonnée ne « brûle » pas les suivantes
         function marquerPosee(question) {
             if (!cleBanque || !question) return;
@@ -1138,9 +1146,13 @@
             return choix.map(melangerReponses);
         }
 
-        // Les réponses changent de place à chaque partie : la bonne n'est jamais toujours le même coin
+        // Les réponses changent de place à chaque partie : la bonne n'est jamais toujours le même coin.
+        // Exception : si les 4 réponses sont chiffrées (années, quantités), elles sont rangées par ordre croissant.
         function melangerReponses(question) {
-            const ordre = melanger([0, 1, 2, 3]);
+            const valeurs = question.reponses.map(valeurNumerique);
+            const ordre = valeurs.every(v => v !== null)
+                ? [0, 1, 2, 3].sort((a, b) => valeurs[a] - valeurs[b])
+                : melanger([0, 1, 2, 3]);
             return { ...question, reponses: ordre.map(k => question.reponses[k]), bonne: ordre.indexOf(question.bonne) };
         }
 
@@ -1154,9 +1166,11 @@
                 if (q.image) {
                     propre.image = base ? new URL(q.image, base).href : String(q.image);
                     if (q.imageApres) propre.imageApres = true;
+                    // Une zone [x, y, largeur, hauteur], ou une liste de zones
                     const zone = r => Array.isArray(r) && r.length === 4 && r.every(n => typeof n === 'number');
-                    if (zone(q.masque)) propre.masque = q.masque;
-                    if (zone(q.flou)) propre.flou = q.flou;
+                    const zones = r => zone(r) ? [r] : Array.isArray(r) && r.length && r.every(zone) ? r : null;
+                    if (zones(q.masque)) propre.masque = zones(q.masque);
+                    if (zones(q.flou)) propre.flou = zones(q.flou);
                     if (q.zoom && [q.zoom.x, q.zoom.y, q.zoom.fois].every(n => typeof n === 'number')) {
                         propre.zoom = { x: q.zoom.x, y: q.zoom.y, fois: q.zoom.fois };
                     }
@@ -1367,10 +1381,11 @@
             }
             const z = question.zoom;
             const zoom = z ? `scale(${z.fois}) translate(${(0.5 - z.x) * 100}%, ${(0.5 - z.y) * 100}%)` : 'none';
-            const rect = (r, classe, contenu = '') => r
-                ? `<div class="${classe}" style="left:${r[0] * 100}%;top:${r[1] * 100}%;width:${r[2] * 100}%;height:${r[3] * 100}%">${contenu}</div>`
-                : '';
-            zone.innerHTML = `<div class="cadre-image"><img alt="" src="${echapper(question.image)}" style="--zoom:${zoom}">${rect(question.masque, 'masque', '?')}${rect(question.flou, 'flou')}</div>`;
+            // Zones en fractions de l'image ; une zone seule est acceptée comme une liste d'une zone
+            const rects = (liste, classe, contenu = '') => (!liste ? [] : typeof liste[0] === 'number' ? [liste] : liste)
+                .map(r => `<div class="${classe}" style="left:${r[0] * 100}%;top:${r[1] * 100}%;width:${r[2] * 100}%;height:${r[3] * 100}%">${contenu}</div>`)
+                .join('');
+            zone.innerHTML = `<div class="cadre-image"><img alt="" src="${echapper(question.image)}" style="--zoom:${zoom}">${rects(question.masque, 'masque', '?')}${rects(question.flou, 'flou')}</div>`;
             // Image introuvable : la question se joue sans
             zone.querySelector('img').addEventListener('error', () => { zone.hidden = true; });
         }
