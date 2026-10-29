@@ -1127,11 +1127,21 @@
 
         function choisirQuestions(nb) {
             const neuves = melanger(questionsNeuves());
-            if (neuves.length >= nb) return neuves.slice(0, nb);
-            // Fichier presque épuisé : on prend les dernières neuves, puis on repart de zéro pour compléter, sans doublon
-            const restantes = new Set(neuves);
-            if (cleBanque) ecrirePosees(cleBanque, new Set());
-            return [...neuves, ...melanger(banque.filter(q => !restantes.has(q)))].slice(0, nb);
+            let choix;
+            if (neuves.length >= nb) choix = neuves.slice(0, nb);
+            else {
+                // Fichier presque épuisé : on prend les dernières neuves, puis on repart de zéro pour compléter, sans doublon
+                const restantes = new Set(neuves);
+                if (cleBanque) ecrirePosees(cleBanque, new Set());
+                choix = [...neuves, ...melanger(banque.filter(q => !restantes.has(q)))].slice(0, nb);
+            }
+            return choix.map(melangerReponses);
+        }
+
+        // Les réponses changent de place à chaque partie : la bonne n'est jamais toujours le même coin
+        function melangerReponses(question) {
+            const ordre = melanger([0, 1, 2, 3]);
+            return { ...question, reponses: ordre.map(k => question.reponses[k]), bonne: ordre.indexOf(question.bonne) };
         }
 
         function validerQuestions(donnees, base) {

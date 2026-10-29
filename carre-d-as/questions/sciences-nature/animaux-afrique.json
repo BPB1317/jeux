@@ -1,0 +1,260 @@
+[
+    {
+        "question": "Ce pelage zébré à l'arrière appartient à quel parent forestier de la girafe ?",
+        "reponses": ["Le Bongo", "L'Okapi", "Le Nyala", "Le Céphalophe"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Saint-Aignan_(Loir-et-Cher)._Okapi.jpg?width=960",
+        "zoom": { "x": 0.66, "y": 0.6, "fois": 2.5 }
+    },
+    {
+        "question": "Ce « trait de larme » noir caractéristique permet de reconnaître :",
+        "reponses": ["Le Léopard", "Le Guépard", "Le Serval", "Le Caracal"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Male_cheetah_facing_left_in_South_Africa.jpg?width=960",
+        "zoom": { "x": 0.66, "y": 0.17, "fois": 3.5 }
+    },
+    {
+        "question": "Surnommé le « secrétaire », ce grand rapace terrestre chasseur de serpents est :",
+        "reponses": ["Le Messager sagittaire", "La Grue couronnée", "L'Outarde kori", "Le Marabout d'Afrique"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Secretary_bird_Mara_for_WC.jpg?width=960"
+    },
+    {
+        "question": "Ce félin sauteur d'Afrique et du Moyen-Orient est :",
+        "reponses": ["Le Serval", "Le Caracal", "L'Ocelot", "Le Chat à pieds noirs"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Caracal_on_the_road,_early_morning_in_Kgalagadi_(36173878220)_(cropped).jpg?width=960",
+        "zoom": { "x": 0.31, "y": 0.17, "fois": 3 }
+    },
+    {
+        "question": "Quel est cet oiseau emblématique des marais du Nil ?",
+        "reponses": ["Le Pélican blanc", "Le Bec-en-sabot du Nil", "L'Ombrette africaine", "Le Tantale ibis"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Balaeniceps_rex_-Ueno_Zoo,_Tokyo,_Japan-8a.jpg?width=960"
+    },
+    {
+        "question": "Ce prédateur sociable qui chasse en meute soudée est :",
+        "reponses": ["La Hyène tachetée", "Le Chacal à chabraque", "Le Lycaon", "Le Loup d'Éthiopie"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/African_Wild_Dog_at_Working_with_Wildlife.jpg?width=960"
+    },
+    {
+        "question": "À quel grand herbivore semi-aquatique appartient cette dentition impressionnante ?",
+        "reponses": ["Le Crocodile du Nil", "L'Hippopotame commun", "Le Sanglier des rivières", "Le Lamantin d'Afrique"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Yawning_hippopotamus_(28021668971).jpg?width=960"
+    },
+    {
+        "question": "Ce primate spectaculaire de la forêt équatoriale est :",
+        "reponses": ["Le Mandrill", "Le Babouin olive", "Le Gélada", "Le Bonobo"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Mandrill_Albert_September_2015_Zoo_Berlin_(2).jpg?width=960",
+        "zoom": { "x": 0.57, "y": 0.3, "fois": 2.5 }
+    },
+    {
+        "question": "Cette sentinelle du désert du Kalahari est :",
+        "reponses": ["Le Fennec", "La Mangouste rayée", "Le Suricate", "Le Ratel"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Meerkat_(Suricata_suricatta)_Tswalu.jpg?width=960"
+    },
+    {
+        "question": "Ce charognard à poche rose sous la gorge, souvent vu près des carcasses, est :",
+        "reponses": ["Le Vautour oricou", "Le Marabout d'Afrique", "L'Ibis sacré", "Le Jabiru d'Afrique"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Marabou_stork_(Leptoptilos_crumenifer).jpg?width=960"
+    },
+    {
+        "question": "Ce lémurien nocturne de Madagascar, au très long doigt squelettique, est :",
+        "reponses": ["L'Aye-aye", "Le Sifaka", "L'Indri", "Le Maki catta"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Wild_aye_aye.jpg?width=960"
+    },
+    {
+        "question": "Cette élégante antilope aux cornes torsadées est :",
+        "reponses": ["L'Élan du Cap", "Le Grand Koudou", "Le Gnou bleu", "L'Impala"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Male_greater_kudu.jpg?width=960",
+        "zoom": { "x": 0.33, "y": 0.25, "fois": 2.5 }
+    },
+    {
+        "question": "Réputé pour son agressivité et sa résistance au venin, quel est cet animal ?",
+        "reponses": ["Le Ratel (blaireau d'Afrique)", "La Zorille commune", "La Genette tachetée", "La Civette africaine"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Honey_Badger.jpg?width=960"
+    },
+    {
+        "question": "Ce casque osseux qui réunit les cornes est la signature :",
+        "reponses": ["Du Buffle d'Afrique", "De l'Oryx gazelle", "Du Bubale", "Du Grand Cobe"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/African_buffalo_(Syncerus_caffer_caffer)_male_with_cattle_egret.jpg?width=960",
+        "zoom": { "x": 0.2, "y": 0.45, "fois": 3 }
+    },
+    {
+        "question": "Ce renard des sables du Sahara est :",
+        "reponses": ["Le Renard de Rüppell", "Le Fennec", "Le Chacal doré", "L'Otocyon"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Fennec_Fox_Vulpes_zerda.jpg?width=960"
+    },
+    {
+        "question": "Ce singe herbivore des hauts plateaux d'Éthiopie est :",
+        "reponses": ["Le Babouin chacma", "Le Gélada", "Le Colobe guéréza", "Le Drill"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 3,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Gelada_(Theropithecus_gelada_gelada)_male_2.jpg?width=960"
+    },
+    {
+        "question": "Ce félin élancé aux longues pattes, excellent sauteur et chasseur de rongeurs, est :",
+        "reponses": ["Le Guépard", "Le Léopard", "Le Serval", "Le Chat doré africain"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Servalcropped.png?width=960"
+    },
+    {
+        "question": "À quel animal appartient cette langue sombre de 45 à 50 cm ?",
+        "reponses": ["L'Éléphant d'Afrique", "La Girafe", "Le Zèbre", "L'Antilope royale"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Giraffe_sticking_out_tongue_01.jpg?width=960",
+        "zoom": { "x": 0.5, "y": 0.78, "fois": 3 }
+    },
+    {
+        "question": "Cet oiseau, emblème national de l'Ouganda, est :",
+        "reponses": ["La Grue royale (grue couronnée)", "Le Flamant rose", "La Grande Aigrette", "Le Touraco géant"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Grey_crowned_crane_(Balearica_regulorum_gibbericeps).jpg?width=960"
+    },
+    {
+        "question": "Ce compagnon de savane rendu célèbre par Pumbaa dans Le Roi Lion est :",
+        "reponses": ["Le Potamochère", "L'Hylochère", "Le Phacochère", "Le Sanglier d'Afrique"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Southern_warthog_(Phacochoerus_africanus_sundevallii)_male.jpg?width=960"
+    },
+    {
+        "question": "Le « dos argenté » désigne le mâle dominant chez :",
+        "reponses": ["Le Chimpanzé", "Le Bonobo", "Le Gorille", "L'Orang-outan"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Male_silverback_Gorilla.JPG?width=960"
+    },
+    {
+        "question": "Ce mammifère couvert d'écailles, menacé par le braconnage, est :",
+        "reponses": ["Le Tatou à neuf bandes", "Le Pangolin", "L'Oryctérope", "Le Hérisson d'Afrique du Sud"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Manis_temminckii_(29645803646).jpg?width=960"
+    },
+    {
+        "question": "Lequel de ces animaux NE fait PAS partie des « Big Five » ?",
+        "reponses": ["Le Léopard", "Le Guépard", "Le Rhinocéros", "Le Buffle"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "explication": "Les Big Five : lion, léopard, éléphant, rhinocéros et buffle."
+    },
+    {
+        "question": "Quelle vitesse un guépard peut-il atteindre en chasse, sur une courte distance ?",
+        "reponses": ["Environ 70 km/h", "Environ 90 km/h", "Entre 100 et 115 km/h", "Plus de 140 km/h"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Qu'est-ce qui distingue facilement l'éléphant d'Afrique de son cousin d'Asie ?",
+        "reponses": ["Ses oreilles bien plus grandes, en forme de continent africain", "Il n'a pas de défenses", "Il a une bosse sur le dos", "Il est beaucoup plus petit"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Pourquoi l'hippopotame semble-t-il parfois « suer du sang » ?",
+        "reponses": ["Il saigne souvent à travers ses pores", "Sa peau sécrète un liquide rougeâtre qui sert de crème solaire et d'antiseptique", "C'est la poussière de terre rouge", "C'est le reflet de l'argile des rivières"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Quel serpent est réputé le plus rapide du monde et le plus craint d'Afrique ?",
+        "reponses": ["La Vipère heurtante", "Le Mamba noir", "Le Cobra cracheur", "Le Boomslang"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "explication": "Son nom vient de l'intérieur noir de sa gueule, pas de sa peau."
+    },
+    {
+        "question": "Comment le clan des hyènes tachetées est-il organisé ?",
+        "reponses": ["En harem dirigé par un vieux mâle", "En société matriarcale où les femelles dominent les mâles", "En vie solitaire, sauf à la saison des pluies", "En couples fidèles à vie"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 3
+    },
+    {
+        "question": "Quel mammifère nocturne creuse des terriers profonds et se nourrit presque uniquement de termites ?",
+        "reponses": ["L'Oryctérope du Cap", "Le Potto", "La Civette", "Le Lièvre sauteur"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 3
+    },
+    {
+        "question": "Quelle antilope fait chaque année la « grande migration » entre le Serengeti et le Masai Mara ?",
+        "reponses": ["Le Cobe à croissant", "L'Oryx", "Le Gnou bleu", "Le Gérénouk"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Comment le gérénouk (gazelle de Waller) attrape-t-il les feuilles hautes des acacias ?",
+        "reponses": ["Il grimpe aux arbres", "Il se dresse sur ses pattes arrière", "Il donne des coups de tête dans le tronc", "Il utilise une petite trompe"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 3
+    },
+    {
+        "question": "Quelle particularité ont les griffes du guépard, contrairement aux autres grands félins ?",
+        "reponses": ["Elles sont transparentes", "Elles ne se rétractent pas complètement et servent de crampons", "Elles tombent et repoussent chaque mois", "Elles sécrètent du venin"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Quel rhinocéros africain a une lèvre supérieure carrée, adaptée pour brouter l'herbe ?",
+        "reponses": ["Le Rhinocéros blanc", "Le Rhinocéros noir", "Le Rhinocéros de Java", "Le Rhinocéros d'Éthiopie"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 3,
+        "explication": "« Blanc » viendrait du néerlandais « wijd » (large), et non de sa couleur."
+    },
+    {
+        "question": "Quel animal a un cœur d'environ 11 kg et la pression artérielle la plus élevée des mammifères, pour faire monter le sang jusqu'à sa tête ?",
+        "reponses": ["L'Hippopotame", "La Girafe", "L'Éléphant d'Afrique", "Le Rhinocéros blanc"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Dans quel pays d'Afrique peut-on observer des lémuriens à l'état sauvage ?",
+        "reponses": ["Le Gabon", "L'Afrique du Sud", "Madagascar", "Le Kenya"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Combien d'heures par jour un lion mâle passe-t-il à dormir ou à somnoler ?",
+        "reponses": ["Environ 6 heures", "Environ 10 heures", "Environ 15 heures", "Entre 18 et 20 heures"],
+        "bonne": 3, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Quel oiseau africain, le plus grand et le plus lourd du monde, ne vole pas mais court à plus de 60 km/h ?",
+        "reponses": ["L'Émeu", "Le Casoar", "L'Autruche", "Le Nandou"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Que peut faire le cobra cracheur africain ?",
+        "reponses": ["Cracher seulement vers le sol", "Projeter son venin dans les yeux de sa cible jusqu'à 2 à 3 mètres", "Cracher des boules de salive enflammée", "Il ne mord jamais ses proies"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "De quoi se nourrissent les millions de flamants des lacs de la vallée du Rift ?",
+        "reponses": ["De petits poissons d'eau douce", "De micro-algues et de petits crustacés", "De racines de roseaux", "De grenouilles et de têtards"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "explication": "Ce sont eux qui leur donnent leur couleur rose."
+    },
+    {
+        "question": "Quel petit oiseau picore les tiques sur le dos des buffles, rhinocéros et girafes ?",
+        "reponses": ["Le Souimanga", "Le Piquebœuf", "Le Martinet d'Afrique", "Le Tisserin gendarme"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Quel primate d'Afrique centrale, connu pour son caractère pacifique, est avec le chimpanzé notre plus proche cousin ?",
+        "reponses": ["Le Babouin", "Le Colobe", "Le Bonobo", "Le Moustac"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Quel petit rongeur africain vit en colonies souterraines avec une reine, comme les fourmis, et ne ressent presque pas la douleur ?",
+        "reponses": ["Le Rat-taupe nu", "La Gerboise du Caire", "Le Porc-épic du Cap", "L'Écureuil fouisseur"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 3
+    },
+    {
+        "question": "Quel prédateur de rivière peut dépasser 5 mètres et a l'une des mâchoires les plus puissantes du monde animal ?",
+        "reponses": ["L'Alligator d'Afrique", "Le Crocodile du Nil", "Le Crocodile à nuque cuirassée", "Le Gavial d'Afrique"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Pourquoi les zèbres se serrent-ils en troupeau face aux lions ?",
+        "reponses": ["Leurs rayures mêlées empêchent le prédateur d'isoler une cible", "Ils font monter la température de l'air pour aveugler le lion", "Ils imitent ensemble le cri d'un éléphant", "Pour que les mâles s'enfuient en premier"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Quelle antilope du désert, très résistante à la soif, a des cornes droites en forme de lances pouvant dépasser un mètre ?",
+        "reponses": ["L'Impala", "L'Oryx gazelle (gemsbok)", "Le Topi", "Le Springbok"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2
+    }
+]

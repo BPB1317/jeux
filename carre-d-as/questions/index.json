@@ -6,6 +6,13 @@
         ]
     },
     {
+        "theme": "Sciences & Nature",
+        "sujets": [
+            { "fichier": "sciences-nature/animaux-europe.json", "titre": "Animaux d'Europe" },
+            { "fichier": "sciences-nature/animaux-afrique.json", "titre": "Animaux d'Afrique" }
+        ]
+    },
+    {
         "theme": "Culture générale",
         "sujets": [
             { "fichier": "exemple.json", "titre": "Questions d'exemple" }

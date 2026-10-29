@@ -1,0 +1,257 @@
+[
+    {
+        "question": "Surnommé le « clown de mer », quel est cet oiseau présent notamment en Islande et en Bretagne ?",
+        "reponses": ["Le Fou de Bassan", "Le Macareux moine", "Le Guillemot de Troïl", "Le Pingouin torda"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Puffin_(Fratercula_arctica).jpg?width=960"
+    },
+    {
+        "question": "Ce grand félin discret, réintroduit dans plusieurs massifs européens, est :",
+        "reponses": ["Le Chat sauvage d'Europe", "Le Léopard du Caucase", "Le Lynx boréal", "Le Serval d'Eurasie"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lynx_Nationalpark_Bayerischer_Wald_01.jpg?width=960"
+    },
+    {
+        "question": "À quel animal sauvage de Corse et de Sardaigne appartiennent ces cornes spiralées ?",
+        "reponses": ["Le Bouquetin des Alpes", "Le Mouflon méditerranéen", "Le Chamois", "L'Isard"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/European_mouflon_ram,_Naturlandia_(1)_(cropped).jpg?width=960",
+        "zoom": { "x": 0.3, "y": 0.2, "fois": 2.5 }
+    },
+    {
+        "question": "Ce petit carnivore fouisseur est un :",
+        "reponses": ["Blaireau européen", "Putois d'Europe", "Raton laveur", "Glouton"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/European_badger_(Meles_meles_taxus)_Drenthe.jpg?width=960",
+        "zoom": { "x": 0.33, "y": 0.35, "fois": 2.5 }
+    },
+    {
+        "question": "Cet amphibien emblématique des sous-bois européens est :",
+        "reponses": ["La Rainette verte", "Le Triton crêté", "La Salamandre tachetée", "Le Crapaud accoucheur"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Salamandra_salamandra_MHNT_1.jpg?width=960"
+    },
+    {
+        "question": "Surnommé le « casseur d'os », quel est ce rapace nécrophage des Alpes ?",
+        "reponses": ["Le Gypaète barbu", "Le Faucon pèlerin", "La Buse variable", "Le Milan royal"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/010e_Wild_Bearded_Vulture_in_flight_at_Pfyn-Finges_(Switzerland)_Photo_by_Giles_Laurent.jpg?width=960"
+    },
+    {
+        "question": "À quel géant des forêts scandinaves appartiennent ces bois en forme de pelles ?",
+        "reponses": ["Le Cerf élaphe", "Le Renne", "L'Élan d'Europe", "Le Daim européen"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Alaska_moose.jpg?width=960",
+        "zoom": { "x": 0.75, "y": 0.3, "fois": 2.2 }
+    },
+    {
+        "question": "Cet amphibien aveugle des grottes des Balkans est :",
+        "reponses": ["L'Axolotl", "Le Protée anguillard", "Le Triton alpestre", "L'Anguille de grotte"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 3,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Proteus_anguinus_Postojnska_Jama_Slovenija.jpg?width=960"
+    },
+    {
+        "question": "Quel est ce plus grand scarabée d'Europe ?",
+        "reponses": ["Le Grand Capricorne", "Le Lucane cerf-volant", "Le Bousier sacré", "Le Carabe doré"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lucanus_cervus.jpg?width=960"
+    },
+    {
+        "question": "Ce mammifère terrestre, le plus lourd d'Europe à l'état sauvage, est :",
+        "reponses": ["L'Aurochs reconstitué", "Le Bison d'Europe", "Le Bœuf musqué", "Le Yack d'Europe"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/European_bison_(Bison_bonasus)_male_Bia%C5%82owieza.jpg?width=960"
+    },
+    {
+        "question": "Ce serpent venimeux au zigzag sombre sur le dos, très répandu en Europe, est :",
+        "reponses": ["La Couleuvre à collier", "La Vipère péliade", "L'Orvet fragile", "La Couleuvre vipérine"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Common_European_viper_(Vipera_berus)_female_Pieniny.jpg?width=960"
+    },
+    {
+        "question": "Ce grand échassier qui niche sur les toits d'Alsace est :",
+        "reponses": ["La Cigogne blanche", "La Grue cendrée", "Le Héron cendré", "La Spatule blanche"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/White_stork_(Ciconia_ciconia)_Bia%C5%82owieza.jpg?width=960"
+    },
+    {
+        "question": "Ce n'est pas un serpent mais un lézard sans pattes. Quel est son nom ?",
+        "reponses": ["Le Léopard des sables", "La Coronelle lisse", "L'Orvet fragile", "Le Seps strié"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Common_slowworm_(Anguis_fragilis).jpg?width=960"
+    },
+    {
+        "question": "Ce redoutable prédateur de la taïga scandinave est :",
+        "reponses": ["Le Glouton (carcajou)", "La Martre des pins", "Le Chien viverrin", "Le Vison d'Europe"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/J%C3%A4rv1.jpg?width=960"
+    },
+    {
+        "question": "Ce petit rongeur roux, connu pour ses longues hibernations, est :",
+        "reponses": ["Le Campagnol roussâtre", "Le Muscardin", "Le Lérot", "Le Rat des moissons"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Hazel_dormouse_(Muscardinus_avellanarius),_Skole,_Lviv_Oblast,_Ukraine_(50540055351)_(cropped).jpg?width=960"
+    },
+    {
+        "question": "Cet oiseau noir à la base du bec blanche et dénudée est :",
+        "reponses": ["Le Grand Corbeau", "La Corneille noire", "Le Corbeau freux", "Le Choucas des tours"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 3,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rook_(Corvus_frugilegus)_Heligan.jpg?width=960"
+    },
+    {
+        "question": "Ce petit mammifère aquatique à trompe, qui vit dans les Pyrénées et le nord de la péninsule Ibérique, est :",
+        "reponses": ["La Musaraigne aquatique", "Le Desman des Pyrénées", "Le Vison d'Europe", "La Loutre d'Europe"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 3,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Galemys_pyrenaicus_01_by-dpc.jpg?width=960"
+    },
+    {
+        "question": "Ce plus grand rapace nocturne d'Europe est :",
+        "reponses": ["La Chouette effraie", "La Chouette hulotte", "Le Hibou grand-duc", "Le Hibou moyen-duc"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Bubo_bubo_3_(Martin_Mecnarowski).jpg?width=960"
+    },
+    {
+        "question": "Quel est cet animal surnommé la sentinelle des alpages ?",
+        "reponses": ["Le Chinchilla", "La Marmotte des Alpes", "Le Lièvre variable", "Le Lemming"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/071_Wild_marmot_at_Grand_Muveran_Nature_Reserve_Photo_by_Giles_Laurent.jpg?width=960"
+    },
+    {
+        "question": "Ce pêcheur miniature est :",
+        "reponses": ["Le Guêpier d'Europe", "Le Martin-pêcheur d'Europe", "Le Rollier d'Europe", "La Gorgebleue à miroir"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Alcedo_atthis_-England-8_(cropped).jpg?width=960"
+    },
+    {
+        "question": "Ce super-prédateur des mers froides d'Europe du Nord est :",
+        "reponses": ["Le Béluga", "L'Orque", "Le Dauphin de Risso", "Le Marsouin commun"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Killerwhales_jumping.jpg?width=960"
+    },
+    {
+        "question": "Ce prédateur du Grand Nord scandinave est :",
+        "reponses": ["Le Renard polaire (isatis)", "Le Loup arctique", "L'Hermine en hiver", "Le Chacal doré"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Vulpes_lagopus_in_Iceland_(cropped_3).jpg?width=960"
+    },
+    {
+        "question": "Quel est le plus grand prédateur terrestre sauvage vivant encore en Europe centrale et méridionale ?",
+        "reponses": ["Le Loup gris", "L'Ours brun", "Le Lynx boréal", "Le Sanglier"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Quel rongeur bâtisseur, réintroduit dans les fleuves européens, a des dents orange renforcées en fer ?",
+        "reponses": ["Le Ragondin", "Le Rat musqué", "Le Castor d'Europe", "Le Campagnol amphibie"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Que devient le pelage de l'hermine à l'approche de l'hiver ?",
+        "reponses": ["Il tombe complètement", "Il devient blanc, sauf le bout de la queue qui reste noir", "Il devient roux foncé pour absorber la chaleur", "Il sécrète une huile violette imperméable"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Combien de temps par an une marmotte passe-t-elle environ en hibernation ?",
+        "reponses": ["Environ 2 mois", "Environ 3 mois", "Environ 6 mois", "Environ 9 mois"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 2,
+        "explication": "D'octobre à avril en moyenne."
+    },
+    {
+        "question": "Quel oiseau européen pond ses œufs dans le nid d'autres espèces, qui élèvent son petit ?",
+        "reponses": ["Le Coucou gris", "Le Geai des chênes", "La Pie bavarde", "L'Étourneau sansonnet"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Contrairement au lapin de garenne, le lièvre d'Europe :",
+        "reponses": ["Creuse des galeries très profondes", "Vit exclusivement dans les arbres", "Met bas à même le sol des petits déjà poilus, les yeux ouverts", "Hiberne tout l'hiver"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 3
+    },
+    {
+        "question": "Quel mammifère marin de Méditerranée est aujourd'hui l'un des plus menacés au monde ?",
+        "reponses": ["Le Morse de Méditerranée", "Le Phoque moine de Méditerranée", "L'Otarie d'Espagne", "Le Lamantin de Grèce"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Quelle vitesse le faucon pèlerin atteint-il en piqué, ce qui en fait l'animal le plus rapide du ciel européen ?",
+        "reponses": ["Environ 120 km/h", "Environ 180 km/h", "Plus de 320 km/h", "Plus de 500 km/h"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Chez quel cervidé européen les mâles ET les femelles portent-ils des bois ?",
+        "reponses": ["Le Renne", "Le Chevreuil", "Le Cerf élaphe", "Le Chamois"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Quel canidé sauvage venu d'Europe de l'Est s'étend naturellement vers l'Europe de l'Ouest depuis les années 2010 ?",
+        "reponses": ["Le Coyote", "Le Dhole", "Le Chacal doré", "Le Fennec"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 3
+    },
+    {
+        "question": "Laquelle de ces chauves-souris européennes a des oreilles presque aussi longues que son corps ?",
+        "reponses": ["La Pipistrelle commune", "La Noctule commune", "Le Grand Rhinolophe", "L'Oreillard roux"],
+        "bonne": 3, "theme": "Animaux", "difficulte": 3
+    },
+    {
+        "question": "De quoi le gypaète barbu se nourrit-il principalement ?",
+        "reponses": ["D'os et de carcasses", "De poissons d'eau douce", "De marmottes vivantes", "De baies sauvages"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 2,
+        "explication": "Les os représentent plus de 80 % de son régime."
+    },
+    {
+        "question": "Lequel de ces animaux venimeux vit à l'état sauvage dans les mers d'Europe de l'Ouest ?",
+        "reponses": ["La Vive", "Le Poisson-clown", "Le Barracuda géant", "La Rascasse volante du Pacifique"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 3,
+        "explication": "La petite vive s'enfouit dans le sable des plages."
+    },
+    {
+        "question": "Quelle est la seule espèce de singe vivant en liberté sur le continent européen ?",
+        "reponses": ["Le Babouin de Sicile", "Le Magot, à Gibraltar", "Le Chimpanzé des Pyrénées", "Le Mandrill de Crète"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2,
+        "explication": "Le magot est aussi appelé macaque de Barbarie."
+    },
+    {
+        "question": "Comment s'appelle le cri puissant du cerf mâle pendant la période des amours, en automne ?",
+        "reponses": ["Le hennissement", "Le brame", "Le glapissement", "Le feulement"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Quel petit insecte rouge et noir des jardins est un grand mangeur de pucerons ?",
+        "reponses": ["Le Doryphore", "Le Gendarme", "La Coccinelle à sept points", "Le Hanneton"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Que fait le hérisson d'Europe face à un prédateur ?",
+        "reponses": ["Il projette ses piquants comme des fléchettes", "Il se roule en boule grâce à un puissant muscle dorsal", "Il fait le mort en dégageant une odeur de putréfaction", "Il s'enfouit sous terre en moins de 10 secondes"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 1
+    },
+    {
+        "question": "Le grand tétras, ou grand coq de bruyère, est connu pour :",
+        "reponses": ["Migrer chaque hiver jusqu'en Afrique du Sud", "Ses parades amoureuses spectaculaires au printemps", "Nager sous la glace", "Chasser des vipères en plein vol"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Quel crustacé d'eau douce indigène est menacé par des espèces introduites d'Amérique ?",
+        "reponses": ["L'Écrevisse à pattes rouges", "Le Homard bleu", "Le Crabe de boue", "La Crevette grise"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 3
+    },
+    {
+        "question": "Où peut-on trouver le caméléon commun à l'état sauvage en Europe ?",
+        "reponses": ["Dans les forêts de conifères alpines", "Sur les côtes d'Andalousie, du Portugal et de Grèce", "Dans les tourbières irlandaises", "Dans les plaines agricoles de Pologne"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 3
+    },
+    {
+        "question": "Quel grand mammifère européen a été sauvé de l'extinction au XXe siècle grâce à une cinquantaine d'individus de zoos ?",
+        "reponses": ["Le Renne", "Le Sanglier", "Le Bison d'Europe", "Le Loup ibérique"],
+        "bonne": 2, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Quel insecte social fabrique des nids en « carton » de bois mâché sous les toits ou dans les troncs ?",
+        "reponses": ["Le Frelon européen", "L'Abeille domestique", "Le Bourdon terrestre", "Le Scarabée rhinocéros"],
+        "bonne": 0, "theme": "Animaux", "difficulte": 2
+    },
+    {
+        "question": "Qu'est-ce qui aide le renard roux à repérer les rongeurs sous un mètre de neige ?",
+        "reponses": ["Une crête thermique sur le front", "Une ouïe très fine et la perception du champ magnétique terrestre", "Des moustaches qui touchent le sol", "Des sabots résonateurs"],
+        "bonne": 1, "theme": "Animaux", "difficulte": 3,
+        "explication": "Selon une étude de 2011, il bondit de préférence orienté vers le nord-est : c'est le « mulotage »."
+    }
+]
