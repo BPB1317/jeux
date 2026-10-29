@@ -412,6 +412,11 @@
             justify-content: center;
         }
 
+        /* Image qui porte toute la question (dessin à reconnaître) : elle prend la place des réponses */
+        .zone-image.grande {
+            height: 46vh;
+        }
+
         /* Extrait musical : égaliseur pendant la question, pochette à la révélation */
         .zone-audio {
             flex: 0 0 auto;
@@ -1297,6 +1302,7 @@
                 if (q.image) {
                     propre.image = base ? new URL(q.image, base).href : String(q.image);
                     if (q.imageApres) propre.imageApres = true;
+                    if (q.grandeImage) propre.grandeImage = true;
                     // Une zone [x, y, largeur, hauteur], ou une liste de zones
                     const zone = r => Array.isArray(r) && r.length === 4 && r.every(n => typeof n === 'number');
                     const zones = r => zone(r) ? [r] : Array.isArray(r) && r.length && r.every(zone) ? r : null;
@@ -1530,6 +1536,7 @@
             const zone = $('zoneImage');
             zone.hidden = !question.image;
             zone.classList.toggle('apres', !!question.imageApres);
+            zone.classList.toggle('grande', !!question.grandeImage);
             if (!question.image) {
                 zone.innerHTML = '';
                 return;

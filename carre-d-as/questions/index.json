@@ -23,5 +23,11 @@
         "sujets": [
             { "fichier": "arts/chansons-france-xxie.json", "titre": "Chansons françaises du XXIe siècle" }
         ]
+    },
+    {
+        "theme": "Autres",
+        "sujets": [
+            { "fichier": "autres/matthieu-morel.json", "titre": "Matthieu Morel" }
+        ]
     }
 ]

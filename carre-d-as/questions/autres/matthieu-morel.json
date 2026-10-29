@@ -1,0 +1,390 @@
+[
+    {
+        "question": "Sur les façades de quel ensemble de temples médiévaux indiens, classé à l'UNESCO, admire-t-on de célèbres bas-reliefs érotiques ?",
+        "reponses": ["Khajurâho", "Le Taj Mahal", "Hampi", "Borobudur"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Khajuraho_-_Kandariya_Mahadeo_Temple.jpg?width=960"
+    },
+    {
+        "question": "À quel auteur indien de l'Antiquité attribue-t-on la rédaction du Kâmasûtra ?",
+        "reponses": ["Patanjali", "Vâtsyâyana", "Kalidasa", "Chanakya"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Cet explorateur britannique est célèbre pour avoir :",
+        "reponses": ["Découvert le manuscrit au Tibet", "Publié la première traduction anglaise du Kâmasûtra (1883)", "Censuré et brûlé le texte original", "Écrit une suite au Kâmasûtra"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Richard_Francis_Burton_by_Rischgitz,_1864.jpg?width=960",
+        "explication": "Sir Richard Francis Burton, avec Forster Arbuthnot."
+    },
+    {
+        "question": "Arc de canne à sucre, flèches de fleurs : quel dieu hindou personnifie le désir amoureux ?",
+        "reponses": ["Kâmadeva", "Ganesha", "Brahma", "Indra"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Kamadeva.jpg?width=960"
+    },
+    {
+        "question": "Quel nom Vâtsyâyana donne-t-il à l'étreinte debout où la femme s'enroule autour de l'homme comme une plante autour d'un arbre ?",
+        "reponses": ["La Liane grimpante (Lataveshtitaka)", "Le Saut du léopard", "Le Bambou courbé", "La Vague du Gange"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+    },
+    {
+        "question": "Dans quelle langue le Kâmasûtra a-t-il été rédigé ?",
+        "reponses": ["En hindi", "En sanskrit", "En pâli", "En tamoul"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Le chant et la pratique d'un instrument de musique font partie :",
+        "reponses": ["Des 64 arts décrits dans le livre", "Des 12 interdits du citadin", "Des pratiques réservées aux prêtresses", "Des rituels de punition"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Dans la classification masculine du Kâmasûtra, quel animal correspond à l'homme le plus « imposant » ?",
+        "reponses": ["Le Cheval (Ashva)", "L'Éléphant (Hastin)", "Le Tigre", "Le Lion"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3,
+        "explication": "Lièvre, taureau, cheval chez les hommes ; biche, jument, éléphante chez les femmes."
+    },
+    {
+        "question": "Quel terme sanskrit désigne l'homme galant, instruit et urbain au cœur du premier livre ?",
+        "reponses": ["Le Nâgaraka", "Le Maharaja", "Le Guru", "Le Sâdhu"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3
+    },
+    {
+        "question": "Selon le Kâmasûtra, comment doit être aménagée la chambre du citadin ?",
+        "reponses": ["Propre, garnie de fleurs, avec un luth et un lit doux", "Sombre, sans fenêtres et sans meubles", "Remplie d'armes et de miroirs dorés", "En plein air sous le soleil de midi"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Parmi les 64 arts recommandés, on trouve :",
+        "reponses": ["La poésie, le dessin, le chant et l'art floral", "La forge du fer et la charpente", "La chasse au tigre solitaire", "La navigation maritime"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Cette union assise face à face, appelée Yab-Yum, est un symbole de quelle tradition ?",
+        "reponses": ["Le tantrisme bouddhique tibétain", "La lutte gréco-romaine", "L'art martial kalaripayatt", "Le théâtre kathakali"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Thangka_des_Vajradhara_Yab-Yum_19Jh.jpg?width=960"
+    },
+    {
+        "question": "L'art de peindre le corps et de le parer d'ornements fait partie :",
+        "reponses": ["Des 64 arts de la séduction", "Des corvées domestiques obligatoires", "Des rituels d'exclusion", "Des interdits formels du texte"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Le livre IV du Kâmasûtra, consacré à l'épouse, insiste sur :",
+        "reponses": ["Sa gestion des dépenses et du budget du foyer", "Son obligation de jeûner chaque jour", "L'interdiction d'apprendre à lire", "Son silence absolu devant les serviteurs"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+    },
+    {
+        "question": "Dans la typologie féminine du Kâmasûtra, à quel animal est comparée la femme Mrigi ?",
+        "reponses": ["La biche", "L'éléphante", "La jument", "L'ourse"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3
+    },
+    {
+        "question": "Dans la société décrite par Vâtsyâyana, les courtisanes de haut rang (ganikâ) :",
+        "reponses": ["Jouissaient d'un grand prestige et d'une riche éducation", "Vivaient en ermites dans la forêt", "Étaient bannies des villes", "N'avaient pas le droit de parler aux hommes"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+    },
+    {
+        "question": "Comment s'appelle le dernier livre du Kâmasûtra, consacré aux recettes, philtres et aphrodisiaques ?",
+        "reponses": ["Aupanishadika", "Alchimie céleste", "Sortilèges d'or", "Mantras guerriers"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3
+    },
+    {
+        "question": "Parmi les marques d'ongles décrites par Vâtsyâyana, l'une est poétiquement nommée :",
+        "reponses": ["Le Croissant de lune (Ardhachandra)", "La Griffe du tigre", "L'Éclair d'orage", "La Branche brisée"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+    },
+    {
+        "question": "Que signifie littéralement « Kâmasûtra » en sanskrit ?",
+        "reponses": ["Aphorismes du désir", "Guide de la fertilité", "Livre des mystères sacrés", "Manuel du mariage"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Quels sont les 4 buts de l'existence (purushartha) dans la philosophie hindoue classique ?",
+        "reponses": ["Dharma, Artha, Kâma, Moksha", "Paix, guerre, richesse, prière", "Terre, eau, feu, air", "Naissance, amour, famille, mort"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "explication": "Le devoir, la prospérité, le plaisir et la libération."
+    },
+    {
+        "question": "Combien de livres composent le Kâmasûtra ?",
+        "reponses": ["3", "7", "12", "24"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 2
+    },
+    {
+        "question": "Contrairement à l'idée reçue, quelle part de l'ouvrage est consacrée aux positions sexuelles ?",
+        "reponses": ["La totalité", "Environ 80 %", "Environ 20 %", "Une seule page"],
+        "bonne": 2, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Dans la classification masculine, quel animal correspond à l'homme le plus « modeste » ?",
+        "reponses": ["Le Lièvre (Shasha)", "Le Cheval (Ashva)", "Le Taureau (Vrisha)", "Le Cerf"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+    },
+    {
+        "question": "Sous quelle dynastie indienne estime-t-on généralement que le texte a été fixé ?",
+        "reponses": ["L'Empire Maurya", "L'empire Gupta", "L'Empire moghol", "L'époque védique"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 3
+    },
+    {
+        "question": "Dans quel livre le Kâmasûtra évoque-t-il sans jugement le « troisième genre » (tritiya prakriti) ?",
+        "reponses": ["Le livre II, sur l'union sexuelle", "Le livre IV, sur l'épouse", "Le livre VI, sur les courtisanes", "Le livre VII, sur les recettes"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3
+    },
+    {
+        "question": "Que conseille Vâtsyâyana au mari pendant les trois premières nuits avec une jeune mariée ?",
+        "reponses": ["La douceur, la patience, la conversation", "L'autorité absolue", "Faire chambre à part pendant un an", "Lui offrir uniquement des mets épicés"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1,
+        "explication": "Le texte recommande même de s'abstenir de relations ces trois nuits-là."
+    },
+    {
+        "question": "Quel est le célèbre commentaire du Kâmasûtra rédigé par Yashodhara au XIIIe siècle ?",
+        "reponses": ["La Jayamangalâ", "Le Gita Govinda", "Le Ramayana", "Le Mahabharata"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3
+    },
+    {
+        "question": "Quelle compétence insolite fait partie des 64 arts à maîtriser ?",
+        "reponses": ["L'écriture codée (mlecchita vikalpa)", "L'art de parler aux tigres", "La maîtrise de dix langues étrangères", "Le chant diphonique"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "explication": "On le cite souvent comme l'un des plus anciens témoignages de cryptographie."
+    },
+    {
+        "question": "Quel traité érotique, écrit au XVe siècle en Tunisie par Cheikh Nefzaoui, est souvent comparé au Kâmasûtra ?",
+        "reponses": ["Le Jardin parfumé", "Les Mille et Une Nuits", "Le Banquet", "L'Art d'aimer"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+    },
+    {
+        "question": "Ce poète latin, exilé au bord de la mer Noire, est l'auteur de L'Art d'aimer. Qui est-ce ?",
+        "reponses": ["Virgile", "Horace", "Ovide", "Sénèque"],
+        "bonne": 2, "theme": "Matthieu Morel", "difficulte": 1,
+        "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Statue_of_Ovid_in_Constantza.jpg?width=960",
+        "masque": [0.36, 0.47, 0.28, 0.05],
+        "explication": "Sa statue à Constanța, l'antique Tomis, où il mourut en exil."
+    },
+    {
+        "question": "Pourquoi la traduction anglaise de 1883 a-t-elle été publiée sous le manteau ?",
+        "reponses": ["À cause de la loi sur les publications obscènes", "Parce que la reine en avait l'exclusivité", "Car l'Inde avait interdit l'impression en Europe", "Pour préserver un monopole d'État"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "explication": "L'Obscene Publications Act de 1857 : Burton créa une fausse société d'édition, la Kama Shastra Society."
+    },
+    {
+        "question": "Quels oiseaux le citadin raffiné garde-t-il en cage pour leur apprendre à parler ?",
+        "reponses": ["Des perroquets et des mainates", "Des éperviers", "Des hiboux", "Des colombes"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+    },
+    {
+        "question": "Pourquoi Vâtsyâyana décrit-il la séduction des femmes d'autrui ?",
+        "reponses": ["Pour que les maris sachent protéger leurs épouses", "Pour encourager l'infidélité", "Pour préconiser la vengeance", "Pour en interdire la lecture"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+    },
+    {
+        "question": "Quel terme sanskrit désigne le sexe masculin, symbole de Shiva ?",
+        "reponses": ["Le Lingam", "La Yoni", "Le Chakra", "Le Prana"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Quel terme sanskrit désigne le sexe féminin, symbole de la matrice universelle ?",
+        "reponses": ["La Yoni", "Le Karma", "Le Mudra", "L'Asana"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Quel art culinaire figure parmi les 64 arts ?",
+        "reponses": ["La préparation de boissons et de sorbets", "La cuisson exclusive du riz au beurre", "La conservation du sel de mer", "La découpe du gibier"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2
+    },
+    {
+        "question": "Quel traité amoureux, écrit vers le XIIe siècle par le poète Kokkoka, a prolongé le Kâmasûtra ?",
+        "reponses": ["Le Koka Shastra (Rati Rahasya)", "L'Upanishad de l'amour", "Le Tantra blanc", "Le Shiva Purana"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3
+    },
+    {
+        "question": "Qu'est-ce que l'Ananga Ranga, écrit par Kalyana Malla ?",
+        "reponses": ["Un manuel pour préserver l'harmonie des couples mariés", "Un recueil de chants militaires", "Un traité de médecine des yeux", "Une critique religieuse du Kâmasûtra"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3
+    },
+    {
+        "question": "Quel courant spirituel voit dans l'énergie sexuelle un chemin vers l'éveil ?",
+        "reponses": ["Le tantrisme", "Le nihilisme", "L'ascétisme", "Le stoïcisme"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Le Compas (Caliper)", "Apollon (Apollo)", "L'Haltère (Barbell)", "Le Mur (Wall)"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/caliper.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["La Brouette (Wheelbarrow)", "Superman", "Le Dauphin (Dolphin)", "Le Marteau-piqueur (Piledriver)"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/superman.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Le Verseau (Aquarius)", "La Levrette (Doggy Style)", "Le Capitaine (Captain)", "La Soumise (Submissive)"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/aquarius.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Narcisse (Narcissus)", "Le Dauphin (Dolphin)", "Zeus", "Le Compas (Caliper)"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/dolphin.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Le Marteau-piqueur (Piledriver)", "Les Oreilles de lapin (Rabbit Ears)", "Le Bourgeon (Bud)", "L'Arc-en-ciel (Rainbow)"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/piledriver.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["L'Arc (Bow)", "Le Pont de Londres (London Bridge)", "La Soumise (Submissive)", "Le Verseau (Aquarius)"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/london-bridge.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["L'Arche (Arch)", "La Crucifixion", "Le Fer à repasser (Flatiron)", "Le Conte de fées (Fairytale)"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/arch.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Le Chili Dog", "La Soumise (Submissive)", "La Levrette (Doggy Style)", "Le Verseau (Aquarius)"],
+        "bonne": 2, "theme": "Matthieu Morel", "difficulte": 1,
+        "grandeImage": true, "image": "positions/doggy.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["La Brouette (Wheelbarrow)", "Le Dauphin (Dolphin)", "Superman", "Zeus"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 1,
+        "grandeImage": true, "image": "positions/wheelbarrow.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Apollon (Apollo)", "Zeus", "Le Mur (Wall)", "Le Compas (Caliper)"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/zeus.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Aphrodite", "La Table basse (Coffee Table)", "Les Gémeaux (Gemini)", "Le Yin et le Yang (Yin-Yang)"],
+        "bonne": 2, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/gemini.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["L'Arc-en-ciel (Rainbow)", "Le Pont de Londres (London Bridge)", "L'Amphibien (Amphibian)", "Le Murmure (Whisper)"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/rainbow.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["La Nonne (Nun)", "La Pousse (Sprout)", "Le Renversé (Overturned)", "L'Amazone inversée (Reverse Cowgirl)"],
+        "bonne": 3, "theme": "Matthieu Morel", "difficulte": 1,
+        "grandeImage": true, "image": "positions/reverse-cowgirl.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Aphrodite", "Les Gémeaux (Gemini)", "L'Araignée (Bow Spider)", "La Chaise (Chair)"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/aphrodite.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Le Mur (Wall)", "Apollon (Apollo)", "L'Haltère (Barbell)", "Le Compas (Caliper)"],
+        "bonne": 2, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/barbell.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Le Yin et le Yang (Yin-Yang)", "Le Verrou (Lock)", "La Grenouille (Frog)", "Le Chili Dog"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/yin-yang.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["La Cuillère (Spoon)", "Le Papillon (Butterfly)", "L'Accordéon (Accordion)", "Le Murmure (Whisper)"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/butterfly.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Le Capricorne (Capricorn)", "Les Oreilles de lapin (Rabbit Ears)", "La Crucifixion", "Le Verseau (Aquarius)"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/capricorn.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Le Capricorne (Capricorn)", "Le Marteau-piqueur (Piledriver)", "Les Oreilles de lapin (Rabbit Ears)", "La Grenouille (Frog)"],
+        "bonne": 2, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/rabbit-ears.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["L'Arc (Bow)", "Le Pont de Londres (London Bridge)", "Le Déjeuner chaud (Hot Lunch)", "La Cuillère inversée (Reverse Spoon)"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/bow.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["La Chaise (Chair)", "La Table basse (Coffee Table)", "Les Gémeaux (Gemini)", "Le Verrou (Lock)"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/coffee-table.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["L'Arc-en-ciel (Rainbow)", "Déjà-vu (Dejavu)", "L'Amphibien (Amphibian)", "Le Papillon (Butterfly)"],
+        "bonne": 2, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/amphibian.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["La Chaise (Chair)", "Aphrodite", "La Pousse (Sprout)", "La Nonne (Nun)"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/chair.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Les Gémeaux (Gemini)", "Le Yin et le Yang (Yin-Yang)", "La Grenouille (Frog)", "Le Caramel"],
+        "bonne": 2, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/frog.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Le Fer à repasser (Flatiron)", "Le Conte de fées (Fairytale)", "L'Arche (Arch)", "Le Bourgeon (Bud)"],
+        "bonne": 0, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/flatiron.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["L'Accordéon (Accordion)", "La Cuillère inversée (Reverse Spoon)", "Le Murmure (Whisper)", "La Cuillère (Spoon)"],
+        "bonne": 3, "theme": "Matthieu Morel", "difficulte": 2,
+        "grandeImage": true, "image": "positions/spoon.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Apollon (Apollo)", "Le Mur (Wall)", "Zeus", "L'Haltère (Barbell)"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 1,
+        "grandeImage": true, "image": "positions/wall.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["La Table basse (Coffee Table)", "L'Araignée (Bow Spider)", "Le Verrou (Lock)", "Le Train"],
+        "bonne": 2, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/lock.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["La Cuillère (Spoon)", "L'Accordéon (Accordion)", "Le Papillon (Butterfly)", "La Cuillère inversée (Reverse Spoon)"],
+        "bonne": 1, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/accordion.jpg"
+    },
+    {
+        "question": "Comment s'appelle cette position ?",
+        "reponses": ["Zeus", "Le Compas (Caliper)", "L'Haltère (Barbell)", "Apollon (Apollo)"],
+        "bonne": 3, "theme": "Matthieu Morel", "difficulte": 3,
+        "grandeImage": true, "image": "positions/apollo.jpg"
+    }
+]
