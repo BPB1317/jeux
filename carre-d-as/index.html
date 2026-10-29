@@ -571,6 +571,28 @@
             to { transform: scale(1) rotate(-4deg); opacity: 1; }
         }
 
+        /* Barre qui se remplit jusqu'au passage automatique au classement (durée : DELAI_CLASSEMENT) */
+        #btnQuestion.decompte {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #btnQuestion.decompte::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 0.3em;
+            background: var(--encre);
+            transform-origin: left;
+            animation: decompte var(--delai, 3s) linear both;
+        }
+
+        @keyframes decompte {
+            from { transform: scaleX(0); }
+        }
+
         .actions-tv {
             display: flex;
             justify-content: flex-end;
@@ -1303,12 +1325,25 @@
                 </li>`).join('');
             $('chrono').hidden = revele;
             $('btnQuestion').textContent = revele ? 'Classement' : 'Révéler maintenant';
-            $('btnQuestion').className = revele ? 'btn btn-geant' : 'btn btn-small';
+            $('btnQuestion').className = revele ? 'btn btn-geant decompte' : 'btn btn-small';
+            $('btnQuestion').style.setProperty('--delai', `${DELAI_CLASSEMENT}ms`);
+            // Après la révélation, le classement s'affiche tout seul (le bouton permet d'y aller plus tôt)
+            clearTimeout(minuteurClassement);
+            if (revele) {
+                const q = etat.q;
+                minuteurClassement = setTimeout(() => {
+                    if (etat.phase === 'revelation' && etat.q === q) suivant();
+                }, DELAI_CLASSEMENT);
+            }
             if (revele) son.revelation();
             else son.question();
             dernierTic = null;
             tic();
         }
+
+        // Durée d'affichage de la bonne réponse avant le passage automatique au classement
+        const DELAI_CLASSEMENT = 3000;
+        let minuteurClassement = null;
 
         // L'image reste la même entre la question et la révélation : seul le zoom, le masque ou le flou s'en va
         let imageRendue = null;
