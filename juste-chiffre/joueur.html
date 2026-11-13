@@ -480,13 +480,16 @@
             if (etat.mode === 'proche') {
                 const serie = scores[uid]?.serie ?? 0;
                 html = d.gagnant
-                    ? `<span class="tampon">Le plus proche</span><p class="tres-grand">+${d.points} ${d.points > 1 ? 'pts' : 'pt'}</p>${bilan}
+                    ? `<span class="tampon">${d.pile ? `Pile ! Bonus +${d.bonusPile}` : 'Le plus proche'}</span><p class="tres-grand">+${d.points} ${d.points > 1 ? 'pts' : 'pt'}</p>${bilan}
                         ${serie >= 2 ? `<p class="detail">Série de ${serie} victoires</p>` : ''}<p class="detail">Total : ${pts(total)}</p>`
                     : `<p class="grand-message">Pas cette fois</p>${bilan}<p class="detail">Total : ${pts(total)}</p>`;
             } else {
-                html = `${d.gagnant ? '<span class="tampon">Le plus proche</span>' : ''}
+                const details = [`${d.precision} pour la précision`];
+                if (d.bonus) details.push(`${d.bonus} pour le plus proche`);
+                if (d.bonusPile) details.push(`${d.bonusPile} pour le pile`);
+                html = `${d.pile ? '<span class="tampon">Pile !</span>' : d.gagnant ? '<span class="tampon">Le plus proche</span>' : ''}
                     <p class="tres-grand">+<span data-compte="${d.points}">0</span></p>${bilan}
-                    ${d.bonus ? `<p class="detail">${d.precision} pour la précision + ${d.bonus} pour le plus proche</p>` : ''}
+                    ${details.length > 1 ? `<p class="detail">${details.join(' + ')}</p>` : ''}
                     <p class="detail">Total : ${pts(total)}</p>`;
             }
             const nouveau = info(d.gagnant ? 'juste' : '', html);

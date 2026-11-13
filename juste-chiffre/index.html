@@ -900,11 +900,11 @@
                     <div class="modes" id="modes">
                         <button type="button" class="mode" data-mode="proche" aria-pressed="false">
                             <span class="nom-mode">Le plus proche</span>
-                            <span class="desc-mode">Seul le plus proche marque 1 point. Série de 3 victoires : 2 points, de 5 : 3 points…</span>
+                            <span class="desc-mode">Seul le plus proche marque 1 point. Série de 3 victoires : 2 points, de 5 : 3 points… +1 si c'est pile.</span>
                         </button>
                         <button type="button" class="mode" data-mode="precision" aria-pressed="true">
                             <span class="nom-mode">Précision</span>
-                            <span class="desc-mode">Tout le monde marque, jusqu'à 1000 points selon l'écart. +200 au plus proche.</span>
+                            <span class="desc-mode">Tout le monde marque, jusqu'à 1000 points selon l'écart. +200 au plus proche, +100 si c'est pile.</span>
                         </button>
                     </div>
                 </div>
@@ -1014,7 +1014,7 @@
         import { db, connexion, heureServeur, genererCode, classementAvecRangs, echapper, melanger, lireStockage, ecrireStockage,
             dossierAttendu, urlPage, gainsDeSoiree, retourAuSalon } from '../hub.js';
         import { ref, set, update, get, remove, onValue, serverTimestamp, query, orderByChild, endAt } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
-        import { marge, pointsPrecision, pointsSerie, formaterValeur, formaterEcart, consigne } from './regles.js';
+        import { marge, pointsPrecision, pointsSerie, formaterValeur, formaterEcart, consigne, BONUS_PROCHE, BONUS_PILE, BONUS_PILE_SERIE } from './regles.js';
 
         const $ = id => document.getElementById(id);
         const MON_JEU = 'juste-chiffre';
@@ -1202,7 +1202,8 @@
             $('btnCreer').disabled = banque.length === 0;
         }
 
-        const clePosees = cle => `justeChiffre.posees.${cle}`;
+        // « v2 » : toutes les questions ont été remises en jeu à l'ajout des 120 questions (novembre 2026)
+        const clePosees = cle => `justeChiffre.posees.v2.${cle}`;
         const idQuestion = q => q.question.trim().toLowerCase();
 
         function lirePosees(cle) {
@@ -1553,7 +1554,7 @@
                 const noms = gagnants.map(p => joueur(p.id).pseudo);
                 const pts = gagnants[0]?.points || 0;
                 $('annonce').innerHTML = !gagnants.length ? 'Personne n\'a répondu'
-                    : `${echapper(noms.join(' et '))} ${noms.length > 1 ? 'tombent' : 'tombe'} le plus près · +${pts}
+                    : `${echapper(noms.join(' et '))} ${gagnants[0].pile ? (noms.length > 1 ? 'tombent pile' : 'tombe pile') : (noms.length > 1 ? 'tombent le plus près' : 'tombe le plus près')} · +${pts}
                         ${gagnants[0].serie >= 2 ? `<span class="serie">Série de ${gagnants[0].serie} victoires${gagnants[0].serie % 2 === 0 ? ` : encore une pour passer à ${Math.ceil((gagnants[0].serie + 1) / 2)} points` : ''}</span>` : ''}`;
                 $('annonce').hidden = false;
             } else {
@@ -1567,7 +1568,7 @@
                 const gain = etat.mode === 'precision' ? `+${p.points}` : p.gagnant ? `+${p.points}` : '';
                 return `<li class="${p.gagnant ? 'gagnant' : ''}" style="--i:${k}">
                     <span class="rang">${p.rang}</span><span>${pastille(j.couleur)} ${echapper(j.pseudo)}</span><span class="gain">${gain}</span>
-                    <span class="detail">${formaterValeur(p.valeur, question, true)} · ${p.ecart === 0 ? 'pile !' : `${formaterEcart(p.ecart, question)} d'écart`}</span>
+                    <span class="detail">${formaterValeur(p.valeur, question, true)} · ${p.ecart === 0 ? `pile ! bonus +${p.bonusPile}` : `${formaterEcart(p.ecart, question)} d'écart`}</span>
                 </li>`;
             }).join('');
             $('btnRevelation').classList.remove('decompte');
@@ -1701,20 +1702,23 @@
                     const avant = scores[id] || { total: 0, serie: 0 };
                     const repondu = id in ecarts;
                     const gagnant = repondu && ecarts[id] === meilleur;
-                    let points = 0, precision = 0, bonus = 0;
+                    const pile = repondu && ecarts[id] === 0;
+                    let points = 0, precision = 0, bonus = 0, bonusPile = 0;
                     const serie = gagnant ? (avant.serie || 0) + 1 : 0;
                     if (etat.mode === 'proche') {
-                        points = gagnant ? pointsSerie(serie) : 0;
+                        bonusPile = pile ? BONUS_PILE_SERIE : 0;
+                        points = gagnant ? pointsSerie(serie) + bonusPile : 0;
                     } else if (repondu) {
                         precision = pointsPrecision(ecarts[id], m);
-                        bonus = gagnant ? 200 : 0;
-                        points = precision + bonus;
+                        bonus = gagnant ? BONUS_PROCHE : 0;
+                        bonusPile = pile ? BONUS_PILE : 0;
+                        points = precision + bonus + bonusPile;
                     }
                     maj[`scores/${id}`] = {
                         total: (avant.total || 0) + points,
                         serie,
                         dernier: repondu
-                            ? { q: etat.q, repondu, valeur: reps[id].valeur, ecart: ecarts[id], gagnant, points, precision, bonus }
+                            ? { q: etat.q, repondu, valeur: reps[id].valeur, ecart: ecarts[id], gagnant, pile, points, precision, bonus, bonusPile }
                             : { q: etat.q, repondu: false, gagnant: false, points: 0 }
                     };
                 });

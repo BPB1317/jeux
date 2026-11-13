@@ -11,7 +11,12 @@ export function marge(question, anneeCourante) {
     return Math.max(Math.abs(question.reponse) / 2, 1);
 }
 
-// Mode Précision : 1000 points pile, 0 quand l'écart atteint la marge (le bonus du plus proche s'ajoute à part)
+// Bonus. Précision : +200 au plus proche, +100 de plus si c'est pile. Le plus proche : +1 point si c'est pile.
+export const BONUS_PROCHE = 200;
+export const BONUS_PILE = 100;
+export const BONUS_PILE_SERIE = 1;
+
+// Mode Précision : 1000 points pile, 0 quand l'écart atteint la marge (les bonus s'ajoutent à part)
 export function pointsPrecision(ecart, m) {
     return Math.round(1000 * Math.max(0, 1 - ecart / m));
 }
