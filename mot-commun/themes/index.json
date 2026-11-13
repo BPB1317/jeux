@@ -1,0 +1,9 @@
+[
+    {
+        "theme": "Tout public",
+        "sujets": [
+            { "fichier": "classiques.json", "titre": "Les classiques" },
+            { "fichier": "quotidien.json", "titre": "La vie de tous les jours" }
+        ]
+    }
+]

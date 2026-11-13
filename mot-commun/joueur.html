@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#D8C7A3">
+    <title>Le Mot commun</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../commun.css">
+    <link rel="stylesheet" href="../telephone.css">
+    <style>
+        :root {
+            --jeu: var(--sapin);
+            --papier: #FFFDF7;
+        }
+
+        .rejoindre h1.tampon {
+            background: var(--jeu);
+        }
+
+        #chronoJoueur {
+            font-family: var(--police-titre);
+            font-size: 1.4rem;
+            line-height: 1;
+            color: var(--carton);
+            background: var(--encre);
+            padding: 0.2em 0.4em;
+            min-width: 2em;
+            text-align: center;
+        }
+
+        #chronoJoueur.urgent {
+            background: var(--tomate);
+        }
+
+        /* ---------- Saisie du mot ---------- */
+
+        #ecranSaisie.actif {
+            gap: 1.1rem;
+        }
+
+        .papier-theme {
+            background: var(--papier);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 1rem;
+            text-align: center;
+            transform: rotate(-1deg);
+        }
+
+        .papier-theme .surtitre {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        #themeTel {
+            font-family: var(--police-titre);
+            font-size: clamp(1.5rem, 8vw, 2.1rem);
+            line-height: 1.1;
+            text-wrap: balance;
+        }
+
+        .zone-saisie {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-top: 0.4rem;
+        }
+
+        #champMot {
+            width: 100%;
+            font-family: var(--police-titre);
+            font-size: clamp(1.6rem, 8vw, 2.2rem);
+            color: var(--encre);
+            background: var(--papier);
+            border: var(--trait) solid var(--encre);
+            border-radius: 0;
+            padding: 0.4em 0.5em;
+            user-select: text;
+        }
+
+        #champMot:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px var(--ocre);
+        }
+
+        #champMot.secoue {
+            animation: secoue 0.4s ease-out;
+        }
+
+        @keyframes secoue {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-0.4em); }
+            50% { transform: translateX(0.35em); }
+            75% { transform: translateX(-0.2em); }
+        }
+
+        .astuce {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--encre-douce);
+        }
+
+        #btnPlier {
+            color: var(--carton);
+            background: var(--jeu);
+        }
+
+        #btnPlier:disabled {
+            background: #8A7F6C;
+        }
+
+        /* ---------- Le papier plié ---------- */
+
+        .papier-plie {
+            font-family: var(--police-titre);
+            font-size: clamp(1.8rem, 10vw, 2.6rem);
+            line-height: 1.1;
+            max-width: 100%;
+            overflow-wrap: anywhere;
+            color: var(--encre);
+            background: var(--papier);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre-forte);
+            padding: 0.5em 0.8em;
+            transform: rotate(-3deg);
+            animation: envoi 0.5s cubic-bezier(.3, 1.6, .5, 1) both;
+        }
+
+        .theme-rappel {
+            font-weight: 900;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--encre-douce);
+        }
+
+        #ecranInfo[data-ton="juste"] .theme-rappel,
+        #ecranInfo[data-ton="mouton"] .theme-rappel { color: var(--carton); }
+
+        /* ---------- Résultat ---------- */
+
+        .fiche {
+            align-self: stretch;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            text-align: left;
+            color: var(--encre);
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 0.9rem 1rem;
+        }
+
+        .fiche .ligne {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.6rem;
+        }
+
+        .fiche .etiquette {
+            font-weight: 900;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--encre-douce);
+        }
+
+        .fiche .mot {
+            font-family: var(--police-titre);
+            font-size: 1.4rem;
+            line-height: 1.1;
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .comme {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .comme span {
+            display: flex;
+            align-items: center;
+            gap: 0.35em;
+            font-weight: 900;
+            border: var(--trait-fin) solid var(--encre);
+            padding: 0.15em 0.5em;
+        }
+
+        .comme .pastille {
+            width: 0.75em;
+            height: 0.75em;
+            border-width: 2px;
+        }
+
+        .tampon-pile {
+            display: inline-block;
+            font-family: var(--police-titre);
+            font-size: 1.3rem;
+            color: var(--carton);
+            background: var(--tomate);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 0.2em 0.6em;
+            transform: rotate(-3deg);
+        }
+
+        #ecranInfo[data-ton="mouton"] { background: var(--encre); color: var(--carton); }
+
+        .mouton-svg {
+            width: 9rem;
+            height: auto;
+        }
+
+        .encart {
+            align-self: stretch;
+            font-weight: 900;
+            line-height: 1.4;
+            color: var(--encre);
+            background: var(--carton);
+            border: var(--trait) solid var(--carton);
+            padding: 0.8rem 1rem;
+        }
+
+        .badge-mouton {
+            display: inline-block;
+            font-weight: 900;
+            font-size: 0.85rem;
+            color: var(--carton);
+            background: var(--encre);
+            border: 2px solid var(--carton);
+            padding: 0.25em 0.7em;
+        }
+
+        .carte-joueur {
+            margin-bottom: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <section id="ecranChargement" class="ecran actif">
+        <div class="centre">
+            <p id="messageChargement" class="surtitre">Connexion…</p>
+        </div>
+    </section>
+
+    <section id="ecranRejoindre" class="ecran">
+        <form class="rejoindre" id="formRejoindre" autocomplete="off">
+            <h1 class="tampon">Le Mot commun</h1>
+            <div class="champ">
+                <label for="champCode">Code affiché sur la TV</label>
+                <input type="text" id="champCode" maxlength="4" inputmode="text" autocapitalize="characters" spellcheck="false">
+            </div>
+            <div class="champ">
+                <label for="champPseudo">Ton pseudo</label>
+                <input type="text" id="champPseudo" maxlength="16" spellcheck="false">
+            </div>
+            <div class="champ">
+                <span class="etiquette-champ">Ta couleur</span>
+                <div class="palette" id="palette"></div>
+            </div>
+            <p id="erreurRejoindre" class="erreur" hidden></p>
+            <button type="submit" class="btn btn-geant" id="btnRejoindre">Rejoindre</button>
+        </form>
+    </section>
+
+    <section id="ecranAttente" class="ecran">
+        <div class="centre">
+            <div class="carte-joueur" id="carteJoueur"></div>
+            <p class="grand-message">Le Mot commun</p>
+            <p class="detail" id="detailAttente">Garde l'œil sur la TV, ça va commencer.</p>
+        </div>
+        <button class="btn-lien" id="btnQuitter">Quitter la partie</button>
+    </section>
+
+    <section id="ecranSaisie" class="ecran">
+        <div class="bandeau"><span class="qui"></span><span class="droite" id="numJoueur"></span><span id="chronoJoueur"></span></div>
+        <div class="papier-theme"><span class="surtitre">Le thème</span><span id="themeTel"></span></div>
+        <form class="zone-saisie" id="formMot" autocomplete="off">
+            <label class="etiquette-champ" for="champMot">Ton mot</label>
+            <input type="text" id="champMot" maxlength="24" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="send" placeholder="Un seul mot">
+            <p class="astuce">Pas besoin d'être original : écris ce que les autres vont écrire.</p>
+            <button type="submit" class="btn btn-geant" id="btnPlier" disabled>Plier le papier</button>
+        </form>
+    </section>
+
+    <section id="ecranInfo" class="ecran">
+        <div class="bandeau qui"></div>
+        <div class="centre" id="info"></div>
+    </section>
+
+    <script type="module">
+        import { db, connexion, heureServeur, rangDe, ordinal, echapper, lireStockage, ecrireStockage, CLE_JOUEUR,
+            brancherRejoindre, signalerPresence, quitter, garderEcranAllume, dossierAttendu, urlPage } from '../hub.js';
+        import { ref, set, get, onValue, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+        import { PENALITE_MOUTON, LONGUEUR_MAX } from './regles.js';
+
+        const $ = id => document.getElementById(id);
+        const MON_JEU = 'mot-commun';
+        const MOUTON_SVG = `<svg class="mouton-svg" viewBox="0 0 60 48" fill="none" stroke="#F1E7D0" stroke-width="2.6" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 30c-6 0-8-5-5-9-3-4 1-9 6-7 1-5 8-6 11-2 3-4 10-3 11 2 5-1 8 4 5 8 3 4 0 9-5 8-2 4-8 5-11 2-3 3-9 2-12-2z" fill="#221C15"/>
+            <path d="M44 18c4-2 9 0 9 5s-4 7-8 6"/><path d="M18 31v10M26 32v10M34 32v10"/><circle cx="49" cy="22" r="1" fill="#F1E7D0"/></svg>`;
+
+        let uid = null;
+        let code = null;
+        let etat = null;
+        let moi = null;
+        let joueurs = {};
+        let scores = {};
+        let resultats = {};
+        let maReponse;          // undefined : pas encore lue ; null : pas de réponse
+        let qSuivie = null;
+        let arreterReponse = null;
+        let refusQ = null;
+        let enSoiree = false;
+        let afficherFormulaire = null;
+        let qSaisie = null;
+
+        function afficher(id) {
+            document.querySelectorAll('.ecran').forEach(e => e.classList.toggle('actif', e.id === id));
+        }
+
+        async function demarrer() {
+            try {
+                uid = await connexion();
+            } catch {
+                $('messageChargement').textContent = 'Pas de connexion. Vérifie le wifi puis recharge la page.';
+                return;
+            }
+            afficherFormulaire = brancherRejoindre(uid, entrer);
+            const codeUrl = (new URLSearchParams(location.search).get('code') || '').toUpperCase();
+            for (const c of new Set([codeUrl, lireStockage(CLE_JOUEUR)])) {
+                if (c && await revenir(c)) return;
+            }
+            ecrireStockage(CLE_JOUEUR, null);
+            afficher('ecranRejoindre');
+            afficherFormulaire();
+        }
+
+        async function revenir(c) {
+            try {
+                const fiche = (await get(ref(db, `parties/${c}/joueurs/${uid}`))).val();
+                if (!fiche) return false;
+                entrer(c);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        function entrer(c) {
+            code = c;
+            ecrireStockage(CLE_JOUEUR, c);
+            garderEcranAllume();
+            const base = `parties/${c}`;
+            get(ref(db, `${base}/meta`)).then(s => { enSoiree = !!s.val()?.soiree; rendre(); }).catch(() => {});
+            onValue(ref(db, `${base}/etat`), s => {
+                const avant = etat;
+                etat = s.val();
+                if (!etat) return partieTerminee(avant);
+                if (dossierAttendu(etat) !== MON_JEU) {
+                    location.replace(urlPage(dossierAttendu(etat), 'joueur', code));
+                    return;
+                }
+                suivreReponse();
+                rendre();
+            }, () => partieTerminee(etat));
+            onValue(ref(db, `${base}/joueurs`), s => { joueurs = s.val() || {}; moi = joueurs[uid] || null; rendre(); });
+            onValue(ref(db, `${base}/scores`), s => { scores = s.val() || {}; rendre(); });
+            onValue(ref(db, `${base}/resultats`), s => { resultats = s.val() || {}; rendre(); });
+            signalerPresence(c, uid);
+        }
+
+        // Mon papier de la manche : pendant l'écriture et tant que la TV déplie les papiers
+        function suivreReponse() {
+            const q = ['question', 'piles'].includes(etat.phase) ? etat.q : null;
+            if (q === qSuivie) return;
+            if (arreterReponse) arreterReponse();
+            arreterReponse = null;
+            maReponse = undefined;
+            qSuivie = q;
+            if (q !== null) {
+                arreterReponse = onValue(ref(db, `parties/${code}/reponses/${q}/${uid}`), s => { maReponse = s.val(); rendre(); });
+            }
+        }
+
+        function partieTerminee(dernierEtat) {
+            ecrireStockage(CLE_JOUEUR, null);
+            if (dernierEtat && dernierEtat.phase === 'fin') return;
+            code = null;
+            afficher('ecranInfo');
+            $('ecranInfo').dataset.ton = '';
+            $('info').innerHTML = `<p class="grand-message">${enSoiree ? 'La soirée est terminée' : 'La partie est terminée'}</p>
+                <a class="btn btn-geant" href="joueur.html">Rejoindre une partie</a>`;
+        }
+
+        function rendreBandeaux() {
+            const html = `<span class="pastille" style="background:${echapper(moi.couleur)}"></span><span>${echapper(moi.pseudo)}</span>`;
+            document.querySelectorAll('.qui').forEach(q => { q.innerHTML = html; });
+            $('carteJoueur').innerHTML = `<span class="pastille" style="background:${echapper(moi.couleur)}"></span><span class="pseudo">${echapper(moi.pseudo)}</span>`;
+        }
+
+        let cleInfo = null;
+        function info(ton, html) {
+            afficher('ecranInfo');
+            if (cleInfo === ton + html) return false;
+            cleInfo = ton + html;
+            $('ecranInfo').dataset.ton = ton;
+            $('info').innerHTML = html;
+            return true;
+        }
+
+        function vibrer(motif) {
+            if (navigator.vibrate) navigator.vibrate(motif);
+        }
+
+        const pts = n => `${n} ${Math.abs(n) > 1 ? 'pts' : 'pt'}`;
+        const ai = () => etat.mode === 'troupeau' && etat.mouton === uid;
+
+        function rendre() {
+            if (!etat || !moi || !code) return;
+            rendreBandeaux();
+            const total = scores[uid]?.total ?? 0;
+            const theme = etat.question?.texte || '';
+            if (etat.pauseDepuis && ['question', 'piles', 'revelation', 'classement'].includes(etat.phase)) {
+                info('', `<p class="grand-message">Pause</p><p class="detail">La partie reprend dans un instant.</p>`);
+                return;
+            }
+            if (etat.phase === 'salle') {
+                afficher('ecranAttente');
+                $('detailAttente').textContent = etat.mode === 'troupeau'
+                    ? 'Mode « Le troupeau » : seule la plus grosse pile marque, et gare au mouton noir. Garde l\'œil sur la TV.'
+                    : 'Mode « Tous ensemble » : 1 point par joueur qui écrit le même mot que toi. Garde l\'œil sur la TV.';
+            } else if (etat.phase === 'question') {
+                if (refusQ === etat.q) {
+                    info('rate', `<p class="grand-message">Trop tard</p><p class="detail">Ton papier est arrivé après la fin du chrono.</p>`);
+                } else if (maReponse === undefined) {
+                    return;
+                } else if (maReponse) {
+                    papierPlie(theme, 'Regarde la TV : on va voir qui pense comme toi.');
+                } else {
+                    rendreSaisie();
+                }
+            } else if (etat.phase === 'piles') {
+                if (maReponse === undefined) return;
+                if (maReponse) papierPlie(theme, 'Les papiers se déplient sur la TV.');
+                else info('rate', `<p class="theme-rappel">${echapper(theme)}</p><p class="grand-message">Pas de papier</p><p class="detail">${etat.mode === 'troupeau' ? 'Sans papier, tu comptes comme isolé.' : 'Tu ne marqueras rien cette manche.'}</p>`);
+            } else if (etat.phase === 'revelation') {
+                rendreResultat(total);
+            } else if (etat.phase === 'classement') {
+                info('', `<p class="surtitre">Classement</p><p class="tres-grand">${ordinal(rangDe(uid, scores))}</p><p class="detail">${pts(total)}</p>
+                    ${ai() ? `<p class="badge-mouton">Tu as le mouton noir : −${PENALITE_MOUTON} s'il est encore là à la fin</p>` : ''}`);
+            } else if (etat.phase === 'fin') {
+                const rang = rangDe(uid, scores);
+                const nb = Object.keys(scores).length || 1;
+                const penalite = scores[uid]?.penalite;
+                info(rang === 1 ? 'juste' : '', `<p class="surtitre">Fin de la partie</p>
+                    ${rang === 1 ? '<span class="tampon">Victoire</span>' : ''}<p class="tres-grand">${ordinal(rang)}</p>
+                    <p class="detail">sur ${nb} ${nb > 1 ? 'joueurs' : 'joueur'}, avec ${pts(total)}</p>
+                    ${penalite ? `<p class="detail">dont −${penalite} pour le mouton noir</p>` : ''}
+                    ${enSoiree ? '<p class="detail">Retour au salon dans un instant.</p>' : ''}`);
+            }
+        }
+
+        function papierPlie(theme, texte) {
+            info('', `<p class="theme-rappel">${echapper(theme)}</p><div class="papier-plie">${echapper(maReponse.mot)}</div>
+                <p class="grand-message">Papier plié</p><p class="detail">${texte}</p>`);
+        }
+
+        function puces(ids) {
+            return `<div class="comme">${ids.map(id => {
+                const j = joueurs[id] || { pseudo: '?', couleur: '#CDBB94' };
+                return `<span><span class="pastille" style="background:${echapper(j.couleur)}"></span>${echapper(j.pseudo)}</span>`;
+            }).join('')}</div>`;
+        }
+
+        function rendreResultat(total) {
+            const d = scores[uid]?.dernier;
+            const res = resultats[etat.q];
+            if (!d || d.q !== etat.q || !res) return;
+            const theme = etat.question?.texte || '';
+            const troupeau = etat.mode === 'troupeau';
+            const prendMouton = troupeau && res.mouton === uid && res.nouveauMouton;
+            const totalTxt = `<p class="detail">Total : ${pts(total)}</p>`;
+            if (prendMouton) {
+                const pile = res.piles?.[d.pile];
+                const nouveau = info('mouton', `${MOUTON_SVG}<p class="grand-message">Tu es le mouton noir</p>
+                    <p class="detail">${pile ? `Seul à avoir écrit « ${echapper(pile.mot)} ».` : 'Sans papier, tu étais le seul isolé.'} Il passera au prochain joueur isolé… s'il y en a un.</p>
+                    <p class="encart">S'il est encore chez toi à la fin de la partie : −${PENALITE_MOUTON} points.</p>${totalTxt}`);
+                if (nouveau) vibrer([200, 100, 200]);
+                return;
+            }
+            const rappelMouton = troupeau && res.mouton === uid ? `<p class="badge-mouton">Tu as toujours le mouton noir</p>` : '';
+            if (d.pile < 0 || !res.piles?.[d.pile]) {
+                const nouveau = info('rate', `<p class="theme-rappel">${echapper(theme)}</p><p class="grand-message">Pas de papier</p><p class="detail">Rien marqué cette manche.</p>${rappelMouton}${totalTxt}`);
+                if (nouveau) vibrer(220);
+                return;
+            }
+            const pile = res.piles[d.pile];
+            const autres = pile.joueurs.filter(id => id !== uid);
+            const fiche = `<div class="fiche">
+                <div class="ligne"><span class="etiquette">Ton mot</span><span class="mot">${echapper(d.mot || pile.mot)}</span></div>
+                ${autres.length ? `<div><span class="etiquette">Comme toi</span>${puces(autres)}</div>` : ''}
+            </div>`;
+            let html, ton;
+            if (d.points > 0) {
+                ton = 'juste';
+                html = `<span class="tampon-pile">${troupeau ? 'La plus grosse pile' : `Pile de ${pile.joueurs.length}`}</span>
+                    <p class="tres-grand">+${d.points}</p>${fiche}${rappelMouton}${totalTxt}`;
+            } else if (!autres.length) {
+                ton = '';
+                html = `<p class="theme-rappel">${echapper(theme)}</p><p class="grand-message">Tout seul</p>
+                    <p class="detail">Personne d'autre n'a écrit « ${echapper(pile.mot)} ».${troupeau ? ' D\'autres sont isolés aussi : le mouton noir ne bouge pas.' : ''}</p>${fiche}${rappelMouton}${totalTxt}`;
+            } else {
+                ton = '';
+                const enTete = Math.max(...(res.piles || []).map(p => p.joueurs.length));
+                html = `<span class="tampon-pile">Pile de ${pile.joueurs.length}</span><p class="tres-grand">+0</p>
+                    <p class="detail">${pile.joueurs.length === enTete ? 'Égalité en tête : personne ne marque.' : 'Ce n\'était pas la plus grosse pile.'}</p>${fiche}${rappelMouton}${totalTxt}`;
+            }
+            const nouveau = info(ton, html);
+            if (nouveau) vibrer(d.points > 0 ? [40, 60, 40] : 80);
+        }
+
+        // ---------- Saisie du mot ----------
+
+        function rendreSaisie() {
+            if (qSaisie !== etat.q) {
+                qSaisie = etat.q;
+                $('champMot').value = '';
+                $('btnPlier').disabled = true;
+                $('themeTel').textContent = etat.question?.texte || '';
+            }
+            const etaitVisible = $('ecranSaisie').classList.contains('actif');
+            afficher('ecranSaisie');
+            cleInfo = null;
+            $('numJoueur').textContent = `Manche ${Number(etat.q) + 1} / ${etat.total}`;
+            if (!etaitVisible) setTimeout(() => $('champMot').focus(), 50);
+            ticJoueur();
+        }
+
+        $('champMot').addEventListener('input', e => {
+            if (e.target.value.length > LONGUEUR_MAX) e.target.value = e.target.value.slice(0, LONGUEUR_MAX);
+            $('btnPlier').disabled = !e.target.value.trim();
+        });
+
+        $('formMot').addEventListener('submit', async e => {
+            e.preventDefault();
+            const mot = $('champMot').value.trim().replace(/\s+/g, ' ');
+            if (!mot) {
+                $('champMot').classList.remove('secoue');
+                $('champMot').offsetWidth;
+                $('champMot').classList.add('secoue');
+                return;
+            }
+            if (!etat || etat.phase !== 'question' || etat.pauseDepuis || maReponse) return;
+            const q = etat.q;
+            $('champMot').blur();
+            vibrer(60);
+            maReponse = { mot };
+            rendre();
+            try {
+                await set(ref(db, `parties/${code}/reponses/${q}/${uid}`), { mot, a: serverTimestamp() });
+            } catch {
+                refusQ = q;
+                maReponse = null;
+                rendre();
+            }
+        });
+
+        function ticJoueur() {
+            if (!etat || etat.phase !== 'question') return;
+            const reste = etat.debut + etat.duree * 1000 - (etat.pauseDepuis || heureServeur());
+            const secondes = Math.max(0, Math.ceil(reste / 1000));
+            $('chronoJoueur').textContent = secondes;
+            $('chronoJoueur').classList.toggle('urgent', secondes <= 5);
+        }
+
+        setInterval(ticJoueur, 250);
+
+        $('btnQuitter').addEventListener('click', async () => {
+            ecrireStockage(CLE_JOUEUR, null);
+            await quitter(code, uid, moi?.couleur);
+            location.href = 'joueur.html';
+        });
+
+        demarrer();
+    </script>
+</body>
+</html>

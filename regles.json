@@ -1,5 +1,5 @@
 {
-  // Règles de sécurité du Game Hub (Carré d'As, Le Juste Chiffre, soirées).
+  // Règles de sécurité du Game Hub (Carré d'As, Le Juste Chiffre, Le Mot commun, soirées).
   // À coller dans la console Firebase : Realtime Database > Règles > Publier.
   "rules": {
     "parties": {
@@ -66,7 +66,7 @@
         },
 
         // Une seule réponse par joueur et par question, pendant le chrono (1,5 s de marge réseau),
-        // horodatée par le serveur : un coin (Carré d'As) ou un nombre (Le Juste Chiffre).
+        // horodatée par le serveur : un coin (Carré d'As), un nombre (Le Juste Chiffre) ou un mot (Le Mot commun).
         // L'hôte les lit, et les efface entre deux jeux d'une soirée.
         "reponses": {
           ".read": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val()",
@@ -75,9 +75,10 @@
             "$uid": {
               ".read": "auth != null && auth.uid === $uid",
               ".write": "auth != null && auth.uid === $uid && !data.exists() && root.child('parties/' + $code + '/joueurs/' + $uid).exists() && root.child('parties/' + $code + '/etat/phase').val() === 'question' && root.child('parties/' + $code + '/etat/q').val() === $q && now <= root.child('parties/' + $code + '/etat/debut').val() + root.child('parties/' + $code + '/etat/duree').val() * 1000 + 1500",
-              ".validate": "newData.hasChildren(['a']) && (newData.hasChildren(['choix']) || newData.hasChildren(['valeur']))",
+              ".validate": "newData.hasChildren(['a']) && (newData.hasChildren(['choix']) || newData.hasChildren(['valeur']) || newData.hasChildren(['mot']))",
               "choix": { ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 3" },
               "valeur": { ".validate": "newData.isNumber() && newData.val() > -1000000000000 && newData.val() < 1000000000000" },
+              "mot": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 30" },
               "a": { ".validate": "newData.val() === now" },
               "$autre": { ".validate": false }
             }

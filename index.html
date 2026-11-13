@@ -294,7 +294,7 @@
 
         <a class="soiree" href="soiree/index.html">
             <span class="tampon soiree-tampon">Mode soirée</span>
-            <span class="soiree-texte">Un seul QR code pour toute la soirée : on enchaîne Carré d'As et Le Juste Chiffre sans rescanner, avec un classement de la soirée.</span>
+            <span class="soiree-texte">Un seul QR code pour toute la soirée : on enchaîne Carré d'As, Le Juste Chiffre et Le Mot commun sans rescanner, avec un classement de la soirée.</span>
             <span class="soiree-lancer" id="soireeLancer">Ouvrir le salon</span>
         </a>
 
@@ -317,6 +317,7 @@
             grid: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="6" y="6" width="36" height="36"/><path d="M18 6v36M30 6v36M6 18h36M6 30h36"/><rect x="19.8" y="19.8" width="8.4" height="8.4" fill="currentColor" stroke="none"/></svg>',
             camera: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="5" y="15" width="38" height="25"/><path d="M17 15l3-6h8l3 6"/><rect x="17" y="21" width="14" height="13"/></svg>',
             bars: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="7" y="28" width="9" height="13"/><rect x="20" y="18" width="9" height="23"/><rect x="33" y="7" width="9" height="34"/></svg>',
+            papiers: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 30l26-8 4 14-26 8z"/><rect x="10" y="6" width="28" height="16"/><path d="M16 14h16"/></svg>',
             ruler: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="4" y="16" width="40" height="16"/><path d="M11 16v7M18 16v4M25 16v7M32 16v4M39 16v7"/></svg>',
             coins: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><circle cx="14" cy="14" r="7"/><rect x="27" y="7" width="14" height="14"/><path d="M14 27l7.5 13h-15z"/><path d="M28 28l12 12M40 28L28 40"/></svg>'
         };
@@ -358,6 +359,17 @@
                 rules: [
                     'Mode « Le plus proche » : seul le plus proche marque.',
                     'Mode Précision : jusqu\'à 1000 points selon l\'écart.'
+                ]
+            },
+            {
+                folder: 'mot-commun',
+                title: 'Le Mot commun',
+                icon: 'papiers',
+                color: '#1F6A5C',
+                description: 'Un thème, un mot à écrire en secret. On gagne en pensant comme les autres.',
+                rules: [
+                    'Mode « Tous ensemble » : 1 point par joueur qui a écrit comme toi.',
+                    'Mode « Le troupeau » : seule la plus grosse pile marque, gare au mouton noir.'
                 ]
             }
         ];

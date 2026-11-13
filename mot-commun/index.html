@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Mot commun</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../commun.css">
+    <style>
+        :root {
+            --jeu: var(--sapin);
+            --papier: #FFFDF7;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .ecran {
+            display: none;
+            min-height: 100vh;
+            padding: clamp(1rem, 2.5vw, 2.5rem);
+        }
+
+        .ecran.actif {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .centre {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .erreur {
+            font-weight: 900;
+            color: var(--tomate);
+        }
+
+        /* ---------- Réglages ---------- */
+
+        .config {
+            width: min(40rem, 100%);
+            margin: 0 auto;
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+
+        .config-gauche,
+        .config-droite {
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+            min-width: 0;
+        }
+
+        @media (min-width: 1000px) {
+            .config {
+                width: min(76rem, 100%);
+                display: grid;
+                grid-template-columns: 1fr 1.1fr;
+                gap: 2.5rem;
+                align-items: start;
+            }
+
+            .config .themes {
+                max-height: calc(100vh - 21rem);
+            }
+        }
+
+        .config-ligne {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        #etatFichier {
+            font-weight: 700;
+            color: var(--encre-douce);
+        }
+
+        .themes {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 46vh;
+            overflow-y: auto;
+            padding: 0.2rem 0.4rem 0.4rem 0;
+        }
+
+        .titre-theme {
+            font-family: var(--police-titre);
+            font-size: 1.25rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .sujets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding-left: 1rem;
+            border-left: var(--trait) solid var(--filet);
+        }
+
+        .theme {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-family: var(--police-texte);
+            font-size: 1rem;
+            font-weight: 900;
+            text-align: left;
+            color: var(--encre);
+            background: var(--papier);
+            border: var(--trait-fin) solid var(--encre);
+            border-radius: var(--rayon);
+            padding: 0.6em 0.8em;
+            cursor: pointer;
+        }
+
+        .theme:hover:not(:disabled):not(.choisi) { background: var(--kraft); }
+        .theme.choisi { color: var(--carton); background: var(--encre); }
+        .theme:disabled { opacity: 0.55; cursor: default; }
+        .theme-titre { flex: 1; }
+        .theme-compte { font-weight: 700; font-size: 0.85em; }
+
+        .a-completer {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--encre);
+            background: var(--ocre);
+            border: 2px solid var(--encre);
+            padding: 0.2em 0.5em;
+        }
+
+        #btnRemiseAZero {
+            align-self: flex-start;
+            margin-top: -0.9rem;
+        }
+
+        .alerte {
+            font-weight: 900;
+            color: var(--encre);
+            background: var(--ocre);
+            border: var(--trait-fin) solid var(--encre);
+            box-shadow: 4px 4px 0 var(--encre);
+            padding: 0.6em 0.9em;
+        }
+
+        .modes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.9rem;
+        }
+
+        .mode {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            text-align: left;
+            font-family: var(--police-texte);
+            color: var(--encre);
+            background: var(--papier);
+            border: var(--trait-fin) solid var(--encre);
+            border-radius: var(--rayon);
+            padding: 0.8em 0.9em;
+            cursor: pointer;
+        }
+
+        .mode .nom-mode {
+            font-family: var(--police-titre);
+            font-size: 1.2rem;
+            line-height: 1.1;
+        }
+
+        .mode .desc-mode {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--encre-douce);
+        }
+
+        .mode[aria-pressed="true"] {
+            color: var(--carton);
+            background: var(--jeu);
+            box-shadow: 4px 4px 0 var(--encre);
+        }
+
+        .mode[data-mode="troupeau"][aria-pressed="true"] { background: var(--prune); }
+        .mode[aria-pressed="true"] .desc-mode { color: var(--carton); }
+
+        /* ---------- Salle d'attente ---------- */
+
+        .logo {
+            align-self: flex-start;
+            font-size: clamp(1.6rem, 2.6vw, 2.8rem);
+            background: var(--jeu);
+        }
+
+        .salle {
+            flex: 1;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: clamp(1.5rem, 4vw, 5rem);
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .invitation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.9rem;
+            text-align: center;
+            padding: clamp(1.2rem, 2vw, 2.2rem);
+            transform: rotate(-1deg);
+        }
+
+        #code {
+            font-family: var(--police-titre);
+            font-size: clamp(3.5rem, 8vw, 8.5rem);
+            letter-spacing: 0.1em;
+            line-height: 1;
+            color: var(--carton);
+            background: var(--jeu);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 0.05em 0.25em 0.1em 0.35em;
+        }
+
+        #qr {
+            padding: 0.6rem;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+        }
+
+        #qr img,
+        #qr canvas {
+            display: block;
+            width: clamp(9rem, 17vw, 17rem);
+            height: auto;
+        }
+
+        .adresse {
+            font-size: clamp(0.9rem, 1.2vw, 1.3rem);
+            line-height: 1.35;
+        }
+
+        #lienJoueur { word-break: break-all; }
+
+        .arrivees h2 {
+            font-size: clamp(2rem, 3.6vw, 3.8rem);
+            margin-bottom: 0.6rem;
+        }
+
+        .arrivees .mode-annonce {
+            font-weight: 900;
+            font-size: clamp(1rem, 1.5vw, 1.6rem);
+            color: var(--encre-douce);
+            margin-bottom: 1.5rem;
+        }
+
+        #listeJoueurs {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem;
+            margin-bottom: 2.5rem;
+            min-height: 3rem;
+        }
+
+        #listeJoueurs li {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            font-weight: 900;
+            font-size: clamp(1.3rem, 2.2vw, 2.4rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            box-shadow: 4px 4px 0 var(--encre);
+            padding: 0.3em 0.7em;
+            transform: rotate(var(--penche, 0deg));
+        }
+
+        #listeJoueurs li.nouveau { animation: pose 0.45s cubic-bezier(.3, 1.6, .5, 1) both; }
+        #listeJoueurs li.hors-ligne { opacity: 0.4; }
+        #listeJoueurs .pastille { width: 1em; height: 1em; }
+
+        @keyframes pose {
+            from { transform: translateY(-1.5em) rotate(-8deg) scale(1.3); opacity: 0; }
+        }
+
+        /* ---------- Thème de la manche ---------- */
+
+        #ecranQuestion.actif,
+        #ecranPiles.actif {
+            height: 100vh;
+            gap: clamp(0.8rem, 1.8vh, 1.5rem);
+        }
+
+        .entete {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: clamp(1rem, 1.6vw, 1.7rem);
+        }
+
+        .entete .mention { font-size: 1em; }
+        .entete .droite { margin-left: auto; font-weight: 900; }
+
+        .tag-mode {
+            color: var(--carton);
+            background: var(--jeu);
+        }
+
+        .tag-mode.troupeau { background: var(--prune); }
+
+        #chrono {
+            font-family: var(--police-titre);
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            line-height: 1;
+            min-width: 1.8em;
+            text-align: center;
+            color: var(--carton);
+            background: var(--encre);
+            border: var(--trait) solid var(--encre);
+            padding: 0.08em 0.15em 0.12em;
+        }
+
+        #chrono.urgent {
+            background: var(--tomate);
+            animation: battement 1s ease-out infinite;
+        }
+
+        @keyframes battement {
+            0% { transform: scale(1.18); }
+            40%, 100% { transform: scale(1); }
+        }
+
+        .jauge {
+            height: clamp(0.7rem, 1.1vw, 1.1rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+        }
+
+        #jauge {
+            height: 100%;
+            background: var(--jeu);
+            transform-origin: left;
+            transition: transform 0.2s linear, background-color 0.3s;
+        }
+
+        #jauge.urgent { background: var(--tomate); }
+
+        /* Le thème, écrit sur un papier scotché */
+        .zone-theme {
+            display: flex;
+            justify-content: center;
+            padding: clamp(1rem, 3vh, 2.5rem) 0 0;
+        }
+
+        .papier-theme {
+            position: relative;
+            max-width: min(64rem, 92%);
+            text-align: center;
+            background: var(--papier);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre-forte);
+            padding: clamp(1.2rem, 3vh, 2.4rem) clamp(1.5rem, 4vw, 4rem);
+            transform: rotate(-1.5deg);
+            animation: apparait 0.45s cubic-bezier(.3, 1.4, .5, 1) both;
+        }
+
+        .papier-theme::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -1.1rem;
+            width: 7rem;
+            height: 2rem;
+            margin-left: -3.5rem;
+            background: rgba(227, 162, 26, 0.75);
+            border: 2px solid var(--encre);
+            transform: rotate(3deg);
+        }
+
+        .papier-theme .surtitre { display: block; margin-bottom: 0.4rem; }
+
+        #texteTheme {
+            font-family: var(--police-titre);
+            font-size: clamp(2.4rem, 5.5vw, 6rem);
+            line-height: 1.05;
+            text-wrap: balance;
+        }
+
+        @keyframes apparait {
+            from { transform: translateY(0.6em) rotate(-1.5deg); opacity: 0; }
+        }
+
+        .consigne-tv {
+            align-self: center;
+            font-weight: 900;
+            font-size: clamp(1rem, 1.6vw, 1.7rem);
+            color: var(--encre-douce);
+        }
+
+        /* Les joueurs : un papier blanc plié quand ils ont écrit */
+        .zone-joueurs {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #joueursQuestion {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.9rem;
+            max-width: 72rem;
+        }
+
+        #joueursQuestion li {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            font-weight: 900;
+            font-size: clamp(1.1rem, 1.9vw, 2rem);
+            background: var(--carton);
+            border: var(--trait-fin) dashed var(--encre-douce);
+            padding: 0.3em 0.7em;
+            opacity: 0.45;
+            transition: opacity 0.3s;
+        }
+
+        #joueursQuestion li.a-repondu {
+            opacity: 1;
+            background: var(--papier);
+            border-style: solid;
+            border-color: var(--encre);
+            box-shadow: 4px 4px 0 var(--encre);
+            animation: pose 0.4s cubic-bezier(.3, 1.6, .5, 1) both;
+        }
+
+        #joueursQuestion li.a-repondu::after {
+            content: 'plié';
+            font-size: 0.6em;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--carton);
+            background: var(--jeu);
+            padding: 0.1em 0.45em;
+            margin-left: 0.2em;
+        }
+
+        #joueursQuestion .pastille { width: 1em; height: 1em; }
+
+        /* ---------- Les piles ---------- */
+
+        .theme-rappel {
+            font-family: var(--police-titre);
+            font-size: clamp(1.6rem, 3vw, 3.2rem);
+        }
+
+        .zone-piles {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            gap: clamp(1rem, 2vw, 2rem);
+        }
+
+        #piles {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            gap: clamp(1.2rem, 2.4vh, 2.2rem) clamp(1rem, 2vw, 2.2rem);
+        }
+
+        .pile {
+            --l: clamp(10rem, 15vw, 17rem);
+            width: var(--l);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: var(--police-texte);
+            color: var(--encre);
+            background: none;
+            border: 0;
+            padding: 0;
+            animation: deplie 0.5s cubic-bezier(.3, 1.4, .5, 1) both;
+            animation-delay: calc(var(--i) * 0.12s);
+        }
+
+        button.pile { cursor: pointer; }
+
+        @keyframes deplie {
+            from { transform: translateY(-1.5em) scale(0.6) rotate(-6deg); opacity: 0; }
+        }
+
+        .pile .gain {
+            font-family: var(--police-titre);
+            font-size: clamp(1.1rem, 1.8vw, 2rem);
+            min-height: 1.2em;
+            color: var(--encre-douce);
+        }
+
+        .pile.marque .gain { color: var(--sapin); }
+
+        .tas {
+            position: relative;
+            width: 100%;
+            height: calc(clamp(3.6rem, 5.5vw, 5.6rem) + var(--dessous) * 0.75rem);
+        }
+
+        .tas i {
+            position: absolute;
+            left: 5%;
+            right: 5%;
+            bottom: calc(var(--k) * 0.75rem);
+            height: clamp(3rem, 4.8vw, 5rem);
+            background: var(--papier);
+            border: var(--trait-fin) solid var(--encre);
+            transform: rotate(var(--penche));
+        }
+
+        .tas .haut {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: clamp(3.6rem, 5.5vw, 5.6rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.5rem;
+            font-family: var(--police-titre);
+            font-size: clamp(1.1rem, 2vw, 2.2rem);
+            line-height: 1.05;
+            text-align: center;
+            overflow-wrap: anywhere;
+            background: var(--papier);
+            border: var(--trait) solid var(--encre);
+            box-shadow: 5px 5px 0 var(--encre);
+            transform: rotate(-2deg);
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .tas .nb {
+            position: absolute;
+            right: -0.6rem;
+            top: -1.1rem;
+            z-index: 2;
+            font-family: var(--police-titre);
+            font-size: clamp(1.1rem, 1.9vw, 2rem);
+            color: var(--carton);
+            background: var(--encre-douce);
+            border: var(--trait-fin) solid var(--encre);
+            padding: 0 0.4em;
+            transform: rotate(5deg);
+        }
+
+        .pile.marque .tas .nb { background: var(--sapin); }
+        .pile.seule .tas .haut { box-shadow: 5px 5px 0 var(--encre-douce); }
+
+        button.pile:hover .tas .haut { transform: rotate(-2deg) translateY(-0.2rem); }
+        .pile.choisie .tas .haut { background: var(--ocre); transform: rotate(1deg) scale(1.05); }
+
+        .noms {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.35rem;
+        }
+
+        .noms li {
+            display: flex;
+            align-items: center;
+            gap: 0.35em;
+            font-weight: 900;
+            font-size: clamp(0.8rem, 1.2vw, 1.3rem);
+            background: var(--carton);
+            border: 2px solid var(--encre);
+            padding: 0.12em 0.45em;
+        }
+
+        .noms .pastille { width: 0.85em; height: 0.85em; border-width: 2px; }
+
+        .pile.passe { opacity: 0.6; }
+
+        /* Le mouton noir */
+        .mouton {
+            align-self: center;
+            width: clamp(14rem, 20vw, 22rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            text-align: center;
+            color: var(--carton);
+            background: var(--encre);
+            border: var(--trait) solid var(--encre);
+            box-shadow: 10px 10px 0 var(--prune);
+            padding: 1.4rem 1.2rem;
+            transform: rotate(1.5deg);
+            animation: deplie 0.5s 0.8s cubic-bezier(.3, 1.4, .5, 1) both;
+        }
+
+        .mouton svg { width: 45%; height: auto; }
+
+        .mouton .titre-mouton {
+            font-family: var(--police-titre);
+            font-size: clamp(1.3rem, 2vw, 2.2rem);
+            line-height: 1.1;
+        }
+
+        .mouton .texte-mouton {
+            font-size: clamp(0.85rem, 1.1vw, 1.2rem);
+            line-height: 1.4;
+        }
+
+        .sans-papier {
+            text-align: center;
+            font-weight: 700;
+            font-size: clamp(0.9rem, 1.3vw, 1.4rem);
+            color: var(--encre-douce);
+        }
+
+        .barre-piles {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 1.5rem;
+        }
+
+        .barre-piles .aide {
+            margin-right: auto;
+            font-weight: 900;
+            font-size: clamp(1rem, 1.5vw, 1.6rem);
+        }
+
+        .barre-piles .aide em {
+            font-style: normal;
+            color: var(--carton);
+            background: var(--encre);
+            padding: 0.05em 0.4em;
+        }
+
+        .regle-mode {
+            text-align: center;
+            font-weight: 700;
+            font-size: clamp(0.95rem, 1.4vw, 1.5rem);
+            color: var(--encre-douce);
+        }
+
+        .btn.decompte {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn.decompte::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 0.3em;
+            background: var(--encre);
+            transform-origin: left;
+            animation: decompte var(--delai, 3s) linear both;
+        }
+
+        @keyframes decompte {
+            from { transform: scaleX(0); }
+        }
+
+        /* ---------- Pause ---------- */
+
+        .bouton-pause {
+            position: fixed;
+            left: clamp(1rem, 2.5vw, 2.5rem);
+            bottom: clamp(1rem, 2.5vw, 2rem);
+            z-index: 50;
+            font-family: var(--police-texte);
+            font-weight: 900;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--encre-douce);
+            background: transparent;
+            border: var(--trait-fin) solid currentColor;
+            padding: 0.45em 0.9em;
+            opacity: 0.55;
+            cursor: pointer;
+        }
+
+        .bouton-pause:hover { opacity: 1; }
+
+        .voile-pause {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            background: rgba(34, 28, 21, 0.88);
+        }
+
+        .voile-pause .tampon { font-size: clamp(3rem, 8vw, 7rem); }
+        .voile-pause .surtitre { color: var(--carton); }
+
+        body.en-pause *,
+        body.en-pause *::after {
+            animation-play-state: paused !important;
+        }
+
+        .actions-tv {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* ---------- Classement et podium ---------- */
+
+        .ecran h2.grand {
+            font-size: clamp(2.2rem, 4.5vw, 4.5rem);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #listeClassement,
+        #autresFin {
+            list-style: none;
+            width: min(52rem, 100%);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .ligne-score {
+            animation: glisse 0.4s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation-delay: calc(var(--i, 0) * 0.1s);
+            display: grid;
+            grid-template-columns: 2.5em 1.1em 1fr auto auto;
+            align-items: center;
+            gap: 0.7em;
+            font-weight: 900;
+            font-size: clamp(1.3rem, 2.2vw, 2.4rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            padding: 0.35em 0.7em;
+        }
+
+        .ligne-score .pastille { width: 1em; height: 1em; }
+        .ligne-score .gain { font-size: 0.75em; color: var(--sapin); }
+        .ligne-score .gain.perte { color: var(--tomate); }
+        .ligne-score .rang { font-family: var(--police-titre); font-weight: 400; }
+        .ligne-score.premier { background: var(--ocre); box-shadow: var(--ombre); }
+
+        .badge-mouton {
+            display: inline-block;
+            font-size: 0.55em;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            vertical-align: middle;
+            color: var(--carton);
+            background: var(--encre);
+            padding: 0.15em 0.5em;
+            margin-left: 0.5em;
+        }
+
+        @keyframes glisse {
+            from { transform: translateX(-3em); opacity: 0; }
+        }
+
+        .autres {
+            text-align: center;
+            font-weight: 700;
+            font-size: clamp(1rem, 1.6vw, 1.6rem);
+            margin-top: 1rem;
+            color: var(--encre-douce);
+        }
+
+        .podium {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: clamp(1rem, 2vw, 2rem);
+            margin-bottom: 2rem;
+        }
+
+        .marche {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            width: clamp(9rem, 18vw, 18rem);
+            font-weight: 900;
+            font-size: clamp(1.2rem, 2vw, 2.2rem);
+            text-align: center;
+        }
+
+        .marche .socle {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            font-family: var(--police-titre);
+            font-weight: 400;
+            font-size: 1.8em;
+            padding-top: 0.2em;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            transform-origin: bottom;
+            animation: monte 0.5s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation-delay: var(--delai);
+        }
+
+        .marche-1 .socle { height: 14rem; background: var(--ocre); }
+        .marche-2 .socle { height: 10rem; }
+        .marche-3 .socle { height: 7rem; background: var(--kraft-fonce); }
+
+        .marche .nom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            animation: tombe 0.5s cubic-bezier(.3, 1.6, .5, 1) both;
+            animation-delay: calc(var(--delai) + 0.4s);
+        }
+
+        .marche .nom .pastille { width: 1.6em; height: 1.6em; }
+        .marche-1 .nom { font-size: 1.35em; }
+        .marche .vainqueur { font-size: 0.6em; margin-bottom: 0.4rem; }
+        .marche .gain-soiree { font-size: 0.7em; color: var(--sapin); }
+        .marche .perte { font-size: 0.6em; color: var(--tomate); }
+
+        @keyframes monte { from { transform: scaleY(0); } }
+        @keyframes tombe { from { transform: translateY(-2em); opacity: 0; } }
+
+        #autresFin { animation: apparaitBas 0.5s 1.8s both; }
+
+        @keyframes apparaitBas {
+            from { transform: translateY(0.4em); opacity: 0; }
+        }
+
+        .confettis {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .confettis i {
+            position: absolute;
+            top: -2rem;
+            width: 0.8rem;
+            height: 1.2rem;
+            border: 2px solid var(--encre);
+            animation: confetti linear both;
+        }
+
+        @keyframes confetti {
+            to { transform: translateY(110vh) rotate(var(--tour)); }
+        }
+
+        @media (max-width: 800px) {
+            .salle { grid-template-columns: 1fr; }
+            .config-ligne, .modes { grid-template-columns: 1fr; }
+            .zone-piles { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <section id="ecranChargement" class="ecran actif">
+        <div class="centre">
+            <p id="messageChargement" class="surtitre">Connexion…</p>
+        </div>
+    </section>
+
+    <section id="ecranConfig" class="ecran">
+        <header class="barre-jeu">
+            <a class="retour-hub" id="retourConfig" href="../index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square" aria-hidden="true"><path d="M15 4l-8 8 8 8"/></svg>
+                Hub
+            </a>
+            <h1 class="titre-jeu">Le Mot commun</h1>
+            <span class="mention" id="badgeSoiree" hidden></span>
+        </header>
+        <div class="config carte">
+            <div class="config-gauche">
+                <div class="champ">
+                    <span class="etiquette-champ">Paquet de thèmes</span>
+                    <ul class="themes" id="listeThemes"></ul>
+                </div>
+                <div class="champ">
+                    <label for="fichierLocal">Ou un fichier de l'ordinateur</label>
+                    <input type="file" id="fichierLocal" accept=".json,application/json">
+                </div>
+            </div>
+            <div class="config-droite">
+                <p id="etatFichier">Chargement des thèmes…</p>
+                <button type="button" class="btn-lien" id="btnRemiseAZero" hidden>Tout remettre en jeu</button>
+                <p id="alerteFichier" class="alerte" role="alert" hidden></p>
+                <div class="champ">
+                    <span class="etiquette-champ">Mode de jeu</span>
+                    <div class="modes" id="modes">
+                        <button type="button" class="mode" data-mode="ensemble" aria-pressed="true">
+                            <span class="nom-mode">Tous ensemble</span>
+                            <span class="desc-mode">1 point par joueur qui a écrit le même mot que toi.</span>
+                        </button>
+                        <button type="button" class="mode" data-mode="troupeau" aria-pressed="false">
+                            <span class="nom-mode">Le troupeau</span>
+                            <span class="desc-mode">Seule la plus grosse pile marque 1 point. Le seul joueur isolé prend le mouton noir : −2 points s'il l'a encore à la fin.</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="config-ligne">
+                    <div class="champ">
+                        <label for="duree">Temps pour écrire</label>
+                        <select id="duree">
+                            <option value="20">20 secondes</option>
+                            <option value="30" selected>30 secondes</option>
+                            <option value="45">45 secondes</option>
+                        </select>
+                    </div>
+                    <div class="champ">
+                        <label for="nbManches">Nombre de manches</label>
+                        <input type="number" id="nbManches" min="1" value="10">
+                    </div>
+                </div>
+                <button id="btnCreer" class="btn btn-geant" disabled>Créer la partie</button>
+                <p id="erreurConfig" class="erreur" hidden></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="ecranSalle" class="ecran">
+        <h1 class="tampon logo">Le Mot commun</h1>
+        <div class="salle">
+            <div class="invitation carte">
+                <p class="surtitre">Scanne pour jouer</p>
+                <div id="qr"></div>
+                <p class="adresse">ou va sur <strong id="lienJoueur"></strong><br>et entre le code</p>
+                <div id="code"></div>
+            </div>
+            <div class="arrivees">
+                <h2 id="nbJoueurs">Personne pour l'instant</h2>
+                <p class="mode-annonce" id="annonceMode"></p>
+                <ul id="listeJoueurs"></ul>
+                <button class="btn btn-geant" data-action="suivant" id="btnLancer" disabled>Lancer la partie</button>
+            </div>
+        </div>
+        <div class="actions-tv">
+            <button class="btn-lien" data-action="son"></button>
+            <button class="btn-lien" data-action="abandonner" id="btnAbandonSalle">Abandonner la partie</button>
+        </div>
+    </section>
+
+    <section id="ecranQuestion" class="ecran">
+        <div class="entete">
+            <span class="mention" id="numManche"></span>
+            <span class="mention tag-mode" id="tagModeQuestion"></span>
+            <span class="droite" id="compteur"></span>
+            <span id="chrono"></span>
+        </div>
+        <div class="jauge"><div id="jauge"></div></div>
+        <div class="zone-theme">
+            <div class="papier-theme"><span class="surtitre">Le thème</span><h2 id="texteTheme"></h2></div>
+        </div>
+        <p class="consigne-tv">Écris sur ton téléphone le mot que les autres vont écrire.</p>
+        <div class="zone-joueurs"><ul id="joueursQuestion"></ul></div>
+        <div class="actions-tv">
+            <button class="btn btn-small" data-action="suivant">Déplier maintenant</button>
+        </div>
+    </section>
+
+    <section id="ecranPiles" class="ecran">
+        <div class="entete">
+            <span class="mention" id="numPiles"></span>
+            <span class="theme-rappel" id="themePiles"></span>
+            <span class="droite"><span class="mention tag-mode" id="tagModePiles"></span></span>
+        </div>
+        <div class="zone-piles">
+            <div id="piles"></div>
+            <div class="mouton" id="mouton" hidden>
+                <svg viewBox="0 0 60 48" fill="none" stroke="#F1E7D0" stroke-width="3" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M14 30c-6 0-8-5-5-9-3-4 1-9 6-7 1-5 8-6 11-2 3-4 10-3 11 2 5-1 8 4 5 8 3 4 0 9-5 8-2 4-8 5-11 2-3 3-9 2-12-2z" fill="#221C15"/>
+                    <path d="M44 18c4-2 9 0 9 5s-4 7-8 6"/>
+                    <path d="M18 31v10M26 32v10M34 32v10"/>
+                    <circle cx="49" cy="22" r="1" fill="#F1E7D0"/>
+                </svg>
+                <span class="titre-mouton" id="titreMouton"></span>
+                <span class="texte-mouton" id="texteMouton"></span>
+            </div>
+        </div>
+        <p class="sans-papier" id="sansPapier" hidden></p>
+        <p class="regle-mode" id="regleMode"></p>
+        <div class="barre-piles" id="barreFusion">
+            <p class="aide" id="aideFusion">Deux piles veulent dire la même chose ? <em>Clique sur l'une puis sur l'autre</em> pour les réunir.</p>
+            <button class="btn-lien" id="btnAnnulerFusions" hidden>Annuler les fusions</button>
+            <button class="btn btn-geant decompte" data-action="suivant" id="btnCompter">Compter les points</button>
+        </div>
+        <div class="barre-piles" id="barreResultat" hidden>
+            <button class="btn btn-geant decompte" data-action="suivant" id="btnResultat">Classement</button>
+        </div>
+    </section>
+
+    <section id="ecranClassement" class="ecran">
+        <h2 class="grand">Classement</h2>
+        <ol id="listeClassement"></ol>
+        <p id="autresClassement" class="autres"></p>
+        <div class="actions-tv">
+            <button class="btn-lien" data-action="abandonner">Abandonner la partie</button>
+            <button class="btn btn-geant" data-action="suivant" id="btnClassement"></button>
+        </div>
+    </section>
+
+    <section id="ecranFin" class="ecran">
+        <div class="confettis" id="confettis" aria-hidden="true"></div>
+        <h2 class="grand">Le podium</h2>
+        <div class="podium" id="podium"></div>
+        <ol id="autresFin"></ol>
+        <div class="actions-tv">
+            <button class="btn btn-geant" data-action="abandonner" id="btnFin">Nouvelle partie</button>
+        </div>
+    </section>
+
+    <button id="btnPause" class="bouton-pause" data-action="pause" hidden>Pause</button>
+    <div id="voilePause" class="voile-pause" hidden>
+        <span class="tampon">Pause</span>
+        <button class="btn btn-geant" data-action="pause">Reprendre</button>
+        <p class="surtitre">ou touche P</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module">
+        import { db, connexion, heureServeur, genererCode, classementAvecRangs, echapper, melanger, lireStockage, ecrireStockage,
+            dossierAttendu, urlPage, gainsDeSoiree, retourAuSalon } from '../hub.js';
+        import { ref, set, update, get, remove, onValue, serverTimestamp, query, orderByChild, endAt } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+        import { construirePiles, compter, NOMS_MODES, PENALITE_MOUTON } from './regles.js';
+
+        const $ = id => document.getElementById(id);
+        const MON_JEU = 'mot-commun';
+        const CLE_HOTE = 'motCommun.hote';
+
+        let uid = null;
+        let code = null;
+        let enSoiree = false;
+        let soiree = {};
+        let banque = [];
+        let themes = [];        // thèmes de la partie, dans l'ordre
+        let etat = null;
+        let joueurs = {};
+        let scores = {};
+        let resultats = {};
+        let reponses = {};
+        let horsLigneDepuis = {};
+        let qEcoutee = null;
+        let arreterReponses = null;
+        let comptageEnCours = false;
+        let derniereAction = null;
+        let qrAffiche = null;
+        let cleEcran = null;
+        let joueursVus = null;
+        let dernierTic = null;
+        let modeChoisi = lireStockage('motCommun.mode') === 'troupeau' ? 'troupeau' : 'ensemble';
+
+        // Piles réunies à la main par la TV pendant la phase « piles » : { cle: cleCible }
+        let fusions = {};
+        let fusionsDeQ = null;
+        let pileChoisie = null;
+
+        function afficher(id) {
+            document.querySelectorAll('.ecran').forEach(e => e.classList.toggle('actif', e.id === id));
+        }
+
+        // ---------- Sons : synthétisés avec WebAudio ----------
+
+        const son = {
+            actif: lireStockage('carreDAs.son') !== 'non',
+            ctx: null,
+            debloquer() {
+                if (!this.ctx) {
+                    try { this.ctx = new AudioContext(); } catch { return; }
+                }
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            },
+            note(freq, debut, duree, type = 'triangle', volume = 0.12) {
+                if (!this.actif || !this.ctx) return;
+                const t = this.ctx.currentTime + debut;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(volume, t);
+                gain.gain.exponentialRampToValueAtTime(0.0001, t + duree);
+                osc.connect(gain).connect(this.ctx.destination);
+                osc.start(t);
+                osc.stop(t + duree);
+            },
+            arrivee() { this.note(660, 0, 0.12); this.note(990, 0.08, 0.18); },
+            question() { [523, 659, 784].forEach((f, k) => this.note(f, k * 0.08, 0.2)); },
+            reponse() { this.note(880, 0, 0.08, 'square', 0.04); },
+            tic(dernier) { this.note(dernier ? 880 : 1320, 0, 0.06, 'square', 0.05); },
+            // Les papiers se déplient un à un
+            deplie(nb) { for (let k = 0; k < nb; k++) this.note(520 + k * 50, k * 0.12, 0.09, 'square', 0.04); },
+            fusion() { this.note(392, 0, 0.08, 'square', 0.05); this.note(587, 0.07, 0.14); },
+            points() { [523, 659, 784, 1047].forEach((f, k) => this.note(f, k * 0.07, 0.18)); },
+            mouton() { this.note(330, 0, 0.25, 'sawtooth', 0.05); this.note(311, 0.25, 0.4, 'sawtooth', 0.05); },
+            classement() { [392, 494, 587].forEach((f, k) => this.note(f, k * 0.06, 0.15, 'triangle', 0.08)); },
+            podium(place) { this.note([0, 784, 587, 494][place], 0, 0.35); },
+            fanfare() { [523, 659, 784, 1047, 784, 1047].forEach((f, k) => this.note(f, k * 0.13, k === 5 ? 0.8 : 0.16)); }
+        };
+
+        function majBoutonSon() {
+            document.querySelectorAll('[data-action="son"]').forEach(b => { b.textContent = son.actif ? 'Son : activé' : 'Son : coupé'; });
+        }
+
+        majBoutonSon();
+
+        function erreurFatale(message) {
+            afficher('ecranChargement');
+            $('messageChargement').textContent = message;
+        }
+
+        // ---------- Démarrage ----------
+
+        async function demarrer() {
+            try {
+                uid = await connexion();
+            } catch {
+                erreurFatale('Connexion à Firebase impossible. Vérifie internet puis recharge la page.');
+                return;
+            }
+            const codeSoiree = new URLSearchParams(location.search).get('soiree');
+            if (codeSoiree) return ouvrirSoiree(codeSoiree.toUpperCase());
+            const enCours = lireStockage(CLE_HOTE);
+            if (enCours && await reprendre(enCours)) return;
+            ecrireStockage(CLE_HOTE, null);
+            preparerConfig();
+        }
+
+        async function lireSecret(c) {
+            const secret = (await get(ref(db, `parties/${c}/secret`))).val() || {};
+            themes = secret.themes || [];
+            cleBanque = secret.fichier || null;
+        }
+
+        async function reprendre(c) {
+            try {
+                const meta = (await get(ref(db, `parties/${c}/meta`))).val();
+                if (!meta || meta.hote !== uid || meta.soiree) return false;
+                await lireSecret(c);
+                code = c;
+                ecouter();
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        async function ouvrirSoiree(c) {
+            try {
+                const meta = (await get(ref(db, `parties/${c}/meta`))).val();
+                if (!meta || meta.hote !== uid || !meta.soiree) throw new Error();
+                const etatSoiree = (await get(ref(db, `parties/${c}/etat`))).val();
+                code = c;
+                enSoiree = true;
+                const dossier = dossierAttendu(etatSoiree);
+                if (dossier === MON_JEU) {
+                    await lireSecret(c);
+                    ecouter();
+                } else if (dossier === 'soiree') {
+                    $('retourConfig').href = urlPage('soiree', 'tv', c);
+                    $('retourConfig').lastChild.textContent = ' Salon';
+                    $('btnCreer').textContent = 'Lancer la partie';
+                    $('badgeSoiree').textContent = `Soirée ${c}`;
+                    $('badgeSoiree').hidden = false;
+                    preparerConfig();
+                } else {
+                    location.replace(urlPage(dossier, 'tv', c));
+                }
+            } catch {
+                erreurFatale('Cette soirée est introuvable. Relance-la depuis le hub.');
+            }
+        }
+
+        // ---------- Réglages ----------
+
+        let paquets = [];
+        let paquetChoisi = null;
+        let cleBanque = null;
+
+        async function preparerConfig() {
+            afficher('ecranConfig');
+            rendreModes();
+            try {
+                const liste = await (await fetch('themes/index.json')).json();
+                const aCharger = liste.flatMap(e => e.sujets
+                    ? e.sujets.map(s => ({ ...s, groupe: e.theme }))
+                    : [{ ...e, groupe: 'Autres' }]);
+                paquets = await Promise.all(aCharger.map(async s => {
+                    const url = new URL('themes/' + s.fichier, location.href);
+                    const paquet = { groupe: s.groupe, titre: s.titre, cle: 'liste:' + s.fichier, banque: [] };
+                    try {
+                        paquet.banque = validerThemes(await (await fetch(url)).json());
+                    } catch (e) {
+                        paquet.erreur = e instanceof SyntaxError || !e.message ? 'Fichier illisible.' : e.message;
+                    }
+                    return paquet;
+                }));
+                choisirPaquet(paquets.find(s => !s.erreur) || null);
+            } catch {
+                $('etatFichier').textContent = 'Impossible de lire la liste des thèmes (themes/index.json).';
+            }
+        }
+
+        function rendreModes() {
+            document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === modeChoisi)));
+        }
+
+        function choisirPaquet(paquet) {
+            paquetChoisi = paquet;
+            banque = paquet && !paquet.erreur ? paquet.banque : [];
+            cleBanque = paquet ? paquet.cle : null;
+            if (banque.length) {
+                $('nbManches').max = banque.length;
+                $('nbManches').value = Math.min(banque.length, Number($('nbManches').value) || 10);
+            }
+            rendrePaquets();
+            $('btnCreer').disabled = banque.length === 0;
+        }
+
+        // Thèmes déjà joués sur cette TV : on les garde pour la fin
+        const clePosees = cle => `motCommun.poses.${cle}`;
+        const idTheme = t => t.trim().toLowerCase();
+
+        function lirePosees(cle) {
+            try { return new Set(JSON.parse(lireStockage(clePosees(cle)) || '[]')); } catch { return new Set(); }
+        }
+
+        function ecrirePosees(cle, posees) {
+            ecrireStockage(clePosees(cle), posees.size ? JSON.stringify([...posees]) : null);
+        }
+
+        const neufsDe = s => { const p = lirePosees(s.cle); return s.banque.filter(t => !p.has(idTheme(t))); };
+        const SEUIL_ALERTE = 15;
+        const aCompleter = s => !s.erreur && neufsDe(s).length < SEUIL_ALERTE;
+
+        function rendrePaquets() {
+            const groupes = [...new Set(paquets.map(s => s.groupe))];
+            $('listeThemes').innerHTML = groupes.map(groupe => {
+                const siens = paquets.filter(s => s.groupe === groupe);
+                return `<li>
+                    <div class="titre-theme">${echapper(groupe)}</div>
+                    <ul class="sujets">${siens.map(s => boutonPaquet(s, paquets.indexOf(s))).join('')}</ul>
+                </li>`;
+            }).join('');
+            majEtatFichier();
+        }
+
+        function boutonPaquet(s, i) {
+            if (s.erreur) {
+                return `<li><button type="button" class="theme" disabled>
+                    <span class="theme-titre">${echapper(s.titre)}</span><span class="theme-compte">${echapper(s.erreur)}</span>
+                </button></li>`;
+            }
+            const choisi = s === paquetChoisi;
+            return `<li><button type="button" class="theme ${choisi ? 'choisi' : ''}" data-paquet="${i}" aria-pressed="${choisi}">
+                <span class="theme-titre">${echapper(s.titre)}</span>
+                ${aCompleter(s) ? '<span class="a-completer">À compléter</span>' : ''}
+                <span class="theme-compte">${neufsDe(s).length} / ${s.banque.length}</span>
+            </button></li>`;
+        }
+
+        function majEtatFichier() {
+            $('btnRemiseAZero').hidden = true;
+            $('alerteFichier').hidden = true;
+            if (!paquetChoisi) return;
+            if (paquetChoisi.erreur) {
+                $('etatFichier').textContent = paquetChoisi.erreur;
+                return;
+            }
+            const neufs = neufsDe(paquetChoisi).length;
+            $('etatFichier').textContent = neufs === banque.length
+                ? `${banque.length} thèmes dans ce paquet, aucun encore joué.`
+                : `${banque.length} thèmes dans ce paquet, dont ${neufs} jamais joués.`;
+            $('btnRemiseAZero').hidden = neufs === banque.length;
+            if (neufs < SEUIL_ALERTE) {
+                $('alerteFichier').textContent = neufs === 0
+                    ? `Tous les thèmes « ${paquetChoisi.titre} » ont été joués : la prochaine partie les remettra en jeu. Pense à en ajouter.`
+                    : `Plus que ${neufs} ${neufs > 1 ? 'thèmes neufs' : 'thème neuf'} en « ${paquetChoisi.titre} » : pense à en ajouter.`;
+                $('alerteFichier').hidden = false;
+            }
+        }
+
+        function marquerPose(theme) {
+            if (!cleBanque || !theme) return;
+            const posees = lirePosees(cleBanque);
+            posees.add(idTheme(theme));
+            ecrirePosees(cleBanque, posees);
+        }
+
+        function choisirThemes(nb) {
+            const neufs = melanger(neufsDe({ cle: cleBanque, banque }));
+            if (neufs.length >= nb) return neufs.slice(0, nb);
+            const restants = new Set(neufs);
+            if (cleBanque) ecrirePosees(cleBanque, new Set());
+            return [...neufs, ...melanger(banque.filter(t => !restants.has(t)))].slice(0, nb);
+        }
+
+        // Un paquet : une liste de thèmes, chacun une simple phrase (« Un fruit jaune »)
+        function validerThemes(donnees) {
+            if (!Array.isArray(donnees) || !donnees.length) throw new Error('Le fichier doit contenir une liste de thèmes.');
+            const vus = new Set();
+            return donnees.map((t, i) => {
+                const texte = typeof t === 'string' ? t : t?.theme;
+                if (typeof texte !== 'string' || !texte.trim()) throw new Error(`Thème ${i + 1} mal formé : il faut une phrase.`);
+                return texte.trim();
+            }).filter(t => !vus.has(idTheme(t)) && vus.add(idTheme(t)));
+        }
+
+        async function creerPartie() {
+            $('btnCreer').disabled = true;
+            $('erreurConfig').hidden = true;
+            const nb = Math.max(1, Math.min(banque.length, Number($('nbManches').value) || banque.length));
+            const duree = Number($('duree').value);
+            const liste = choisirThemes(nb);
+            const secret = cleBanque ? { themes: liste, fichier: cleBanque } : { themes: liste };
+            const etatInitial = { jeu: MON_JEU, sujet: paquetChoisi?.titre || '', mode: modeChoisi, phase: 'salle', duree, total: nb };
+            if (enSoiree) {
+                try {
+                    await update(ref(db, `parties/${code}`), { secret, scores: null, resultats: null, reponses: null, etat: etatInitial });
+                    themes = liste;
+                    ecouter();
+                } catch {
+                    $('erreurConfig').textContent = 'Impossible de lancer la partie. As-tu bien publié les nouvelles règles de sécurité ?';
+                    $('erreurConfig').hidden = false;
+                    $('btnCreer').disabled = false;
+                }
+                return;
+            }
+            nettoyerVieillesParties();
+            for (let essai = 0; essai < 10; essai++) {
+                const c = genererCode();
+                try {
+                    await set(ref(db, `parties/${c}`), {
+                        meta: { hote: uid, creeLe: serverTimestamp(), nbQuestions: nb, duree },
+                        secret,
+                        etat: etatInitial
+                    });
+                    code = c;
+                    themes = liste;
+                    ecouter();
+                    return;
+                } catch { /* code occupé, on en tire un autre */ }
+            }
+            $('erreurConfig').textContent = 'Impossible de créer la partie. As-tu bien publié les règles de sécurité ?';
+            $('erreurConfig').hidden = false;
+            $('btnCreer').disabled = false;
+        }
+
+        async function nettoyerVieillesParties() {
+            try {
+                const limite = heureServeur() - 86400000 - 120000;
+                const vieilles = await get(query(ref(db, 'parties'), orderByChild('meta/creeLe'), endAt(limite)));
+                const suppressions = {};
+                vieilles.forEach(p => { suppressions[p.key] = null; });
+                if (Object.keys(suppressions).length) await update(ref(db, 'parties'), suppressions);
+            } catch { /* on réessaiera */ }
+        }
+
+        // ---------- Écoute de la partie ----------
+
+        function ecouter() {
+            if (!enSoiree) ecrireStockage(CLE_HOTE, code);
+            const base = `parties/${code}`;
+            onValue(ref(db, `${base}/etat`), s => {
+                etat = s.val();
+                if (!etat) { ecrireStockage(CLE_HOTE, null); location.reload(); return; }
+                if (dossierAttendu(etat) !== MON_JEU) { location.replace(urlPage(dossierAttendu(etat), 'tv', code)); return; }
+                suivreReponses();
+                rendre();
+            });
+            onValue(ref(db, `${base}/joueurs`), s => {
+                joueurs = s.val() || {};
+                Object.entries(joueurs).forEach(([id, j]) => {
+                    if (j.enLigne !== false) delete horsLigneDepuis[id];
+                    else if (!horsLigneDepuis[id]) horsLigneDepuis[id] = Date.now();
+                });
+                rendre();
+            });
+            onValue(ref(db, `${base}/scores`), s => { scores = s.val() || {}; rendre(); });
+            onValue(ref(db, `${base}/resultats`), s => { resultats = s.val() || {}; rendre(); });
+            if (enSoiree) {
+                onValue(ref(db, `${base}/soiree`), s => { soiree = s.val() || {}; rendre(); });
+                $('btnAbandonSalle').textContent = 'Retour au salon';
+            }
+        }
+
+        function suivreReponses() {
+            const q = ['question', 'piles'].includes(etat.phase) ? etat.q : null;
+            if (q === qEcoutee) return;
+            if (arreterReponses) arreterReponses();
+            arreterReponses = null;
+            reponses = {};
+            qEcoutee = q;
+            if (q !== null) {
+                arreterReponses = onValue(ref(db, `parties/${code}/reponses/${q}`), s => {
+                    const avant = Object.keys(reponses).length;
+                    reponses = s.val() || {};
+                    if (etat?.phase === 'question' && Object.keys(reponses).length > avant) son.reponse();
+                    rendre();
+                });
+            }
+        }
+
+        function rendre() {
+            if (!etat) return;
+            if (etat.phase === 'salle') rendreSalle();
+            else if (etat.phase === 'question') rendreQuestion();
+            else if (etat.phase === 'piles') rendrePilesAFusionner();
+            else if (etat.phase === 'revelation') rendreRevelation();
+            else if (etat.phase === 'classement') rendreClassement();
+            else if (etat.phase === 'fin') rendreFin();
+            rendrePause();
+        }
+
+        function pastille(couleur) {
+            return `<span class="pastille" style="background:${echapper(couleur)}"></span>`;
+        }
+
+        const joueur = id => joueurs[id] || { pseudo: '?', couleur: '#CDBB94' };
+        const parArrivee = ids => ids.slice().sort((a, b) => (joueurs[a]?.arrive || 0) - (joueurs[b]?.arrive || 0));
+        const present = id => !horsLigneDepuis[id] || Date.now() - horsLigneDepuis[id] < 10000;
+
+        function rendreSalle() {
+            afficher('ecranSalle');
+            $('code').textContent = code;
+            const url = enSoiree ? urlPage('soiree', 'joueur', code) : new URL(`joueur.html?code=${code}`, location.href).href;
+            if (qrAffiche !== url) {
+                $('qr').innerHTML = '';
+                new QRCode($('qr'), { text: url, width: 512, height: 512, colorDark: '#221C15', colorLight: '#F1E7D0', correctLevel: QRCode.CorrectLevel.M });
+                $('lienJoueur').textContent = url.replace(/^https?:\/\//, '').replace(/\?.*$/, '');
+                qrAffiche = url;
+            }
+            $('annonceMode').textContent = `Mode ${NOMS_MODES[etat.mode]} · ${etat.total} ${etat.total > 1 ? 'manches' : 'manche'}`;
+            const liste = Object.entries(joueurs).sort(([, a], [, b]) => (a.arrive || 0) - (b.arrive || 0));
+            const premiers = joueursVus === null;
+            if (premiers) joueursVus = new Set();
+            let nouveaux = 0;
+            $('listeJoueurs').innerHTML = liste.map(([id, j], k) => {
+                const nouveau = !joueursVus.has(id);
+                if (nouveau && !premiers) nouveaux++;
+                joueursVus.add(id);
+                const classes = [j.enLigne === false ? 'hors-ligne' : '', nouveau && !premiers ? 'nouveau' : ''].join(' ');
+                return `<li class="${classes}" style="--penche:${[-2, 1.5, -1, 2, 0.5][k % 5]}deg">${pastille(j.couleur)}${echapper(j.pseudo)}</li>`;
+            }).join('');
+            if (nouveaux) son.arrivee();
+            $('nbJoueurs').textContent = liste.length === 0 ? "Personne pour l'instant"
+                : liste.length === 1 ? '1 joueur dans la place' : `${liste.length} joueurs dans la place`;
+            $('btnLancer').disabled = liste.length < 2;
+            $('btnLancer').textContent = liste.length < 2 ? 'Il faut au moins 2 joueurs' : 'Lancer la partie';
+        }
+
+        function nouvelleEtape(cle) {
+            if (cle === cleEcran) return false;
+            cleEcran = cle;
+            return true;
+        }
+
+        function tagMode(el) {
+            el.textContent = `Mode ${NOMS_MODES[etat.mode]}`;
+            el.classList.toggle('troupeau', etat.mode === 'troupeau');
+        }
+
+        function rendreQuestion() {
+            afficher('ecranQuestion');
+            const i = Number(etat.q);
+            const theme = themes[i];
+            if (!theme) return;
+            const ids = parArrivee(Object.keys(joueurs));
+            const nb = Object.keys(reponses).length;
+            $('compteur').textContent = `${nb} / ${ids.length} ${nb > 1 ? 'papiers' : 'papier'}`;
+            $('joueursQuestion').innerHTML = ids
+                .map(id => `<li class="${reponses[id] ? 'a-repondu' : ''}">${pastille(joueurs[id].couleur)}${echapper(joueurs[id].pseudo)}</li>`).join('');
+            if (!nouvelleEtape(`q:${etat.q}`)) return;
+            $('numManche').textContent = `Manche ${i + 1} / ${etat.total}`;
+            tagMode($('tagModeQuestion'));
+            $('texteTheme').textContent = theme;
+            const papier = document.querySelector('.papier-theme');
+            papier.style.animation = 'none';
+            papier.offsetWidth;
+            papier.style.animation = '';
+            programmerSuite(null);
+            son.question();
+            dernierTic = null;
+            tic();
+        }
+
+        // ---------- Les piles ----------
+
+        function htmlPile(p, k, options) {
+            const n = p.joueurs.length;
+            const dessous = Math.min(n - 1, 6);
+            const papiers = Array.from({ length: dessous }, (_, d) => `<i style="--k:${d};--penche:${d % 2 ? 3 : -4}deg"></i>`).join('');
+            const noms = parArrivee(p.joueurs).map(id => `<li>${pastille(joueur(id).couleur)}${echapper(joueur(id).pseudo)}</li>`).join('');
+            const balise = options.cliquable ? 'button' : 'div';
+            const classes = ['pile', options.marque ? 'marque' : '', n === 1 ? 'seule' : '', options.passe ? 'passe' : '', options.choisie ? 'choisie' : ''].join(' ');
+            return `<${balise} ${options.cliquable ? `type="button" data-pile="${echapper(p.cle)}"` : ''} class="${classes}" style="--i:${k}">
+                <span class="gain">${options.gain || ''}</span>
+                <div class="tas" style="--dessous:${dessous}">${papiers}<div class="haut">${echapper(p.mot)}</div><span class="nb">×${n}</span></div>
+                <ul class="noms">${noms}</ul>
+            </${balise}>`;
+        }
+
+        function entetePiles() {
+            const i = Number(etat.q);
+            $('numPiles').textContent = `Manche ${i + 1} / ${etat.total}`;
+            $('themePiles').textContent = themes[i] || etat.question?.texte || '';
+            tagMode($('tagModePiles'));
+        }
+
+        function textesSansPapier(ids) {
+            $('sansPapier').hidden = !ids.length;
+            $('sansPapier').textContent = ids.length
+                ? `Sans papier : ${ids.map(id => joueur(id).pseudo).join(', ')}${etat.mode === 'troupeau' ? ' (compté comme isolé)' : ''}`
+                : '';
+        }
+
+        // Phase « piles » : les papiers sont dépliés, la TV peut réunir deux piles avant de compter
+        function rendrePilesAFusionner() {
+            afficher('ecranPiles');
+            if (fusionsDeQ !== etat.q) { fusions = {}; fusionsDeQ = etat.q; pileChoisie = null; }
+            const piles = construirePiles(reponses, fusions);
+            const premiere = nouvelleEtape(`p:${etat.q}`);
+            entetePiles();
+            $('barreFusion').hidden = false;
+            $('barreResultat').hidden = true;
+            $('mouton').hidden = true;
+            $('btnAnnulerFusions').hidden = !Object.keys(fusions).length;
+            $('aideFusion').hidden = piles.length < 2;
+            $('regleMode').textContent = etat.mode === 'troupeau'
+                ? 'Seule la plus grosse pile marque 1 point. Si deux piles sont à égalité en tête, personne ne marque.'
+                : '1 point par joueur qui a écrit la même chose que toi.';
+            textesSansPapier(Object.keys(joueurs).filter(id => !reponses[id] && present(id)));
+            const html = piles.map((p, k) => htmlPile(p, k, { cliquable: piles.length > 1, choisie: p.cle === pileChoisie })).join('')
+                || '<p class="sans-papier">Personne n\'a écrit de mot.</p>';
+            $('piles').innerHTML = html;
+            if (!premiere) $('piles').querySelectorAll('.pile').forEach(el => { el.style.animation = 'none'; });
+            if (premiere) {
+                relancerDecompte($('btnCompter'), DELAI_COMPTER);
+                son.deplie(piles.length);
+            }
+        }
+
+        function relancerDecompte(bouton, delai) {
+            bouton.classList.remove('decompte');
+            bouton.offsetWidth;
+            bouton.classList.add('decompte');
+            programmerSuite(delai);
+        }
+
+        $('piles').addEventListener('click', e => {
+            const el = e.target.closest('[data-pile]');
+            if (!el || etat?.phase !== 'piles') return;
+            const cle = el.dataset.pile;
+            if (!pileChoisie) pileChoisie = cle;
+            else if (pileChoisie === cle) pileChoisie = null;
+            else {
+                // La pile cliquée en second rejoint la première
+                fusions[cle] = pileChoisie;
+                pileChoisie = null;
+                son.fusion();
+            }
+            cleEcran = `p:${etat.q}`;
+            rendrePilesAFusionner();
+            // On laisse le temps de finir : le décompte repart de zéro à chaque clic
+            relancerDecompte($('btnCompter'), DELAI_COMPTER);
+        });
+
+        $('btnAnnulerFusions').addEventListener('click', () => {
+            fusions = {};
+            pileChoisie = null;
+            rendrePilesAFusionner();
+            relancerDecompte($('btnCompter'), DELAI_COMPTER);
+        });
+
+        // Phase « revelation » : les points sont comptés
+        function rendreRevelation() {
+            afficher('ecranPiles');
+            const res = resultats[etat.q];
+            if (!res) return;
+            if (Object.keys(joueurs).length && !Object.values(scores).some(s => s.dernier?.q === etat.q)) return;
+            const premiere = nouvelleEtape(`r:${etat.q}`);
+            if (!premiere) return;
+            entetePiles();
+            $('barreFusion').hidden = true;
+            $('barreResultat').hidden = false;
+            const piles = res.piles || [];
+            const troupeau = etat.mode === 'troupeau';
+            $('piles').innerHTML = piles.map((p, k) => {
+                const n = p.joueurs.length;
+                const gain = p.gain > 0 ? `+${p.gain} ${n > 1 ? 'chacun' : ''}`
+                    : troupeau && n === 1 && res.mouton === p.joueurs[0] && res.nouveauMouton ? 'mouton noir'
+                    : n === 1 ? 'tout seul' : '0';
+                return htmlPile(p, k, { marque: p.gain > 0, passe: !(p.gain > 0), gain });
+            }).join('') || '<p class="sans-papier">Personne n\'a écrit de mot.</p>';
+            // Pas d'animation de dépliage : les piles sont déjà là, seuls les points changent
+            $('piles').querySelectorAll('.pile').forEach(el => { el.style.animation = 'none'; });
+            textesSansPapier(res.sansPapier || []);
+            if (troupeau && res.mouton && joueurs[res.mouton]) {
+                const nom = joueur(res.mouton).pseudo;
+                $('mouton').hidden = false;
+                $('titreMouton').textContent = res.nouveauMouton ? `${nom} prend le mouton noir` : `${nom} garde le mouton noir`;
+                $('texteMouton').textContent = res.nouveauMouton
+                    ? `Seul sur sa pile. Le mouton passera au prochain isolé, et coûte ${PENALITE_MOUTON} points à qui l'a encore à la fin.`
+                    : `Personne d'autre n'est tout seul cette fois. −${PENALITE_MOUTON} points s'il est encore là à la fin.`;
+            } else {
+                $('mouton').hidden = true;
+            }
+            const marques = piles.filter(p => p.gain > 0);
+            $('regleMode').textContent = troupeau
+                ? (marques.length ? `La plus grosse pile marque : « ${marques[0].mot} ».` : 'Pas de pile seule en tête : personne ne marque.')
+                : (marques.length ? '1 point par joueur qui a écrit la même chose que toi.' : 'Aucun mot en commun : personne ne marque.');
+            relancerDecompte($('btnResultat'), DELAI_CLASSEMENT);
+            if (marques.length) son.points();
+            if (troupeau && res.nouveauMouton) setTimeout(() => son.mouton(), 800);
+        }
+
+        // ---------- Enchaînements automatiques ----------
+
+        const DELAI_COMPTER = 15000;     // le temps de réunir les piles qui veulent dire la même chose
+        const DELAI_CLASSEMENT = 7000;
+        const DELAI_SUIVANT = 5000;
+        const DELAI_SALON = 20000;
+        let echeanceSuite = null;
+        let dernierTicSuite = Date.now();
+
+        function programmerSuite(delai) {
+            echeanceSuite = delai ? Date.now() + delai : null;
+            document.querySelectorAll('.decompte').forEach(b => b.style.setProperty('--delai', `${delai}ms`));
+        }
+
+        function ticSuite() {
+            const maintenant = Date.now();
+            if (etat && etat.pauseDepuis && echeanceSuite) echeanceSuite += maintenant - dernierTicSuite;
+            dernierTicSuite = maintenant;
+            if (echeanceSuite && maintenant >= echeanceSuite && etat && !etat.pauseDepuis) {
+                echeanceSuite = null;
+                suivant();
+            }
+        }
+
+        setInterval(ticSuite, 200);
+
+        // ---------- Classement et podium ----------
+
+        function gainSoiree(id) {
+            if (!enSoiree || etat.phase !== 'fin') return null;
+            return soiree.parties?.[etat.partieSoiree]?.gains?.[id] ?? null;
+        }
+
+        function lignesScore(liste) {
+            return liste.map((s, k) => {
+                const j = joueur(s.id);
+                const soir = gainSoiree(s.id);
+                let gain = '';
+                if (soir !== null) gain = `+${soir} soirée`;
+                else if (etat.phase === 'fin' && s.penalite) gain = `<span class="perte">−${s.penalite} mouton</span>`;
+                else if (etat.phase !== 'fin' && s.dernier?.points) gain = `+${s.dernier.points}`;
+                const badge = etat.mode === 'troupeau' && etat.mouton === s.id && etat.phase !== 'fin' ? '<span class="badge-mouton">mouton noir</span>' : '';
+                return `<li class="ligne-score ${s.rang === 1 ? 'premier' : ''}" style="--i:${k}">
+                    <span class="rang">${s.rang}</span>${pastille(j.couleur)}<span>${echapper(j.pseudo)}${badge}</span><span class="gain">${gain}</span><span>${s.total}</span>
+                </li>`;
+            }).join('');
+        }
+
+        function rendreClassement() {
+            afficher('ecranClassement');
+            if (!nouvelleEtape(`classement:${etat.q}`)) return;
+            const liste = classementAvecRangs(scores);
+            $('listeClassement').innerHTML = lignesScore(liste.slice(0, 6));
+            const autres = liste.length - 6;
+            $('autresClassement').textContent = autres > 0 ? `et ${autres} ${autres > 1 ? 'autres joueurs' : 'autre joueur'} en embuscade` : '';
+            const derniere = Number(etat.q) + 1 >= etat.total;
+            $('btnClassement').textContent = derniere ? 'Voir le podium' : 'Manche suivante';
+            relancerDecompte($('btnClassement'), DELAI_SUIVANT);
+            son.classement();
+        }
+
+        function rendreFin() {
+            afficher('ecranFin');
+            if (enSoiree && !soiree.parties?.[etat.partieSoiree]) return;
+            if (!nouvelleEtape('fin')) return;
+            const btnFin = $('btnFin');
+            btnFin.textContent = enSoiree ? 'Retour au salon' : 'Nouvelle partie';
+            btnFin.classList.remove('decompte');
+            if (enSoiree) { btnFin.offsetWidth; btnFin.classList.add('decompte'); }
+            programmerSuite(enSoiree ? DELAI_SALON : null);
+            const liste = classementAvecRangs(scores);
+            const delais = { 3: 0, 2: 0.5, 1: 1 };
+            const marche = (s, place) => {
+                if (!s) return '';
+                const j = joueur(s.id);
+                const soir = gainSoiree(s.id);
+                return `<div class="marche marche-${place}" style="--delai:${delais[place]}s">
+                    <div class="nom">${place === 1 ? '<span class="tampon vainqueur">Victoire</span>' : ''}${pastille(j.couleur)}<span>${echapper(j.pseudo)}</span><span>${s.total} ${Math.abs(s.total) > 1 ? 'pts' : 'pt'}</span>${s.penalite ? `<span class="perte">dont −${s.penalite} mouton noir</span>` : ''}${soir !== null ? `<span class="gain-soiree">+${soir} soirée</span>` : ''}</div>
+                    <div class="socle">${s.rang}</div>
+                </div>`;
+            };
+            $('podium').innerHTML = marche(liste[1], 2) + marche(liste[0], 1) + marche(liste[2], 3);
+            $('autresFin').innerHTML = lignesScore(liste.slice(3));
+            [3, 2].forEach(p => { if (liste[p - 1]) setTimeout(() => son.podium(p), (delais[p] + 0.4) * 1000); });
+            setTimeout(() => { son.fanfare(); lancerConfettis(); }, (delais[1] + 0.4) * 1000);
+        }
+
+        function lancerConfettis() {
+            const couleurs = ['#C8401F', '#E3A21A', '#2A4A7A', '#7E3A58', '#1F6A5C', '#F1E7D0'];
+            $('confettis').innerHTML = Array.from({ length: 70 }, () => {
+                const duree = 2.5 + Math.random() * 2.5;
+                return `<i style="left:${Math.random() * 100}%;background:${couleurs[Math.floor(Math.random() * couleurs.length)]};
+                    animation-duration:${duree}s;animation-delay:${Math.random() * 1.5}s;--tour:${Math.round(Math.random() * 1440 - 720)}deg"></i>`;
+            }).join('');
+        }
+
+        // ---------- Déroulé ----------
+
+        function lancerManche(i) {
+            const theme = themes[i];
+            marquerPose(theme);
+            const nouvel = {
+                jeu: MON_JEU, sujet: etat.sujet || '', mode: etat.mode,
+                phase: 'question', q: String(i), debut: serverTimestamp(), duree: etat.duree, total: etat.total,
+                question: { texte: theme }
+            };
+            if (etat.mouton) nouvel.mouton = etat.mouton;
+            return set(ref(db, `parties/${code}/etat`), nouvel);
+        }
+
+        // Compte les points et les écrit avec les piles en une seule écriture : si la TV recharge, rien n'est compté deux fois
+        async function compterPoints() {
+            if (comptageEnCours || etat.phase !== 'piles') return;
+            comptageEnCours = true;
+            try {
+                const reps = (await get(ref(db, `parties/${code}/reponses/${etat.q}`))).val() || {};
+                // Seuls les joueurs encore là comptent
+                Object.keys(reps).forEach(id => { if (!joueurs[id]) delete reps[id]; });
+                const piles = construirePiles(reps, fusions);
+                const sansPapier = Object.keys(joueurs).filter(id => !reps[id] && present(id));
+                const { gains, gainsPiles, mouton, nouveauMouton } = compter(piles, etat.mode, etat.mouton || null, sansPapier);
+                const maj = {};
+                Object.keys(joueurs).forEach(id => {
+                    const avant = scores[id] || { total: 0 };
+                    const k = piles.findIndex(p => p.joueurs.includes(id));
+                    maj[`scores/${id}`] = {
+                        total: (avant.total || 0) + (gains[id] || 0),
+                        dernier: { q: etat.q, points: gains[id] || 0, pile: k, mot: reps[id]?.mot || null }
+                    };
+                });
+                maj[`resultats/${etat.q}`] = {
+                    piles: piles.map((p, k) => ({ mot: p.mot, joueurs: p.joueurs, gain: gainsPiles[k] })),
+                    sansPapier,
+                    mouton: mouton || null,
+                    nouveauMouton
+                };
+                maj['etat/phase'] = 'revelation';
+                maj['etat/mouton'] = mouton || null;
+                await update(ref(db, `parties/${code}`), maj);
+            } finally {
+                comptageEnCours = false;
+            }
+        }
+
+        // Fin de partie : le mouton noir coûte ses points à celui qui l'a encore
+        function scoresFinaux() {
+            const finaux = JSON.parse(JSON.stringify(scores));
+            const maj = {};
+            if (etat.mode === 'troupeau' && etat.mouton && finaux[etat.mouton]) {
+                finaux[etat.mouton].total -= PENALITE_MOUTON;
+                finaux[etat.mouton].penalite = PENALITE_MOUTON;
+                maj[`scores/${etat.mouton}/total`] = finaux[etat.mouton].total;
+                maj[`scores/${etat.mouton}/penalite`] = PENALITE_MOUTON;
+            }
+            return { finaux, maj };
+        }
+
+        async function suivant() {
+            if (!etat || etat.pauseDepuis || (etat.phase === 'salle' && Object.keys(joueurs).length < 2)) return;
+            const cle = `${etat.phase}:${etat.q}`;
+            if (derniereAction === cle) return;
+            derniereAction = cle;
+            try {
+                const i = Number(etat.q);
+                if (etat.phase === 'salle') await lancerManche(0);
+                else if (etat.phase === 'question') await update(ref(db, `parties/${code}/etat`), { phase: 'piles' });
+                else if (etat.phase === 'piles') await compterPoints();
+                else if (etat.phase === 'revelation') await update(ref(db, `parties/${code}/etat`), { phase: 'classement' });
+                else if (etat.phase === 'classement') {
+                    if (i + 1 < etat.total) await lancerManche(i + 1);
+                    else {
+                        const { finaux, maj } = scoresFinaux();
+                        if (enSoiree) Object.assign(maj, await gainsDeSoiree(code, finaux, MON_JEU, etat.sujet));
+                        maj['etat/phase'] = 'fin';
+                        await update(ref(db, `parties/${code}`), maj);
+                    }
+                }
+                else if (etat.phase === 'fin' && enSoiree) await retourAuSalon(code);
+            } catch {
+                derniereAction = null;
+            }
+        }
+
+        async function abandonner() {
+            if (enSoiree) {
+                if (etat.phase === 'fin') return suivant();
+                if (etat.phase !== 'salle' && !confirm('Abandonner la partie et revenir au salon ? Personne ne marquera de points de soirée.')) return;
+                try { await retourAuSalon(code); } catch { /* réessayer */ }
+                return;
+            }
+            if (etat.phase !== 'fin' && !confirm('Abandonner la partie en cours ?')) return;
+            ecrireStockage(CLE_HOTE, null);
+            try { await remove(ref(db, `parties/${code}`)); } catch { /* elle sera supprimée au bout de 24 h */ }
+            location.reload();
+        }
+
+        // Chrono : fin du temps ou tout le monde a écrit (un joueur déconnecté depuis plus de 10 s n'est plus attendu)
+        function tic() {
+            if (!etat || etat.phase !== 'question') return;
+            const reste = etat.debut + etat.duree * 1000 - (etat.pauseDepuis || heureServeur());
+            const secondes = Math.max(0, Math.ceil(reste / 1000));
+            const urgent = secondes <= 5;
+            $('chrono').textContent = secondes;
+            $('chrono').classList.toggle('urgent', urgent);
+            $('jauge').classList.toggle('urgent', urgent);
+            $('jauge').style.transform = `scaleX(${Math.min(Math.max(reste / (etat.duree * 1000), 0), 1)})`;
+            if (urgent && secondes > 0 && secondes !== dernierTic) son.tic(secondes === 1);
+            dernierTic = secondes;
+            const presents = Object.keys(joueurs).filter(present);
+            const tousOntEcrit = presents.length > 0 && presents.every(id => reponses[id]);
+            // 1,5 s de marge après le chrono : les derniers papiers ont le temps d'arriver
+            if (!etat.pauseDepuis && (reste <= -1500 || tousOntEcrit)) suivant();
+        }
+
+        setInterval(tic, 200);
+
+        // ---------- Pause ----------
+
+        const PHASES_PAUSABLES = ['question', 'piles', 'revelation', 'classement'];
+
+        async function basculerPause() {
+            if (!etat || !PHASES_PAUSABLES.includes(etat.phase)) return;
+            const refEtat = ref(db, `parties/${code}/etat`);
+            if (!etat.pauseDepuis) {
+                await update(refEtat, { pauseDepuis: serverTimestamp() });
+                return;
+            }
+            const duree = Math.max(0, heureServeur() - etat.pauseDepuis);
+            const maj = { pauseDepuis: null };
+            if (etat.phase === 'question') maj.debut = etat.debut + duree;
+            await update(refEtat, maj);
+        }
+
+        function rendrePause() {
+            const enPause = !!(etat && etat.pauseDepuis && PHASES_PAUSABLES.includes(etat.phase));
+            document.body.classList.toggle('en-pause', enPause);
+            $('voilePause').hidden = !enPause;
+            $('btnPause').hidden = !etat || !PHASES_PAUSABLES.includes(etat.phase);
+        }
+
+        // ---------- Commandes ----------
+
+        document.addEventListener('click', e => {
+            const action = e.target.closest('[data-action]')?.dataset.action;
+            if (action === 'suivant') suivant();
+            if (action === 'abandonner') abandonner();
+            if (action === 'pause') basculerPause();
+            if (action === 'son') {
+                son.actif = !son.actif;
+                ecrireStockage('carreDAs.son', son.actif ? null : 'non');
+                majBoutonSon();
+            }
+        });
+
+        document.addEventListener('pointerdown', () => son.debloquer());
+
+        document.addEventListener('keydown', e => {
+            son.debloquer();
+            if (!etat || e.target.closest('input, select')) return;
+            if (e.key === 'p' || e.key === 'P') {
+                e.preventDefault();
+                basculerPause();
+                return;
+            }
+            if (e.target.closest('button')) return;
+            if (etat.pauseDepuis && e.key === 'Enter') {
+                e.preventDefault();
+                basculerPause();
+            } else if (['Enter', ' ', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+                suivant();
+            }
+        });
+
+        $('modes').addEventListener('click', e => {
+            const bouton = e.target.closest('[data-mode]');
+            if (!bouton) return;
+            modeChoisi = bouton.dataset.mode;
+            ecrireStockage('motCommun.mode', modeChoisi);
+            rendreModes();
+        });
+        $('listeThemes').addEventListener('click', e => {
+            const bouton = e.target.closest('[data-paquet]');
+            if (bouton) choisirPaquet(paquets[Number(bouton.dataset.paquet)]);
+        });
+        $('fichierLocal').addEventListener('change', async e => {
+            const fichier = e.target.files[0];
+            if (!fichier) return;
+            const paquet = { groupe: "Fichiers de l'ordinateur", titre: fichier.name.replace(/\.json$/i, ''), cle: 'local:' + fichier.name, banque: [] };
+            try {
+                paquet.banque = validerThemes(JSON.parse(await fichier.text()));
+            } catch (err) {
+                paquet.erreur = err instanceof SyntaxError ? `« ${fichier.name} » n'est pas un fichier JSON valide.` : err.message;
+            }
+            paquets = paquets.filter(s => s.cle !== paquet.cle).concat(paquet);
+            choisirPaquet(paquet);
+        });
+        $('btnCreer').addEventListener('click', creerPartie);
+        $('btnRemiseAZero').addEventListener('click', () => {
+            if (!confirm(`Remettre tous les thèmes « ${paquetChoisi.titre} » en jeu ?`)) return;
+            ecrirePosees(cleBanque, new Set());
+            rendrePaquets();
+        });
+
+        demarrer();
+    </script>
+</body>
+</html>

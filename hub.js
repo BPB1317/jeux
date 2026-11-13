@@ -1,4 +1,4 @@
-// Game Hub — code partagé par tous les jeux en ligne (Carré d'As, Le Juste Chiffre) et par le salon de soirée.
+// Game Hub — code partagé par tous les jeux en ligne (Carré d'As, Le Juste Chiffre, Le Mot commun) et par le salon de soirée.
 //
 // Une partie vit dans « parties/CODE » (voir regles.json). Une soirée est une partie qui dure :
 // les joueurs la rejoignent une fois, puis les jeux s'y succèdent. Entre deux jeux, l'état vaut { phase: 'salon' } ;
@@ -96,7 +96,8 @@ export function melanger(liste) {
 
 export const JEUX = {
     'carre-d-as': { titre: "Carré d'As", couleur: '#C8401F', texte: '#F1E7D0', resume: 'Quiz à 4 réponses' },
-    'juste-chiffre': { titre: 'Le Juste Chiffre', couleur: '#2A4A7A', texte: '#F1E7D0', resume: 'Estimations sur la règle' }
+    'juste-chiffre': { titre: 'Le Juste Chiffre', couleur: '#2A4A7A', texte: '#F1E7D0', resume: 'Estimations sur la règle' },
+    'mot-commun': { titre: 'Le Mot commun', couleur: '#1F6A5C', texte: '#F1E7D0', resume: 'Pense comme les autres' }
 };
 
 // Clé locale de la TV qui anime une soirée
