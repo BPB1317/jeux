@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../telephone.css">
     <style>
         :root {
-            --jeu: var(--sapin);
+            --jeu: var(--prune);
             --papier: #FFFDF7;
         }
 
@@ -78,6 +78,10 @@
             border-radius: 0;
             padding: 0.4em 0.5em;
             user-select: text;
+        }
+
+        #champMot::placeholder {
+            color: var(--filet);
         }
 
         #champMot:focus {
@@ -419,7 +423,7 @@
             if (navigator.vibrate) navigator.vibrate(motif);
         }
 
-        const pts = n => `${n} ${Math.abs(n) > 1 ? 'pts' : 'pt'}`;
+        const pts = n => `${n < 0 ? `−${-n}` : n} ${Math.abs(n) > 1 ? 'pts' : 'pt'}`;
         const ai = () => etat.mode === 'troupeau' && etat.mouton === uid;
 
         function rendre() {
@@ -490,7 +494,7 @@
             if (prendMouton) {
                 const pile = res.piles?.[d.pile];
                 const nouveau = info('mouton', `${MOUTON_SVG}<p class="grand-message">Tu es le mouton noir</p>
-                    <p class="detail">${pile ? `Seul à avoir écrit « ${echapper(pile.mot)} ».` : 'Sans papier, tu étais le seul isolé.'} Il passera au prochain joueur isolé… s'il y en a un.</p>
+                    <p class="detail">${pile ? `Personne d'autre n'a écrit « ${echapper(pile.mot)} ».` : 'Sans papier, et personne d\'autre d\'isolé.'} Il passera au prochain joueur isolé… s'il y en a un.</p>
                     <p class="encart">S'il est encore chez toi à la fin de la partie : −${PENALITE_MOUTON} points.</p>${totalTxt}`);
                 if (nouveau) vibrer([200, 100, 200]);
                 return;
@@ -514,7 +518,7 @@
                     <p class="tres-grand">+${d.points}</p>${fiche}${rappelMouton}${totalTxt}`;
             } else if (!autres.length) {
                 ton = '';
-                html = `<p class="theme-rappel">${echapper(theme)}</p><p class="grand-message">Tout seul</p>
+                html = `<p class="theme-rappel">${echapper(theme)}</p><p class="grand-message">Personne comme toi</p>
                     <p class="detail">Personne d'autre n'a écrit « ${echapper(pile.mot)} ».${troupeau ? ' D\'autres sont isolés aussi : le mouton noir ne bouge pas.' : ''}</p>${fiche}${rappelMouton}${totalTxt}`;
             } else {
                 ton = '';

@@ -97,7 +97,7 @@ export function melanger(liste) {
 export const JEUX = {
     'carre-d-as': { titre: "Carré d'As", couleur: '#C8401F', texte: '#F1E7D0', resume: 'Quiz à 4 réponses' },
     'juste-chiffre': { titre: 'Le Juste Chiffre', couleur: '#2A4A7A', texte: '#F1E7D0', resume: 'Estimations sur la règle' },
-    'mot-commun': { titre: 'Le Mot commun', couleur: '#1F6A5C', texte: '#F1E7D0', resume: 'Pense comme les autres' }
+    'mot-commun': { titre: 'Le Mot commun', couleur: '#7E3A58', texte: '#F1E7D0', resume: 'Pense comme les autres' }
 };
 
 // Clé locale de la TV qui anime une soirée

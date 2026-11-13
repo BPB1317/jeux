@@ -3,7 +3,9 @@
         "theme": "Tout public",
         "sujets": [
             { "fichier": "classiques.json", "titre": "Les classiques" },
-            { "fichier": "quotidien.json", "titre": "La vie de tous les jours" }
+            { "fichier": "quotidien.json", "titre": "La vie de tous les jours" },
+            { "fichier": "culture-pop.json", "titre": "Culture pop" },
+            { "fichier": "entre-amis.json", "titre": "Entre amis" }
         ]
     }
 ]

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../commun.css">
     <style>
         :root {
-            --jeu: var(--sapin);
+            --jeu: var(--prune);
             --papier: #FFFDF7;
         }
 
@@ -201,7 +201,8 @@
             box-shadow: 4px 4px 0 var(--encre);
         }
 
-        .mode[data-mode="troupeau"][aria-pressed="true"] { background: var(--prune); }
+        /* Le troupeau : noir comme le mouton */
+        .mode[data-mode="troupeau"][aria-pressed="true"] { background: var(--encre); box-shadow: 4px 4px 0 var(--jeu); }
         .mode[aria-pressed="true"] .desc-mode { color: var(--carton); }
 
         /* ---------- Salle d'attente ---------- */
@@ -328,7 +329,7 @@
             background: var(--jeu);
         }
 
-        .tag-mode.troupeau { background: var(--prune); }
+        .tag-mode.troupeau { background: var(--encre); }
 
         #chrono {
             font-family: var(--police-titre);
@@ -647,11 +648,17 @@
             color: var(--encre-douce);
         }
 
+        /* À gauche, la place du bouton Pause */
         .barre-piles {
             display: flex;
             align-items: center;
             justify-content: flex-end;
             gap: 1.5rem;
+            padding-left: 7rem;
+        }
+
+        .barre-piles .btn {
+            white-space: nowrap;
         }
 
         .barre-piles .aide {
@@ -778,7 +785,7 @@
 
         .ligne-score .pastille { width: 1em; height: 1em; }
         .ligne-score .gain { font-size: 0.75em; color: var(--sapin); }
-        .ligne-score .gain.perte { color: var(--tomate); }
+        .ligne-score .perte { color: var(--tomate); }
         .ligne-score .rang { font-family: var(--police-titre); font-weight: 400; }
         .ligne-score.premier { background: var(--ocre); box-shadow: var(--ombre); }
 
@@ -1459,6 +1466,8 @@
         }
 
         const joueur = id => joueurs[id] || { pseudo: '?', couleur: '#CDBB94' };
+        // Un total peut devenir négatif à cause du mouton noir : vrai signe moins
+        const nombre = n => n < 0 ? `−${-n}` : String(n);
         const parArrivee = ids => ids.slice().sort((a, b) => (joueurs[a]?.arrive || 0) - (joueurs[b]?.arrive || 0));
         const present = id => !horsLigneDepuis[id] || Date.now() - horsLigneDepuis[id] < 10000;
 
@@ -1631,7 +1640,7 @@
                 const n = p.joueurs.length;
                 const gain = p.gain > 0 ? `+${p.gain} ${n > 1 ? 'chacun' : ''}`
                     : troupeau && n === 1 && res.mouton === p.joueurs[0] && res.nouveauMouton ? 'mouton noir'
-                    : n === 1 ? 'tout seul' : '0';
+                    : '0';
                 return htmlPile(p, k, { marque: p.gain > 0, passe: !(p.gain > 0), gain });
             }).join('') || '<p class="sans-papier">Personne n\'a écrit de mot.</p>';
             // Pas d'animation de dépliage : les piles sont déjà là, seuls les points changent
@@ -1642,8 +1651,8 @@
                 $('mouton').hidden = false;
                 $('titreMouton').textContent = res.nouveauMouton ? `${nom} prend le mouton noir` : `${nom} garde le mouton noir`;
                 $('texteMouton').textContent = res.nouveauMouton
-                    ? `Seul sur sa pile. Le mouton passera au prochain isolé, et coûte ${PENALITE_MOUTON} points à qui l'a encore à la fin.`
-                    : `Personne d'autre n'est tout seul cette fois. −${PENALITE_MOUTON} points s'il est encore là à la fin.`;
+                    ? `Personne d'autre n'a écrit ce mot. Le mouton passera au prochain joueur isolé, et coûte ${PENALITE_MOUTON} points à qui l'a encore à la fin.`
+                    : `Aucun autre joueur isolé cette fois. −${PENALITE_MOUTON} points s'il est encore là à la fin.`;
             } else {
                 $('mouton').hidden = true;
             }
@@ -1699,7 +1708,7 @@
                 else if (etat.phase !== 'fin' && s.dernier?.points) gain = `+${s.dernier.points}`;
                 const badge = etat.mode === 'troupeau' && etat.mouton === s.id && etat.phase !== 'fin' ? '<span class="badge-mouton">mouton noir</span>' : '';
                 return `<li class="ligne-score ${s.rang === 1 ? 'premier' : ''}" style="--i:${k}">
-                    <span class="rang">${s.rang}</span>${pastille(j.couleur)}<span>${echapper(j.pseudo)}${badge}</span><span class="gain">${gain}</span><span>${s.total}</span>
+                    <span class="rang">${s.rang}</span>${pastille(j.couleur)}<span>${echapper(j.pseudo)}${badge}</span><span class="gain">${gain}</span><span>${nombre(s.total)}</span>
                 </li>`;
             }).join('');
         }
@@ -1720,6 +1729,8 @@
         function rendreFin() {
             afficher('ecranFin');
             if (enSoiree && !soiree.parties?.[etat.partieSoiree]) return;
+            // La pénalité du mouton noir est écrite avec la phase « fin », mais peut arriver juste après
+            if (etat.mode === 'troupeau' && etat.mouton && scores[etat.mouton] && !scores[etat.mouton].penalite) return;
             if (!nouvelleEtape('fin')) return;
             const btnFin = $('btnFin');
             btnFin.textContent = enSoiree ? 'Retour au salon' : 'Nouvelle partie';
@@ -1733,7 +1744,7 @@
                 const j = joueur(s.id);
                 const soir = gainSoiree(s.id);
                 return `<div class="marche marche-${place}" style="--delai:${delais[place]}s">
-                    <div class="nom">${place === 1 ? '<span class="tampon vainqueur">Victoire</span>' : ''}${pastille(j.couleur)}<span>${echapper(j.pseudo)}</span><span>${s.total} ${Math.abs(s.total) > 1 ? 'pts' : 'pt'}</span>${s.penalite ? `<span class="perte">dont −${s.penalite} mouton noir</span>` : ''}${soir !== null ? `<span class="gain-soiree">+${soir} soirée</span>` : ''}</div>
+                    <div class="nom">${place === 1 ? '<span class="tampon vainqueur">Victoire</span>' : ''}${pastille(j.couleur)}<span>${echapper(j.pseudo)}</span><span>${nombre(s.total)} ${Math.abs(s.total) > 1 ? 'pts' : 'pt'}</span>${s.penalite ? `<span class="perte">dont −${s.penalite} mouton noir</span>` : ''}${soir !== null ? `<span class="gain-soiree">+${soir} soirée</span>` : ''}</div>
                     <div class="socle">${s.rang}</div>
                 </div>`;
             };
