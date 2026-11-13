@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soirée — Game Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../commun.css">
+    <style>
+        :root {
+            --jeu: var(--encre);
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        .ecran {
+            display: none;
+            min-height: 100vh;
+            padding: clamp(1rem, 2.5vw, 2.5rem);
+        }
+
+        .ecran.actif {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .centre {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        /* ---------- Salon : invitation, classement de la soirée, partie suivante ---------- */
+
+        .salon {
+            flex: 1;
+            display: grid;
+            grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: clamp(1.5rem, 3vw, 3rem);
+            align-items: start;
+        }
+
+        .colonne {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            min-width: 0;
+        }
+
+        .surtitre-salon {
+            align-self: flex-start;
+            font-size: clamp(0.9rem, 1.1vw, 1.2rem);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: var(--encre);
+            box-shadow: none;
+            border: 0;
+        }
+
+        .colonne h1 {
+            font-size: clamp(2rem, 3.2vw, 3.4rem);
+            line-height: 1.05;
+        }
+
+        .invitation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            text-align: center;
+            padding: clamp(1rem, 1.6vw, 1.6rem);
+            box-shadow: var(--ombre-forte);
+        }
+
+        #qr {
+            padding: 0.5rem;
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+        }
+
+        #qr img,
+        #qr canvas {
+            display: block;
+            width: clamp(9rem, 15vw, 15rem);
+            height: auto;
+        }
+
+        #code {
+            font-family: var(--police-titre);
+            font-size: clamp(2.6rem, 4.5vw, 4.6rem);
+            letter-spacing: 0.12em;
+            line-height: 1;
+        }
+
+        #lienJoueur {
+            font-weight: 700;
+            font-size: clamp(0.85rem, 1vw, 1.1rem);
+            color: var(--encre-douce);
+            word-break: break-all;
+        }
+
+        .note {
+            font-size: clamp(0.9rem, 1.1vw, 1.15rem);
+            color: var(--encre-douce);
+        }
+
+        .titre-colonne {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .titre-colonne h2 {
+            font-size: clamp(1.5rem, 2.2vw, 2.4rem);
+        }
+
+        #listeSoiree {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .ligne-soiree {
+            display: grid;
+            grid-template-columns: 1.8em 1em 1fr auto auto;
+            align-items: center;
+            gap: 0.7em;
+            font-weight: 900;
+            font-size: clamp(1.1rem, 1.6vw, 1.7rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            box-shadow: 4px 4px 0 var(--encre);
+            padding: 0.35em 0.7em;
+            animation: glisse 0.4s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation-delay: calc(var(--i, 0) * 0.06s);
+        }
+
+        @keyframes glisse {
+            from { transform: translateX(-2em); opacity: 0; }
+        }
+
+        .ligne-soiree.premier {
+            background: var(--ocre);
+        }
+
+        .ligne-soiree.hors-ligne {
+            opacity: 0.45;
+        }
+
+        .ligne-soiree .pastille {
+            width: 1em;
+            height: 1em;
+        }
+
+        .ligne-soiree .rang,
+        .ligne-soiree .points {
+            font-family: var(--police-titre);
+            font-weight: 400;
+        }
+
+        .ligne-soiree .statut {
+            font-size: 0.65em;
+            font-weight: 700;
+            color: var(--encre-douce);
+        }
+
+        .vide {
+            font-weight: 700;
+            font-size: clamp(1.1rem, 1.6vw, 1.6rem);
+            color: var(--encre-douce);
+            border: var(--trait-fin) dashed var(--encre-douce);
+            padding: 1em;
+            text-align: center;
+        }
+
+        /* Choix du jeu : une boîte par jeu */
+        .choix-jeu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            text-align: left;
+            font-family: var(--police-texte);
+            color: var(--encre);
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 0.9rem 1.1rem;
+            cursor: pointer;
+            transition: transform 0.12s cubic-bezier(.3, 1.6, .5, 1), box-shadow 0.12s cubic-bezier(.3, 1.6, .5, 1);
+        }
+
+        .choix-jeu:hover:not(:disabled) {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0 var(--encre);
+        }
+
+        .choix-jeu:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .choix-jeu .bloc {
+            width: 3.2rem;
+            height: 3.2rem;
+            flex-shrink: 0;
+            background: var(--couleur);
+            border: var(--trait-fin) solid var(--encre);
+        }
+
+        .choix-jeu .nom-jeu {
+            display: block;
+            font-family: var(--police-titre);
+            font-size: clamp(1.3rem, 1.8vw, 1.9rem);
+            line-height: 1.1;
+        }
+
+        .choix-jeu .resume {
+            display: block;
+            font-weight: 700;
+            font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+            color: var(--encre-douce);
+        }
+
+        .choix-jeu .lancer {
+            margin-left: auto;
+            font-family: var(--police-titre);
+            font-size: clamp(1rem, 1.3vw, 1.4rem);
+            color: var(--carton);
+            background: var(--couleur);
+            border: var(--trait-fin) solid var(--encre);
+            padding: 0.3em 0.8em;
+        }
+
+        #historique {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        #historique li {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            font-weight: 700;
+            font-size: clamp(0.9rem, 1.1vw, 1.15rem);
+            border-bottom: 2px solid var(--filet);
+            padding-bottom: 0.3rem;
+        }
+
+        #historique .gagnant {
+            color: var(--encre-douce);
+            white-space: nowrap;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        /* ---------- Fin de la soirée : podium ---------- */
+
+        .grand {
+            font-size: clamp(2.2rem, 4.5vw, 4.5rem);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .podium {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: clamp(1rem, 2vw, 2rem);
+            margin-bottom: 2rem;
+        }
+
+        .marche {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            width: clamp(9rem, 18vw, 18rem);
+            font-weight: 900;
+            font-size: clamp(1.2rem, 2vw, 2.2rem);
+            text-align: center;
+        }
+
+        .marche .socle {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            font-family: var(--police-titre);
+            font-weight: 400;
+            font-size: 1.8em;
+            padding-top: 0.2em;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            transform-origin: bottom;
+            animation: monte 0.5s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation-delay: var(--delai);
+        }
+
+        .marche-1 .socle { height: 14rem; background: var(--ocre); }
+        .marche-2 .socle { height: 10rem; }
+        .marche-3 .socle { height: 7rem; background: var(--kraft-fonce); }
+
+        .marche .nom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            animation: tombe 0.5s cubic-bezier(.3, 1.6, .5, 1) both;
+            animation-delay: calc(var(--delai) + 0.4s);
+        }
+
+        .marche .nom .pastille {
+            width: 1.6em;
+            height: 1.6em;
+        }
+
+        .marche-1 .nom { font-size: 1.35em; }
+        .marche .vainqueur { font-size: 0.6em; margin-bottom: 0.4rem; }
+
+        @keyframes monte { from { transform: scaleY(0); } }
+        @keyframes tombe { from { transform: translateY(-2em); opacity: 0; } }
+
+        #autresFin {
+            list-style: none;
+            width: min(52rem, 100%);
+            margin: 0 auto 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .confettis {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .confettis i {
+            position: absolute;
+            top: -2rem;
+            width: 0.8rem;
+            height: 1.2rem;
+            border: 2px solid var(--encre);
+            animation: confetti linear both;
+        }
+
+        @keyframes confetti {
+            to { transform: translateY(110vh) rotate(var(--tour)); }
+        }
+
+        @media (max-width: 1000px) {
+            .salon { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <section id="ecranChargement" class="ecran actif">
+        <div class="centre">
+            <p id="messageChargement" class="surtitre">Connexion…</p>
+        </div>
+    </section>
+
+    <section id="ecranSalon" class="ecran">
+        <div class="salon">
+            <div class="colonne">
+                <span class="tampon surtitre-salon">Soirée</span>
+                <h1>Le salon<br>reste ouvert</h1>
+                <div class="invitation carte">
+                    <p class="surtitre">Scanne une seule fois</p>
+                    <div id="qr"></div>
+                    <div id="code"></div>
+                    <p id="lienJoueur"></p>
+                </div>
+                <p class="note">Les retardataires scannent le même code, même en pleine partie.</p>
+            </div>
+
+            <div class="colonne">
+                <div class="titre-colonne">
+                    <h2 id="nbJoueurs">Personne pour l'instant</h2>
+                    <span class="surtitre">Classement de la soirée</span>
+                </div>
+                <ol id="listeSoiree"></ol>
+                <p class="note" id="regleSoiree"></p>
+            </div>
+
+            <div class="colonne">
+                <div class="titre-colonne">
+                    <h2>Partie suivante</h2>
+                    <span class="surtitre" id="nbParties"></span>
+                </div>
+                <div id="choixJeux" class="colonne"></div>
+                <ul id="historique"></ul>
+            </div>
+        </div>
+        <div class="actions">
+            <a class="btn-lien" href="../index.html">Revenir au hub (la soirée reste ouverte)</a>
+            <button class="btn btn-small" data-action="finSoiree">Terminer la soirée</button>
+        </div>
+    </section>
+
+    <section id="ecranFin" class="ecran">
+        <div class="confettis" id="confettis" aria-hidden="true"></div>
+        <h2 class="grand">Le podium de la soirée</h2>
+        <div class="podium" id="podium"></div>
+        <ol id="autresFin"></ol>
+        <div class="actions">
+            <button class="btn-lien" data-action="reprendre">Reprendre la soirée</button>
+            <button class="btn btn-geant" data-action="fermer">Fermer le salon</button>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module">
+        import { db, connexion, heureServeur, genererCode, echapper, lireStockage, ecrireStockage, JEUX, CLE_SOIREE, dossierAttendu, urlPage, pointsSoiree } from '../hub.js';
+        import { ref, set, update, get, remove, onValue, serverTimestamp, query, orderByChild, endAt } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+        const $ = id => document.getElementById(id);
+
+        let uid = null;
+        let code = null;
+        let etat = null;
+        let joueurs = {};
+        let soiree = {};
+        let qrAffiche = null;
+        let joueursVus = null;
+        let cleEcran = null;
+
+        function afficher(id) {
+            document.querySelectorAll('.ecran').forEach(e => e.classList.toggle('actif', e.id === id));
+        }
+
+        function erreurFatale(message) {
+            afficher('ecranChargement');
+            $('messageChargement').textContent = message;
+        }
+
+        // ---------- Sons ----------
+
+        const son = {
+            actif: lireStockage('carreDAs.son') !== 'non',
+            ctx: null,
+            debloquer() {
+                if (!this.ctx) {
+                    try { this.ctx = new AudioContext(); } catch { return; }
+                }
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            },
+            note(freq, debut, duree, type = 'triangle', volume = 0.12) {
+                if (!this.actif || !this.ctx) return;
+                const t = this.ctx.currentTime + debut;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(volume, t);
+                gain.gain.exponentialRampToValueAtTime(0.0001, t + duree);
+                osc.connect(gain).connect(this.ctx.destination);
+                osc.start(t);
+                osc.stop(t + duree);
+            },
+            arrivee() { this.note(660, 0, 0.12); this.note(990, 0.08, 0.18); },
+            podium(place) { this.note([0, 784, 587, 494][place], 0, 0.35); },
+            fanfare() { [523, 659, 784, 1047, 784, 1047].forEach((f, k) => this.note(f, k * 0.13, k === 5 ? 0.8 : 0.16)); }
+        };
+
+        document.addEventListener('pointerdown', () => son.debloquer());
+        document.addEventListener('keydown', () => son.debloquer());
+
+        // ---------- Démarrage : on rouvre la soirée en cours, sinon on en crée une ----------
+
+        async function demarrer() {
+            try {
+                uid = await connexion();
+            } catch {
+                erreurFatale('Connexion à Firebase impossible. Vérifie internet puis recharge la page.');
+                return;
+            }
+            const candidats = [new URLSearchParams(location.search).get('soiree'), lireStockage(CLE_SOIREE)];
+            for (const c of candidats) {
+                if (c && await reprendre(c.toUpperCase())) return;
+            }
+            ecrireStockage(CLE_SOIREE, null);
+            await creerSoiree();
+        }
+
+        async function reprendre(c) {
+            try {
+                const meta = (await get(ref(db, `parties/${c}/meta`))).val();
+                if (!meta || meta.hote !== uid || !meta.soiree) return false;
+                const e = (await get(ref(db, `parties/${c}/etat`))).val();
+                if (!e) return false;
+                // Un jeu est en cours : la TV y retourne
+                if (dossierAttendu(e) !== 'soiree') {
+                    location.replace(urlPage(dossierAttendu(e), 'tv', c));
+                    return true;
+                }
+                code = c;
+                ecouter();
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        async function creerSoiree() {
+            nettoyerVieillesParties();
+            // Le code est réservé par la règle de sécurité : si une partie récente l'occupe, l'écriture est refusée
+            for (let essai = 0; essai < 10; essai++) {
+                const c = genererCode();
+                try {
+                    await set(ref(db, `parties/${c}`), {
+                        meta: { hote: uid, creeLe: serverTimestamp(), soiree: true },
+                        etat: { phase: 'salon' }
+                    });
+                    code = c;
+                    ecouter();
+                    return;
+                } catch { /* code occupé, on en tire un autre */ }
+            }
+            erreurFatale('Impossible d\'ouvrir la soirée. As-tu bien publié les règles de sécurité ?');
+        }
+
+        // Pas de serveur pour supprimer les vieilles parties : chaque nouvelle soirée fait le ménage
+        async function nettoyerVieillesParties() {
+            try {
+                const limite = heureServeur() - 86400000 - 120000;
+                const vieilles = await get(query(ref(db, 'parties'), orderByChild('meta/creeLe'), endAt(limite)));
+                const suppressions = {};
+                vieilles.forEach(p => { suppressions[p.key] = null; });
+                if (Object.keys(suppressions).length) await update(ref(db, 'parties'), suppressions);
+            } catch { /* on réessaiera */ }
+        }
+
+        function ecouter() {
+            ecrireStockage(CLE_SOIREE, code);
+            history.replaceState(null, '', `?soiree=${code}`);
+            const base = `parties/${code}`;
+            onValue(ref(db, `${base}/etat`), s => {
+                etat = s.val();
+                if (!etat) { ecrireStockage(CLE_SOIREE, null); location.href = '../index.html'; return; }
+                if (dossierAttendu(etat) !== 'soiree') { location.replace(urlPage(dossierAttendu(etat), 'tv', code)); return; }
+                rendre();
+            });
+            onValue(ref(db, `${base}/joueurs`), s => { joueurs = s.val() || {}; rendre(); });
+            onValue(ref(db, `${base}/soiree`), s => { soiree = s.val() || {}; rendre(); });
+        }
+
+        // ---------- Affichage ----------
+
+        function pastille(couleur) {
+            return `<span class="pastille" style="background:${echapper(couleur)}"></span>`;
+        }
+
+        // Tous les joueurs de la soirée, classés par points de soirée (ex æquo au même rang)
+        function classementSoiree() {
+            const points = soiree.points || {};
+            const parties = Object.values(soiree.parties || {});
+            const liste = Object.entries(joueurs).map(([id, j]) => ({
+                id, ...j,
+                points: points[id] || 0,
+                nouveau: !parties.some(p => p.gains && id in p.gains)
+            })).sort((a, b) => b.points - a.points || (a.arrive || 0) - (b.arrive || 0));
+            liste.forEach((s, k) => { s.rang = k > 0 && s.points === liste[k - 1].points ? liste[k - 1].rang : k + 1; });
+            return liste;
+        }
+
+        function rendre() {
+            if (!etat) return;
+            if (etat.phase === 'finSoiree') rendreFin();
+            else rendreSalon();
+        }
+
+        function rendreSalon() {
+            afficher('ecranSalon');
+            cleEcran = 'salon';
+            $('code').textContent = code;
+            const url = urlPage('soiree', 'joueur', code);
+            if (qrAffiche !== url) {
+                $('qr').innerHTML = '';
+                new QRCode($('qr'), { text: url, width: 512, height: 512, colorDark: '#221C15', colorLight: '#F1E7D0', correctLevel: QRCode.CorrectLevel.M });
+                $('lienJoueur').textContent = url.replace(/^https?:\/\//, '').replace(/\?.*$/, '');
+                qrAffiche = url;
+            }
+
+            const liste = classementSoiree();
+            const premiers = joueursVus === null;
+            if (premiers) joueursVus = new Set();
+            const arrivees = liste.filter(j => !joueursVus.has(j.id)).length;
+            liste.forEach(j => joueursVus.add(j.id));
+            if (arrivees && !premiers) son.arrivee();
+
+            $('nbJoueurs').textContent = liste.length === 0 ? "Personne pour l'instant"
+                : liste.length === 1 ? '1 joueur' : `${liste.length} joueurs`;
+            $('listeSoiree').innerHTML = liste.length === 0
+                ? '<li class="vide">Scannez le QR code pour entrer dans le salon.</li>'
+                : liste.map((j, k) => {
+                    const statut = j.enLigne === false ? 'hors ligne' : j.nouveau && Object.keys(soiree.parties || {}).length ? 'vient d\'arriver' : '';
+                    return `<li class="ligne-soiree ${j.rang === 1 && j.points > 0 ? 'premier' : ''} ${j.enLigne === false ? 'hors-ligne' : ''}" style="--i:${k}">
+                        <span class="rang">${j.points > 0 ? j.rang : '–'}</span>${pastille(j.couleur)}
+                        <span>${echapper(j.pseudo)}</span><span class="statut">${statut}</span><span class="points">${j.points}</span>
+                    </li>`;
+                }).join('');
+            const n = Math.max(liste.length, 2);
+            const valeurs = Array.from({ length: Math.min(n, 6) }, (_, k) => pointsSoiree(k + 1, n));
+            $('regleSoiree').textContent = `Points de soirée à chaque partie, ici à ${n} joueurs : ${valeurs.join(', ')}${n > 6 ? '…' : ''} du 1er au dernier. Tout le monde marque.`;
+
+            const parties = Object.values(soiree.parties || {});
+            $('nbParties').textContent = parties.length === 0 ? 'Aucune partie jouée' : parties.length === 1 ? '1 partie jouée' : `${parties.length} parties jouées`;
+            if (!$('choixJeux').children.length) {
+                $('choixJeux').innerHTML = Object.entries(JEUX).map(([id, jeu]) => `
+                    <button type="button" class="choix-jeu" data-jeu="${id}" style="--couleur:${jeu.couleur}">
+                        <span class="bloc"></span>
+                        <span><span class="nom-jeu">${echapper(jeu.titre)}</span><span class="resume">${echapper(jeu.resume)}</span></span>
+                        <span class="lancer">Choisir</span>
+                    </button>`).join('');
+            }
+            $('choixJeux').querySelectorAll('button').forEach(b => { b.disabled = liste.length === 0; });
+            $('historique').innerHTML = parties.slice().reverse().map(p => {
+                const gagnants = Object.entries(p.gains || {}).filter(([, g]) => g === Math.max(...Object.values(p.gains))).map(([id]) => joueurs[id]?.pseudo || '?');
+                return `<li><span>${echapper(JEUX[p.jeu]?.titre || p.jeu)}${p.titre ? ` · ${echapper(p.titre)}` : ''}</span><span class="gagnant">${echapper(gagnants.join(', '))}</span></li>`;
+            }).join('');
+        }
+
+        function rendreFin() {
+            afficher('ecranFin');
+            if (cleEcran === 'fin') return;
+            cleEcran = 'fin';
+            const liste = classementSoiree();
+            const delais = { 3: 0, 2: 0.5, 1: 1 };
+            const marche = (s, place) => {
+                if (!s) return '';
+                return `<div class="marche marche-${place}" style="--delai:${delais[place]}s">
+                    <div class="nom">${place === 1 ? '<span class="tampon vainqueur">Champion</span>' : ''}${pastille(s.couleur)}<span>${echapper(s.pseudo)}</span><span>${s.points} pts</span></div>
+                    <div class="socle">${s.rang}</div>
+                </div>`;
+            };
+            $('podium').innerHTML = marche(liste[1], 2) + marche(liste[0], 1) + marche(liste[2], 3);
+            $('autresFin').innerHTML = liste.slice(3).map((s, k) => `
+                <li class="ligne-soiree" style="--i:${k}"><span class="rang">${s.rang}</span>${pastille(s.couleur)}<span>${echapper(s.pseudo)}</span><span></span><span class="points">${s.points}</span></li>`).join('');
+            [3, 2].forEach(p => { if (liste[p - 1]) setTimeout(() => son.podium(p), (delais[p] + 0.4) * 1000); });
+            setTimeout(() => { son.fanfare(); lancerConfettis(); }, (delais[1] + 0.4) * 1000);
+        }
+
+        function lancerConfettis() {
+            const couleurs = ['#C8401F', '#E3A21A', '#2A4A7A', '#7E3A58', '#1F6A5C', '#F1E7D0'];
+            $('confettis').innerHTML = Array.from({ length: 70 }, () => {
+                const duree = 2.5 + Math.random() * 2.5;
+                return `<i style="left:${Math.random() * 100}%;background:${couleurs[Math.floor(Math.random() * couleurs.length)]};
+                    animation-duration:${duree}s;animation-delay:${Math.random() * 1.5}s;--tour:${Math.round(Math.random() * 1440 - 720)}deg"></i>`;
+            }).join('');
+        }
+
+        // ---------- Commandes ----------
+
+        document.addEventListener('click', async e => {
+            const choix = e.target.closest('[data-jeu]');
+            if (choix && !choix.disabled) {
+                location.href = urlPage(choix.dataset.jeu, 'tv', code);
+                return;
+            }
+            const action = e.target.closest('[data-action]')?.dataset.action;
+            if (action === 'finSoiree' && confirm('Terminer la soirée et afficher le podium ?')) {
+                await update(ref(db, `parties/${code}/etat`), { phase: 'finSoiree' });
+            }
+            if (action === 'reprendre') {
+                await update(ref(db, `parties/${code}/etat`), { phase: 'salon' });
+            }
+            if (action === 'fermer' && confirm('Fermer le salon ? Les joueurs seront déconnectés.')) {
+                ecrireStockage(CLE_SOIREE, null);
+                try { await remove(ref(db, `parties/${code}`)); } catch { /* elle sera supprimée au bout de 24 h */ }
+                location.href = '../index.html';
+            }
+        });
+
+        demarrer();
+    </script>
+</body>
+</html>

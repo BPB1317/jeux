@@ -1,5 +1,5 @@
 {
-  // Règles de sécurité de Carré d'As.
+  // Règles de sécurité du Game Hub (Carré d'As, Le Juste Chiffre, soirées).
   // À coller dans la console Firebase : Realtime Database > Règles > Publier.
   "rules": {
     "parties": {
@@ -8,7 +8,7 @@
       ".read": "auth != null && query.orderByChild === 'meta/creeLe' && query.endAt <= now - 86400000",
 
       "$code": {
-        // Créer une partie (code libre ou partie périmée) en s'en déclarant l'hôte,
+        // Créer une partie ou une soirée (code libre ou partie périmée) en s'en déclarant l'hôte,
         // ou supprimer une partie périmée ou la sienne
         ".write": "auth != null && (((!data.exists() || data.child('meta/creeLe').val() < now - 86400000) && newData.child('meta/hote').val() === auth.uid && newData.child('meta/creeLe').val() === now) || (!newData.exists() && (data.child('meta/creeLe').val() < now - 86400000 || data.child('meta/hote').val() === auth.uid)))",
         ".validate": "$code.matches(/^[A-Z]{4}$/)",
@@ -23,7 +23,7 @@
           ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val()"
         },
 
-        // État, résultats et scores : lus par tous les participants, écrits par l'hôte seul
+        // État, résultats, scores et points de la soirée : lus par tous les participants, écrits par l'hôte seul
         "etat": {
           ".read": "auth != null && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000",
           ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val() && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000"
@@ -33,6 +33,10 @@
           ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val() && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000"
         },
         "scores": {
+          ".read": "auth != null && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000",
+          ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val() && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000"
+        },
+        "soiree": {
           ".read": "auth != null && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000",
           ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val() && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000"
         },
@@ -62,15 +66,18 @@
         },
 
         // Une seule réponse par joueur et par question, pendant le chrono (1,5 s de marge réseau),
-        // horodatée par le serveur
+        // horodatée par le serveur : un coin (Carré d'As) ou un nombre (Le Juste Chiffre).
+        // L'hôte les lit, et les efface entre deux jeux d'une soirée.
         "reponses": {
           ".read": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val()",
+          ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val() && !newData.exists()",
           "$q": {
             "$uid": {
               ".read": "auth != null && auth.uid === $uid",
               ".write": "auth != null && auth.uid === $uid && !data.exists() && root.child('parties/' + $code + '/joueurs/' + $uid).exists() && root.child('parties/' + $code + '/etat/phase').val() === 'question' && root.child('parties/' + $code + '/etat/q').val() === $q && now <= root.child('parties/' + $code + '/etat/debut').val() + root.child('parties/' + $code + '/etat/duree').val() * 1000 + 1500",
-              ".validate": "newData.hasChildren(['choix', 'a'])",
+              ".validate": "newData.hasChildren(['a']) && (newData.hasChildren(['choix']) || newData.hasChildren(['valeur']))",
               "choix": { ".validate": "newData.isNumber() && newData.val() % 1 === 0 && newData.val() >= 0 && newData.val() <= 3" },
+              "valeur": { ".validate": "newData.isNumber() && newData.val() > -1000000000000 && newData.val() < 1000000000000" },
               "a": { ".validate": "newData.val() === now" },
               "$autre": { ".validate": false }
             }

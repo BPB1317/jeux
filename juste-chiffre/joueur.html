@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#D8C7A3">
+    <title>Le Juste Chiffre</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../commun.css">
+    <link rel="stylesheet" href="../telephone.css">
+    <style>
+        :root {
+            --jeu: var(--prusse);
+        }
+
+        .rejoindre h1.tampon {
+            background: var(--jeu);
+        }
+
+        /* ---------- Saisie : tout l'écran, aucun scroll ---------- */
+
+        #ecranSaisie.actif {
+            height: 100dvh;
+            gap: 0.7rem;
+            overflow: hidden;
+        }
+
+        #chronoJoueur {
+            font-family: var(--police-titre);
+            font-size: 1.4rem;
+            line-height: 1;
+            color: var(--carton);
+            background: var(--encre);
+            padding: 0.2em 0.4em;
+            min-width: 2em;
+            text-align: center;
+        }
+
+        #chronoJoueur.urgent {
+            background: var(--tomate);
+        }
+
+        .question-tel {
+            font-weight: 900;
+            font-size: 1.05rem;
+            line-height: 1.3;
+            text-align: center;
+            text-wrap: balance;
+        }
+
+        .zone-saisie {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .affichage {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.4rem;
+            max-width: 100%;
+            min-width: 70%;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 0.35em 0.6em;
+        }
+
+        #valeurSaisie {
+            font-family: var(--police-titre);
+            font-size: clamp(2rem, 13vw, 3.4rem);
+            line-height: 1.05;
+            white-space: nowrap;
+        }
+
+        #valeurSaisie.vide {
+            color: var(--filet);
+        }
+
+        #uniteSaisie {
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--encre-douce);
+            white-space: nowrap;
+        }
+
+        .affichage.secoue {
+            animation: secoue 0.4s ease-out;
+        }
+
+        @keyframes secoue {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-0.4em); }
+            50% { transform: translateX(0.35em); }
+            75% { transform: translateX(-0.2em); }
+        }
+
+        #consigneTel {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--encre-douce);
+        }
+
+        .pave {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: min(4.2rem, calc((100dvh - 17rem) / 5));
+            gap: 0.55rem;
+        }
+
+        .pave button {
+            font-family: var(--police-titre);
+            font-size: 1.7rem;
+            color: var(--encre);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            border-radius: var(--rayon);
+            box-shadow: 3px 3px 0 var(--encre);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .pave button:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0 0 0 var(--encre);
+        }
+
+        .pave .touche-texte {
+            font-family: var(--police-texte);
+            font-weight: 900;
+            font-size: 1rem;
+        }
+
+        .pave .valider {
+            grid-column: 1 / -1;
+            color: var(--carton);
+            background: var(--jeu);
+            border-width: var(--trait);
+            box-shadow: var(--ombre);
+        }
+
+        /* ---------- Messages ---------- */
+
+        .reponse-envoyee {
+            display: flex;
+            align-items: baseline;
+            gap: 0.4rem;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre-forte);
+            padding: 0.5em 0.8em;
+            transform: rotate(-2deg);
+        }
+
+        .reponse-envoyee .nombre {
+            font-family: var(--police-titre);
+            font-size: 3rem;
+            line-height: 1;
+        }
+
+        .reponse-envoyee .unite {
+            font-weight: 900;
+            font-size: 1.3rem;
+            color: var(--encre-douce);
+        }
+
+        .bilan {
+            align-self: stretch;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.4rem;
+            color: var(--encre);
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 0.8rem 0.6rem;
+        }
+
+        .bilan div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            min-width: 0;
+        }
+
+        .bilan .etiquette {
+            font-weight: 900;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--encre-douce);
+        }
+
+        .bilan .nombre {
+            font-family: var(--police-titre);
+            font-size: 1.25rem;
+            line-height: 1.1;
+            overflow-wrap: anywhere;
+        }
+
+        .bilan .juste {
+            color: var(--tomate);
+        }
+
+        .serie-tel {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+        }
+
+        .serie-tel i {
+            width: 0.8rem;
+            height: 0.8rem;
+            background: var(--sapin);
+            border: 2px solid var(--encre);
+        }
+
+        #ecranAttente .centre .detail {
+            max-width: 20rem;
+        }
+
+        .carte-joueur {
+            margin-bottom: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <section id="ecranChargement" class="ecran actif">
+        <div class="centre">
+            <p id="messageChargement" class="surtitre">Connexion…</p>
+        </div>
+    </section>
+
+    <section id="ecranRejoindre" class="ecran">
+        <form class="rejoindre" id="formRejoindre" autocomplete="off">
+            <h1 class="tampon">Le Juste Chiffre</h1>
+            <div class="champ">
+                <label for="champCode">Code affiché sur la TV</label>
+                <input type="text" id="champCode" maxlength="4" inputmode="text" autocapitalize="characters" spellcheck="false">
+            </div>
+            <div class="champ">
+                <label for="champPseudo">Ton pseudo</label>
+                <input type="text" id="champPseudo" maxlength="16" spellcheck="false">
+            </div>
+            <div class="champ">
+                <span class="etiquette-champ">Ta couleur</span>
+                <div class="palette" id="palette"></div>
+            </div>
+            <p id="erreurRejoindre" class="erreur" hidden></p>
+            <button type="submit" class="btn btn-geant" id="btnRejoindre">Rejoindre</button>
+        </form>
+    </section>
+
+    <section id="ecranAttente" class="ecran">
+        <div class="centre">
+            <div class="carte-joueur" id="carteJoueur"></div>
+            <p class="grand-message">Le Juste Chiffre</p>
+            <p class="detail" id="detailAttente">Garde l'œil sur la TV, ça va commencer.</p>
+        </div>
+        <button class="btn-lien" id="btnQuitter">Quitter la partie</button>
+    </section>
+
+    <section id="ecranSaisie" class="ecran">
+        <div class="bandeau"><span class="qui"></span><span class="droite" id="numJoueur"></span><span id="chronoJoueur"></span></div>
+        <p class="question-tel" id="questionTel"></p>
+        <div class="zone-saisie">
+            <div class="affichage" id="affichage"><span id="valeurSaisie" class="vide">0</span><span id="uniteSaisie"></span></div>
+            <p id="consigneTel"></p>
+        </div>
+        <div class="pave" id="pave"></div>
+    </section>
+
+    <section id="ecranInfo" class="ecran">
+        <div class="bandeau qui"></div>
+        <div class="centre" id="info"></div>
+    </section>
+
+    <script type="module">
+        import { db, connexion, heureServeur, rangDe, ordinal, echapper, lireStockage, ecrireStockage, CLE_JOUEUR,
+            brancherRejoindre, signalerPresence, quitter, garderEcranAllume, dossierAttendu, urlPage } from '../hub.js';
+        import { ref, set, get, onValue, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+        import { formaterValeur, formaterEcart, uniteDe, consigne } from './regles.js';
+
+        const $ = id => document.getElementById(id);
+        const MON_JEU = 'juste-chiffre';
+
+        let uid = null;
+        let code = null;
+        let etat = null;
+        let moi = null;
+        let scores = {};
+        let resultats = {};
+        let maReponse;          // undefined : pas encore lue ; null : pas de réponse
+        let qSuivie = null;
+        let arreterReponse = null;
+        let refusQ = null;
+        let enSoiree = false;
+        let afficherFormulaire = null;
+
+        // Saisie en cours
+        let saisie = '';
+        let negatif = false;
+        let qSaisie = null;
+
+        function afficher(id) {
+            document.querySelectorAll('.ecran').forEach(e => e.classList.toggle('actif', e.id === id));
+        }
+
+        async function demarrer() {
+            try {
+                uid = await connexion();
+            } catch {
+                $('messageChargement').textContent = 'Pas de connexion. Vérifie le wifi puis recharge la page.';
+                return;
+            }
+            afficherFormulaire = brancherRejoindre(uid, entrer);
+            const codeUrl = (new URLSearchParams(location.search).get('code') || '').toUpperCase();
+            for (const c of new Set([codeUrl, lireStockage(CLE_JOUEUR)])) {
+                if (c && await revenir(c)) return;
+            }
+            ecrireStockage(CLE_JOUEUR, null);
+            afficher('ecranRejoindre');
+            afficherFormulaire();
+        }
+
+        async function revenir(c) {
+            try {
+                const fiche = (await get(ref(db, `parties/${c}/joueurs/${uid}`))).val();
+                if (!fiche) return false;
+                entrer(c);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        function entrer(c) {
+            code = c;
+            ecrireStockage(CLE_JOUEUR, c);
+            garderEcranAllume();
+            const base = `parties/${c}`;
+            get(ref(db, `${base}/meta`)).then(s => { enSoiree = !!s.val()?.soiree; rendre(); }).catch(() => {});
+            onValue(ref(db, `${base}/etat`), s => {
+                const avant = etat;
+                etat = s.val();
+                if (!etat) return partieTerminee(avant);
+                if (dossierAttendu(etat) !== MON_JEU) {
+                    location.replace(urlPage(dossierAttendu(etat), 'joueur', code));
+                    return;
+                }
+                suivreReponse();
+                rendre();
+            }, () => partieTerminee(etat));
+            onValue(ref(db, `${base}/joueurs/${uid}`), s => { moi = s.val(); rendre(); });
+            onValue(ref(db, `${base}/scores`), s => { scores = s.val() || {}; rendre(); });
+            onValue(ref(db, `${base}/resultats`), s => { resultats = s.val() || {}; rendre(); });
+            signalerPresence(c, uid);
+        }
+
+        function suivreReponse() {
+            const q = etat.phase === 'question' ? etat.q : null;
+            if (q === qSuivie) return;
+            if (arreterReponse) arreterReponse();
+            arreterReponse = null;
+            maReponse = undefined;
+            qSuivie = q;
+            if (q !== null) {
+                arreterReponse = onValue(ref(db, `parties/${code}/reponses/${q}/${uid}`), s => { maReponse = s.val(); rendre(); });
+            }
+        }
+
+        function partieTerminee(dernierEtat) {
+            ecrireStockage(CLE_JOUEUR, null);
+            if (dernierEtat && dernierEtat.phase === 'fin') return;
+            code = null;
+            afficher('ecranInfo');
+            $('ecranInfo').dataset.ton = '';
+            $('info').innerHTML = `<p class="grand-message">${enSoiree ? 'La soirée est terminée' : 'La partie est terminée'}</p>
+                <a class="btn btn-geant" href="joueur.html">Rejoindre une partie</a>`;
+        }
+
+        function rendreBandeaux() {
+            const html = `<span class="pastille" style="background:${echapper(moi.couleur)}"></span><span>${echapper(moi.pseudo)}</span>`;
+            document.querySelectorAll('.qui').forEach(q => { q.innerHTML = html; });
+            $('carteJoueur').innerHTML = `<span class="pastille" style="background:${echapper(moi.couleur)}"></span><span class="pseudo">${echapper(moi.pseudo)}</span>`;
+        }
+
+        let cleInfo = null;
+        function info(ton, html) {
+            afficher('ecranInfo');
+            if (cleInfo === ton + html) return false;
+            cleInfo = ton + html;
+            $('ecranInfo').dataset.ton = ton;
+            $('info').innerHTML = html;
+            $('info').querySelectorAll('[data-compte]').forEach(el => {
+                const cible = Number(el.dataset.compte);
+                const debut = performance.now();
+                const pas = t => {
+                    const p = Math.min((t - debut) / 900, 1);
+                    el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 3))).toLocaleString('fr-FR');
+                    if (p < 1) requestAnimationFrame(pas);
+                };
+                requestAnimationFrame(pas);
+            });
+            return true;
+        }
+
+        function vibrer(motif) {
+            if (navigator.vibrate) navigator.vibrate(motif);
+        }
+
+        const pts = n => `${n.toLocaleString('fr-FR')} ${n > 1 ? 'pts' : 'pt'}`;
+
+        function rendre() {
+            if (!etat || !moi || !code) return;
+            rendreBandeaux();
+            const total = scores[uid]?.total ?? 0;
+            const serie = scores[uid]?.serie ?? 0;
+            const q = etat.question;
+            if (etat.pauseDepuis && ['question', 'revelation', 'classement'].includes(etat.phase)) {
+                info('', `<p class="grand-message">Pause</p><p class="detail">La partie reprend dans un instant.</p>`);
+                return;
+            }
+            if (etat.phase === 'salle') {
+                afficher('ecranAttente');
+                $('detailAttente').textContent = etat.mode === 'proche'
+                    ? 'Mode « Le plus proche » : seul le plus proche marque. Garde l\'œil sur la TV.'
+                    : 'Mode Précision : plus tu es près, plus tu marques. Garde l\'œil sur la TV.';
+            } else if (etat.phase === 'question') {
+                if (refusQ === etat.q) {
+                    info('rate', `<p class="grand-message">Trop tard</p><p class="detail">Ta réponse est arrivée après la fin du chrono.</p>`);
+                } else if (maReponse === undefined) {
+                    return;
+                } else if (maReponse) {
+                    const u = q.type === 'date' ? '' : uniteDe(q);
+                    info('', `<div class="reponse-envoyee"><span class="nombre">${echapper(formaterValeur(maReponse.valeur, q))}</span><span class="unite">${echapper(u)}</span></div>
+                        <p class="grand-message">C'est noté</p><p class="detail">Regarde la TV : la règle va trancher.</p>
+                        ${etat.mode === 'proche' && serie > 0 ? `<p class="serie-tel"><i></i>Série en cours : ${serie} ${serie > 1 ? 'victoires' : 'victoire'}</p>` : ''}`);
+                } else {
+                    rendreSaisie();
+                }
+            } else if (etat.phase === 'revelation') {
+                rendreResultat(total);
+            } else if (etat.phase === 'classement') {
+                info('', `<p class="surtitre">Classement</p><p class="tres-grand">${ordinal(rangDe(uid, scores))}</p><p class="detail">${pts(total)}</p>`);
+            } else if (etat.phase === 'fin') {
+                const rang = rangDe(uid, scores);
+                const nb = Object.keys(scores).length || 1;
+                info(rang === 1 ? 'juste' : '', `<p class="surtitre">Fin de la partie</p>
+                    ${rang === 1 ? '<span class="tampon">Victoire</span>' : ''}<p class="tres-grand">${ordinal(rang)}</p>
+                    <p class="detail">sur ${nb} ${nb > 1 ? 'joueurs' : 'joueur'}, avec ${pts(total)}</p>
+                    ${enSoiree ? '<p class="detail">Retour au salon dans un instant.</p>' : ''}`);
+            }
+        }
+
+        function rendreResultat(total) {
+            const d = scores[uid]?.dernier;
+            const res = resultats[etat.q];
+            const q = etat.question;
+            if (!d || d.q !== etat.q || !res) return;
+            const laReponse = formaterValeur(res.reponse, q, true);
+            if (!d.repondu) {
+                const nouveau = info('rate', `<p class="grand-message">Pas de réponse</p><p class="detail">C'était ${echapper(laReponse)}.</p><p class="detail">Total : ${pts(total)}</p>`);
+                if (nouveau) vibrer(220);
+                return;
+            }
+            const bilan = `<div class="bilan">
+                <div><span class="etiquette">Toi</span><span class="nombre">${echapper(formaterValeur(d.valeur, q, true))}</span></div>
+                <div><span class="etiquette">Réponse</span><span class="nombre juste">${echapper(laReponse)}</span></div>
+                <div><span class="etiquette">Écart</span><span class="nombre">${d.ecart === 0 ? 'Pile !' : echapper(formaterEcart(d.ecart, q))}</span></div>
+            </div>`;
+            let html;
+            if (etat.mode === 'proche') {
+                const serie = scores[uid]?.serie ?? 0;
+                html = d.gagnant
+                    ? `<span class="tampon">Le plus proche</span><p class="tres-grand">+${d.points} ${d.points > 1 ? 'pts' : 'pt'}</p>${bilan}
+                        ${serie >= 2 ? `<p class="detail">Série de ${serie} victoires</p>` : ''}<p class="detail">Total : ${pts(total)}</p>`
+                    : `<p class="grand-message">Pas cette fois</p>${bilan}<p class="detail">Total : ${pts(total)}</p>`;
+            } else {
+                html = `${d.gagnant ? '<span class="tampon">Le plus proche</span>' : ''}
+                    <p class="tres-grand">+<span data-compte="${d.points}">0</span></p>${bilan}
+                    ${d.bonus ? `<p class="detail">${d.precision} pour la précision + ${d.bonus} pour le plus proche</p>` : ''}
+                    <p class="detail">Total : ${pts(total)}</p>`;
+            }
+            const nouveau = info(d.gagnant ? 'juste' : '', html);
+            if (nouveau) vibrer(d.gagnant ? [40, 60, 40] : 80);
+        }
+
+        // ---------- Saisie au pavé numérique ----------
+
+        function rendreSaisie() {
+            const q = etat.question;
+            if (qSaisie !== etat.q) {
+                qSaisie = etat.q;
+                saisie = '';
+                negatif = false;
+                $('questionTel').textContent = q.texte;
+                $('consigneTel').textContent = consigne(q);
+                $('uniteSaisie').textContent = q.type === 'date' ? '' : uniteDe(q);
+                // Les dates peuvent être avant J.-C. : la touche ± remplace « Effacer »
+                const gauche = q.type === 'date'
+                    ? '<button type="button" class="touche-texte" data-touche="signe">av. J.-C.</button>'
+                    : '<button type="button" class="touche-texte" data-touche="effacer">Effacer</button>';
+                $('pave').innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button type="button" data-touche="${n}">${n}</button>`).join('')
+                    + gauche + '<button type="button" data-touche="0">0</button>'
+                    + '<button type="button" class="touche-texte" data-touche="retour" aria-label="Effacer le dernier chiffre">⌫</button>'
+                    + '<button type="button" class="valider" data-touche="valider">Valider</button>';
+            }
+            afficher('ecranSaisie');
+            $('numJoueur').textContent = `Question ${Number(etat.q) + 1} / ${etat.total}`;
+            majAffichage();
+            ticJoueur();
+        }
+
+        function majAffichage() {
+            const q = etat.question;
+            const el = $('valeurSaisie');
+            el.classList.toggle('vide', !saisie);
+            if (!saisie) { el.textContent = '0'; return; }
+            const v = Number(saisie) * (negatif ? -1 : 1);
+            el.textContent = formaterValeur(v, q);
+            const signe = $('pave').querySelector('[data-touche="signe"]');
+            if (signe) signe.style.background = negatif ? 'var(--ocre)' : '';
+        }
+
+        $('pave').addEventListener('click', e => {
+            const touche = e.target.closest('[data-touche]')?.dataset.touche;
+            if (!touche || !etat || etat.phase !== 'question' || maReponse) return;
+            vibrer(15);
+            if (/^\d$/.test(touche)) {
+                if (saisie === '0') saisie = '';
+                if (saisie.length < 9) saisie += touche;
+            } else if (touche === 'retour') saisie = saisie.slice(0, -1);
+            else if (touche === 'effacer') saisie = '';
+            else if (touche === 'signe') negatif = !negatif;
+            else if (touche === 'valider') return valider();
+            majAffichage();
+        });
+
+        async function valider() {
+            if (!saisie) {
+                $('affichage').classList.remove('secoue');
+                $('affichage').offsetWidth;
+                $('affichage').classList.add('secoue');
+                return;
+            }
+            if (etat.pauseDepuis || maReponse) return;
+            const q = etat.q;
+            const valeur = Number(saisie) * (negatif ? -1 : 1);
+            vibrer(60);
+            maReponse = { valeur };
+            rendre();
+            try {
+                await set(ref(db, `parties/${code}/reponses/${q}/${uid}`), { valeur, a: serverTimestamp() });
+            } catch {
+                refusQ = q;
+                maReponse = null;
+                rendre();
+            }
+        }
+
+        function ticJoueur() {
+            if (!etat || etat.phase !== 'question') return;
+            const reste = etat.debut + etat.duree * 1000 - (etat.pauseDepuis || heureServeur());
+            const secondes = Math.max(0, Math.ceil(reste / 1000));
+            $('chronoJoueur').textContent = secondes;
+            $('chronoJoueur').classList.toggle('urgent', secondes <= 5);
+        }
+
+        setInterval(ticJoueur, 250);
+
+        $('btnQuitter').addEventListener('click', async () => {
+            ecrireStockage(CLE_JOUEUR, null);
+            await quitter(code, uid, moi?.couleur);
+            location.href = 'joueur.html';
+        });
+
+        demarrer();
+    </script>
+</body>
+</html>

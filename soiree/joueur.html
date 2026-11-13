@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#D8C7A3">
+    <title>Soirée — Game Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../commun.css">
+    <link rel="stylesheet" href="../telephone.css">
+    <style>
+        :root {
+            --jeu: var(--encre);
+        }
+
+        #ecranSalon.actif {
+            gap: 1.1rem;
+        }
+
+        .entete {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .entete .tampon {
+            font-size: 0.95rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: var(--encre);
+            box-shadow: none;
+            border: 0;
+        }
+
+        .entete .nb {
+            font-weight: 700;
+            color: var(--encre-douce);
+        }
+
+        .moi {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            text-align: center;
+            padding: 1.3rem 1rem;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            border-top: 0.8rem solid var(--ma-couleur);
+            box-shadow: var(--ombre-forte);
+        }
+
+        .moi .pseudo {
+            font-family: var(--police-titre);
+            font-size: 2.2rem;
+            line-height: 1.05;
+            word-break: break-word;
+        }
+
+        .moi .rang {
+            font-weight: 900;
+            color: var(--encre-douce);
+        }
+
+        .attente {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            text-align: center;
+        }
+
+        .attente .grand-message {
+            font-size: 2rem;
+        }
+
+        .attente .detail {
+            max-width: 18rem;
+            color: var(--encre-douce);
+        }
+
+        .historique {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .historique li {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            gap: 0.8rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            padding: 0.55em 0.8em;
+        }
+
+        .historique .resultat {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <section id="ecranChargement" class="ecran actif">
+        <div class="centre">
+            <p id="messageChargement" class="surtitre">Connexion…</p>
+        </div>
+    </section>
+
+    <section id="ecranRejoindre" class="ecran">
+        <form class="rejoindre" id="formRejoindre" autocomplete="off">
+            <h1 class="tampon">Soirée</h1>
+            <div class="champ">
+                <label for="champCode">Code affiché sur la TV</label>
+                <input type="text" id="champCode" maxlength="4" inputmode="text" autocapitalize="characters" spellcheck="false">
+            </div>
+            <div class="champ">
+                <label for="champPseudo">Ton pseudo</label>
+                <input type="text" id="champPseudo" maxlength="16" spellcheck="false">
+            </div>
+            <div class="champ">
+                <span class="etiquette-champ">Ta couleur</span>
+                <div class="palette" id="palette"></div>
+            </div>
+            <p id="erreurRejoindre" class="erreur" hidden></p>
+            <button type="submit" class="btn btn-geant" id="btnRejoindre">Rejoindre</button>
+        </form>
+    </section>
+
+    <section id="ecranSalon" class="ecran">
+        <div class="entete">
+            <span class="tampon" id="titreSoiree">Soirée</span>
+            <span class="nb" id="nbJoueurs"></span>
+        </div>
+        <div class="moi" id="moi"></div>
+        <div class="attente" id="attente"></div>
+        <ul class="historique" id="historique"></ul>
+        <button class="btn-lien" id="btnQuitter">Quitter la soirée</button>
+    </section>
+
+    <section id="ecranInfo" class="ecran">
+        <div class="centre" id="info"></div>
+    </section>
+
+    <script type="module">
+        import { db, connexion, echapper, lireStockage, ecrireStockage, ordinal, JEUX, CLE_JOUEUR,
+            brancherRejoindre, signalerPresence, quitter, garderEcranAllume, dossierAttendu, urlPage } from '../hub.js';
+        import { ref, get, onValue } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+        const $ = id => document.getElementById(id);
+
+        let uid = null;
+        let code = null;
+        let etat = null;
+        let moi = null;
+        let joueurs = {};
+        let soiree = {};
+        let afficherFormulaire = null;
+
+        function afficher(id) {
+            document.querySelectorAll('.ecran').forEach(e => e.classList.toggle('actif', e.id === id));
+        }
+
+        async function demarrer() {
+            try {
+                uid = await connexion();
+            } catch {
+                $('messageChargement').textContent = 'Pas de connexion. Vérifie le wifi puis recharge la page.';
+                return;
+            }
+            afficherFormulaire = brancherRejoindre(uid, entrer);
+            const codeUrl = (new URLSearchParams(location.search).get('code') || '').toUpperCase();
+            for (const c of new Set([codeUrl, lireStockage(CLE_JOUEUR)])) {
+                if (c && await revenir(c)) return;
+            }
+            ecrireStockage(CLE_JOUEUR, null);
+            afficher('ecranRejoindre');
+            afficherFormulaire();
+        }
+
+        async function revenir(c) {
+            try {
+                const fiche = (await get(ref(db, `parties/${c}/joueurs/${uid}`))).val();
+                if (!fiche) return false;
+                entrer(c);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        function entrer(c) {
+            code = c;
+            ecrireStockage(CLE_JOUEUR, c);
+            garderEcranAllume();
+            const base = `parties/${c}`;
+            onValue(ref(db, `${base}/etat`), s => {
+                etat = s.val();
+                if (!etat) return termine();
+                // Un jeu commence : le téléphone passe sur la page du jeu
+                if (dossierAttendu(etat) !== 'soiree') {
+                    location.replace(urlPage(dossierAttendu(etat), 'joueur', code));
+                    return;
+                }
+                rendre();
+            }, termine);
+            onValue(ref(db, `${base}/joueurs`), s => {
+                joueurs = s.val() || {};
+                moi = joueurs[uid] || null;
+                rendre();
+            });
+            onValue(ref(db, `${base}/soiree`), s => { soiree = s.val() || {}; rendre(); });
+            signalerPresence(c, uid);
+        }
+
+        function termine() {
+            ecrireStockage(CLE_JOUEUR, null);
+            code = null;
+            afficher('ecranInfo');
+            $('info').innerHTML = `<p class="grand-message">La soirée est terminée</p><p class="detail">Merci d'avoir joué !</p>
+                <a class="btn btn-geant" href="joueur.html">Rejoindre une soirée</a>`;
+        }
+
+        // Rang de soirée avec ex æquo
+        function monRang() {
+            const points = soiree.points || {};
+            const mes = points[uid] || 0;
+            return 1 + Object.keys(joueurs).filter(id => (points[id] || 0) > mes).length;
+        }
+
+        function rendre() {
+            if (!etat || !code) return;
+            if (!moi) {
+                // Fiche retirée (on a quitté depuis un autre onglet) : retour au formulaire
+                afficher('ecranRejoindre');
+                afficherFormulaire();
+                return;
+            }
+            afficher('ecranSalon');
+            const points = soiree.points?.[uid] || 0;
+            const parties = Object.values(soiree.parties || {});
+            const nb = Object.keys(joueurs).length;
+            $('titreSoiree').textContent = `Soirée ${code}`;
+            $('nbJoueurs').textContent = nb > 1 ? `${nb} joueurs` : '1 joueur';
+            $('moi').style.setProperty('--ma-couleur', moi.couleur);
+            const rang = monRang();
+            $('moi').innerHTML = `<span class="pseudo">${echapper(moi.pseudo)}</span>
+                <span class="rang">${parties.length ? `${ordinal(rang)} de la soirée · ${points} ${points > 1 ? 'points' : 'point'}` : 'Dans le salon'}</span>`;
+            if (etat.phase === 'finSoiree') {
+                $('attente').innerHTML = `<span class="surtitre">Fin de la soirée</span>
+                    ${rang === 1 ? '<span class="tampon">Champion</span>' : ''}
+                    <p class="tres-grand">${ordinal(rang)}</p>
+                    <p class="detail">avec ${points} points de soirée</p>`;
+            } else {
+                $('attente').innerHTML = `<span class="surtitre">Partie suivante</span>
+                    <p class="grand-message">La TV choisit le jeu</p>
+                    <p class="detail">Reste sur cette page : ton téléphone passera tout seul au jeu quand la partie commencera.</p>`;
+            }
+            $('historique').innerHTML = parties.slice().reverse().map(p => {
+                const gains = p.gains || {};
+                const mien = gains[uid];
+                const rangPartie = mien === undefined ? null : 1 + Object.values(gains).filter(g => g > mien).length;
+                return `<li><span>${echapper(JEUX[p.jeu]?.titre || p.jeu)}${p.titre ? ` · ${echapper(p.titre)}` : ''}</span>
+                    <span class="resultat">${rangPartie ? `${ordinal(rangPartie)} · +${mien}` : '—'}</span></li>`;
+            }).join('');
+        }
+
+        $('btnQuitter').addEventListener('click', async () => {
+            if (!confirm('Quitter la soirée ? Tes points de soirée seront perdus.')) return;
+            const c = code;
+            code = null;
+            ecrireStockage(CLE_JOUEUR, null);
+            await quitter(c, uid, moi?.couleur);
+            location.href = 'joueur.html';
+        });
+
+        demarrer();
+    </script>
+</body>
+</html>

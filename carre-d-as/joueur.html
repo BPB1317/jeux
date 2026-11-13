@@ -398,10 +398,12 @@
     </section>
 
     <script type="module">
-        import { db, connexion, heureServeur, COINS, formeSVG, PALETTE_JOUEURS, rangDe, ordinal, echapper, lireStockage, ecrireStockage, CLE_JOUEUR } from './commun.js';
-        import { ref, set, update, get, onValue, onDisconnect, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+        import { db, connexion, heureServeur, COINS, formeSVG, rangDe, ordinal, echapper, lireStockage, ecrireStockage, CLE_JOUEUR,
+            brancherRejoindre, signalerPresence, quitter, garderEcranAllume, dossierAttendu, urlPage } from './commun.js';
+        import { ref, set, get, onValue, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
         const $ = id => document.getElementById(id);
+        const MON_JEU = 'carre-d-as';
 
         let uid = null;
         let code = null;
@@ -412,14 +414,14 @@
         let qSuivie = null;
         let arreterReponse = null;
         let refusQ = null;      // question où la réponse est arrivée trop tard
-        let couleur = null;
-        let couleursPrises = new Set();
+        let enSoiree = false;
+        let afficherFormulaire = null;
 
         function afficher(id) {
             document.querySelectorAll('.ecran').forEach(e => e.classList.toggle('actif', e.id === id));
         }
 
-        // ---------- Démarrage : on retrouve sa partie après une veille ou un rechargement ----------
+        // ---------- Démarrage : on retrouve sa partie après une veille, un rechargement ou un changement de jeu ----------
 
         async function demarrer() {
             try {
@@ -429,10 +431,14 @@
                 $('messageChargement').textContent = 'Pas de connexion. Vérifie le wifi puis recharge la page.';
                 return;
             }
-            const enCours = lireStockage(CLE_JOUEUR);
-            if (enCours && await revenir(enCours)) return;
+            afficherFormulaire = brancherRejoindre(uid, entrer);
+            const codeUrl = (new URLSearchParams(location.search).get('code') || '').toUpperCase();
+            for (const c of new Set([codeUrl, lireStockage(CLE_JOUEUR)])) {
+                if (c && await revenir(c)) return;
+            }
             ecrireStockage(CLE_JOUEUR, null);
-            formulaire();
+            afficher('ecranRejoindre');
+            afficherFormulaire();
         }
 
         async function revenir(c) {
@@ -446,90 +452,6 @@
             }
         }
 
-        // ---------- Rejoindre ----------
-
-        function formulaire() {
-            afficher('ecranRejoindre');
-            const codeUrl = new URLSearchParams(location.search).get('code');
-            if (codeUrl) $('champCode').value = codeUrl.toUpperCase().slice(0, 4);
-            rendrePalette();
-            if ($('champCode').value.length === 4) {
-                suivreCouleurs($('champCode').value);
-                $('champPseudo').focus();
-            }
-        }
-
-        function rendrePalette() {
-            if (couleursPrises.has(couleur)) couleur = null;
-            if (!couleur) couleur = PALETTE_JOUEURS.find(c => !couleursPrises.has(c.hex))?.hex || PALETTE_JOUEURS[0].hex;
-            $('palette').innerHTML = PALETTE_JOUEURS.map(c => `
-                <button type="button" data-couleur="${c.hex}" style="background:${c.hex}" aria-label="${c.nom}"
-                    aria-pressed="${c.hex === couleur}" ${couleursPrises.has(c.hex) ? 'disabled' : ''}></button>`).join('');
-        }
-
-        // Couleurs réservées dans la partie, suivies en direct : une couleur prise se grise aussitôt
-        let arreterCouleurs = null;
-        function suivreCouleurs(c) {
-            if (arreterCouleurs) arreterCouleurs();
-            arreterCouleurs = null;
-            couleursPrises = new Set();
-            rendrePalette();
-            if (c.length !== 4) return;
-            arreterCouleurs = onValue(ref(db, `parties/${c}/couleurs`), s => {
-                const reservees = s.val() || {};
-                couleursPrises = new Set(Object.keys(reservees).filter(hex => reservees[hex] !== uid).map(hex => '#' + hex));
-                rendrePalette();
-            }, () => { couleursPrises = new Set(); rendrePalette(); });
-        }
-
-        $('champCode').addEventListener('input', e => {
-            e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
-            suivreCouleurs(e.target.value);
-        });
-
-        $('palette').addEventListener('click', e => {
-            const bouton = e.target.closest('[data-couleur]');
-            if (!bouton || bouton.disabled) return;
-            couleur = bouton.dataset.couleur;
-            rendrePalette();
-        });
-
-        $('formRejoindre').addEventListener('submit', async e => {
-            e.preventDefault();
-            const c = $('champCode').value;
-            const pseudo = $('champPseudo').value.trim();
-            const erreur = message => { $('erreurRejoindre').textContent = message; $('erreurRejoindre').hidden = false; };
-            $('erreurRejoindre').hidden = true;
-            if (c.length !== 4) return erreur('Le code fait 4 lettres.');
-            if (!pseudo) return erreur('Choisis un pseudo.');
-            $('btnRejoindre').disabled = true;
-            try {
-                const meta = (await get(ref(db, `parties/${c}/meta`))).val();
-                if (!meta) throw new Error();
-            } catch {
-                $('btnRejoindre').disabled = false;
-                return erreur('Aucune partie avec ce code.');
-            }
-            // La fiche et la réservation de la couleur sont écrites ensemble :
-            // si quelqu'un vient de prendre la couleur, Firebase refuse les deux.
-            // (La palette en direct peut changer « couleur » entre-temps : on garde celle demandée.)
-            const tentee = couleur;
-            try {
-                await update(ref(db, `parties/${c}`), {
-                    [`joueurs/${uid}`]: { pseudo, couleur: tentee, arrive: serverTimestamp(), enLigne: true },
-                    [`couleurs/${tentee.slice(1)}`]: uid
-                });
-                if (arreterCouleurs) arreterCouleurs();
-                arreterCouleurs = null;
-                entrer(c);
-            } catch {
-                $('btnRejoindre').disabled = false;
-                // La réservation de l'autre joueur arrive par le suivi en direct : on lui laisse un instant
-                for (let i = 0; i < 15 && !couleursPrises.has(tentee); i++) await new Promise(r => setTimeout(r, 100));
-                erreur(couleursPrises.has(tentee) ? 'Cette couleur vient d\'être prise, choisis-en une autre.' : 'Impossible de rejoindre la partie.');
-            }
-        });
-
         // ---------- Dans la partie ----------
 
         function entrer(c) {
@@ -537,21 +459,22 @@
             ecrireStockage(CLE_JOUEUR, c);
             garderEcranAllume();
             const base = `parties/${c}`;
+            get(ref(db, `${base}/meta`)).then(s => { enSoiree = !!s.val()?.soiree; rendre(); }).catch(() => {});
             onValue(ref(db, `${base}/etat`), s => {
                 const avant = etat;
                 etat = s.val();
                 if (!etat) return partieTerminee(avant);
+                // Soirée : retour au salon ou passage à un autre jeu
+                if (dossierAttendu(etat) !== MON_JEU) {
+                    location.replace(urlPage(dossierAttendu(etat), 'joueur', code));
+                    return;
+                }
                 suivreReponse();
                 rendre();
             }, () => partieTerminee(etat));
             onValue(ref(db, `${base}/joueurs/${uid}`), s => { moi = s.val(); rendre(); });
             onValue(ref(db, `${base}/scores`), s => { scores = s.val() || {}; rendre(); });
-            // Présence : la TV grise les joueurs déconnectés et ne les attend pas
-            onValue(ref(db, '.info/connected'), s => {
-                if (s.val() !== true) return;
-                onDisconnect(ref(db, `${base}/joueurs/${uid}/enLigne`)).set(false);
-                update(ref(db, `${base}/joueurs/${uid}`), { enLigne: true }).catch(() => {});
-            });
+            signalerPresence(c, uid);
         }
 
         function suivreReponse() {
@@ -572,7 +495,7 @@
             code = null;
             afficher('ecranInfo');
             $('ecranInfo').dataset.ton = '';
-            $('info').innerHTML = `<p class="grand-message">La partie est terminée</p>
+            $('info').innerHTML = `<p class="grand-message">${enSoiree ? 'La soirée est terminée' : 'La partie est terminée'}</p>
                 <a class="btn btn-geant" href="joueur.html">Rejoindre une partie</a>`;
         }
 
@@ -652,7 +575,8 @@
                 const nb = Object.keys(scores).length || 1;
                 info(rang === 1 ? 'juste' : '', `<p class="surtitre">Fin de la partie</p>
                     ${rang === 1 ? '<span class="tampon">Victoire</span>' : ''}<p class="tres-grand">${ordinal(rang)}</p>
-                    <p class="detail">sur ${nb} ${nb > 1 ? 'joueurs' : 'joueur'}, avec ${total} pts</p>`);
+                    <p class="detail">sur ${nb} ${nb > 1 ? 'joueurs' : 'joueur'}, avec ${total} pts</p>
+                    ${enSoiree ? '<p class="detail">Retour au salon dans un instant.</p>' : ''}`);
             }
         }
 
@@ -693,20 +617,8 @@
 
         $('btnQuitter').addEventListener('click', async () => {
             ecrireStockage(CLE_JOUEUR, null);
-            // On libère aussi sa couleur pour les suivants
-            try {
-                await update(ref(db, `parties/${code}`), { [`joueurs/${uid}`]: null, [`couleurs/${moi.couleur.slice(1)}`]: null });
-            } catch { /* tant pis */ }
+            await quitter(code, uid, moi?.couleur);
             location.href = 'joueur.html';
-        });
-
-        // L'écran reste allumé pendant la partie (si le téléphone le permet)
-        async function garderEcranAllume() {
-            try { await navigator.wakeLock?.request('screen'); } catch { /* non supporté */ }
-        }
-
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible' && code) garderEcranAllume();
         });
 
         demarrer();
