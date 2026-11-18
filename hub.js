@@ -1,4 +1,4 @@
-// Game Hub — code partagé par tous les jeux en ligne (Carré d'As, Le Juste Chiffre, Le Mot commun) et par le salon de soirée.
+// Game Hub — code partagé par tous les jeux en ligne (Carré d'As, Le Juste Chiffre, Le Mot commun, La Jauge) et par le salon de soirée.
 //
 // Une partie vit dans « parties/CODE » (voir regles.json). Une soirée est une partie qui dure :
 // les joueurs la rejoignent une fois, puis les jeux s'y succèdent. Entre deux jeux, l'état vaut { phase: 'salon' } ;
@@ -97,7 +97,8 @@ export function melanger(liste) {
 export const JEUX = {
     'carre-d-as': { titre: "Carré d'As", couleur: '#C8401F', texte: '#F1E7D0', resume: 'Quiz à 4 réponses' },
     'juste-chiffre': { titre: 'Le Juste Chiffre', couleur: '#2A4A7A', texte: '#F1E7D0', resume: 'Estimations sur la règle' },
-    'mot-commun': { titre: 'Le Mot commun', couleur: '#7E3A58', texte: '#F1E7D0', resume: 'Pense comme les autres' }
+    'mot-commun': { titre: 'Le Mot commun', couleur: '#7E3A58', texte: '#F1E7D0', resume: 'Pense comme les autres' },
+    'jauge': { titre: 'La Jauge', couleur: '#E3A21A', texte: '#221C15', resume: 'Un indice, une cible à viser' }
 };
 
 // Clé locale de la TV qui anime une soirée
@@ -143,7 +144,7 @@ export async function gainsDeSoiree(code, scores, jeu, titre) {
 // Fin d'un jeu : on vide ses données et la soirée revient au salon
 export function retourAuSalon(code) {
     return update(ref(db, `parties/${code}`), {
-        etat: { phase: 'salon' }, secret: null, scores: null, resultats: null, reponses: null
+        etat: { phase: 'salon' }, secret: null, prive: null, scores: null, resultats: null, reponses: null
     });
 }
 

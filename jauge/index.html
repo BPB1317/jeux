@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Jauge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../commun.css">
+    <style>
+        :root {
+            --jeu: var(--ocre);
+            --jeu-texte: var(--encre);
+            --papier: #FFFDF7;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .ecran {
+            display: none;
+            min-height: 100vh;
+            padding: clamp(1rem, 2.5vw, 2.5rem);
+        }
+
+        .ecran.actif {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .centre {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .erreur {
+            font-weight: 900;
+            color: var(--tomate);
+        }
+
+        /* ---------- Réglages ---------- */
+
+        .config {
+            width: min(40rem, 100%);
+            margin: 0 auto;
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+
+        .config-gauche,
+        .config-droite {
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+            min-width: 0;
+        }
+
+        @media (min-width: 1000px) {
+            .config {
+                width: min(76rem, 100%);
+                display: grid;
+                grid-template-columns: 1fr 1.1fr;
+                gap: 2.5rem;
+                align-items: start;
+            }
+
+            .config .themes {
+                max-height: calc(100vh - 21rem);
+            }
+        }
+
+        .config-ligne {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        #etatFichier {
+            font-weight: 700;
+            color: var(--encre-douce);
+        }
+
+        .regle-jeu {
+            font-weight: 700;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--encre-douce);
+            border-left: var(--trait) solid var(--jeu);
+            padding-left: 0.9rem;
+        }
+
+        .themes {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 46vh;
+            overflow-y: auto;
+            padding: 0.2rem 0.4rem 0.4rem 0;
+        }
+
+        .titre-theme {
+            font-family: var(--police-titre);
+            font-size: 1.25rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .sujets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding-left: 1rem;
+            border-left: var(--trait) solid var(--filet);
+        }
+
+        .theme {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-family: var(--police-texte);
+            font-size: 1rem;
+            font-weight: 900;
+            text-align: left;
+            color: var(--encre);
+            background: var(--papier);
+            border: var(--trait-fin) solid var(--encre);
+            border-radius: var(--rayon);
+            padding: 0.6em 0.8em;
+            cursor: pointer;
+        }
+
+        .theme:hover:not(:disabled):not(.choisi) { background: var(--kraft); }
+        .theme.choisi { color: var(--carton); background: var(--encre); }
+        .theme:disabled { opacity: 0.55; cursor: default; }
+        .theme-titre { flex: 1; }
+        .theme-compte { font-weight: 700; font-size: 0.85em; }
+
+        .a-completer {
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--encre);
+            background: var(--ocre);
+            border: 2px solid var(--encre);
+            padding: 0.2em 0.5em;
+        }
+
+        #btnRemiseAZero {
+            align-self: flex-start;
+            margin-top: -0.9rem;
+        }
+
+        .alerte {
+            font-weight: 900;
+            color: var(--encre);
+            background: var(--ocre);
+            border: var(--trait-fin) solid var(--encre);
+            box-shadow: 4px 4px 0 var(--encre);
+            padding: 0.6em 0.9em;
+        }
+
+        /* ---------- Salle d'attente ---------- */
+
+        .logo {
+            align-self: flex-start;
+            font-size: clamp(1.6rem, 2.6vw, 2.8rem);
+            color: var(--encre);
+            background: var(--jeu);
+        }
+
+        .salle {
+            flex: 1;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: clamp(1.5rem, 4vw, 5rem);
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .invitation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.9rem;
+            text-align: center;
+            padding: clamp(1.2rem, 2vw, 2.2rem);
+            transform: rotate(-1deg);
+        }
+
+        #code {
+            font-family: var(--police-titre);
+            font-size: clamp(3.5rem, 8vw, 8.5rem);
+            letter-spacing: 0.1em;
+            line-height: 1;
+            color: var(--encre);
+            background: var(--jeu);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 0.05em 0.25em 0.1em 0.35em;
+        }
+
+        #qr {
+            padding: 0.6rem;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+        }
+
+        #qr img,
+        #qr canvas {
+            display: block;
+            width: clamp(9rem, 17vw, 17rem);
+            height: auto;
+        }
+
+        .adresse {
+            font-size: clamp(0.9rem, 1.2vw, 1.3rem);
+            line-height: 1.35;
+        }
+
+        #lienJoueur { word-break: break-all; }
+
+        .arrivees h2 {
+            font-size: clamp(2rem, 3.6vw, 3.8rem);
+            margin-bottom: 0.6rem;
+        }
+
+        .arrivees .mode-annonce {
+            font-weight: 900;
+            font-size: clamp(1rem, 1.5vw, 1.6rem);
+            color: var(--encre-douce);
+            margin-bottom: 1.5rem;
+        }
+
+        #listeJoueurs {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem;
+            margin-bottom: 2.5rem;
+            min-height: 3rem;
+        }
+
+        #listeJoueurs li {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            font-weight: 900;
+            font-size: clamp(1.3rem, 2.2vw, 2.4rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            box-shadow: 4px 4px 0 var(--encre);
+            padding: 0.3em 0.7em;
+            transform: rotate(var(--penche, 0deg));
+        }
+
+        #listeJoueurs li.nouveau { animation: pose 0.45s cubic-bezier(.3, 1.6, .5, 1) both; }
+        #listeJoueurs li.hors-ligne { opacity: 0.4; }
+        #listeJoueurs .pastille { width: 1em; height: 1em; }
+
+        @keyframes pose {
+            from { transform: translateY(-1.5em) rotate(-8deg) scale(1.3); opacity: 0; }
+        }
+
+        /* ---------- En-tête des manches ---------- */
+
+        #ecranQuestion.actif,
+        #ecranRevelation.actif {
+            height: 100vh;
+            gap: clamp(0.8rem, 1.8vh, 1.5rem);
+        }
+
+        .entete {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: clamp(1rem, 1.6vw, 1.7rem);
+        }
+
+        .entete .mention { font-size: 1em; }
+        .entete .droite { margin-left: auto; font-weight: 900; }
+
+        .tag-aveugle {
+            color: var(--carton);
+            background: var(--encre);
+        }
+
+        #chrono {
+            font-family: var(--police-titre);
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            line-height: 1;
+            min-width: 1.8em;
+            text-align: center;
+            color: var(--carton);
+            background: var(--encre);
+            border: var(--trait) solid var(--encre);
+            padding: 0.08em 0.15em 0.12em;
+        }
+
+        #chrono.urgent {
+            background: var(--tomate);
+            animation: battement 1s ease-out infinite;
+        }
+
+        @keyframes battement {
+            0% { transform: scale(1.18); }
+            40%, 100% { transform: scale(1); }
+        }
+
+        .barre-temps {
+            height: clamp(0.7rem, 1.1vw, 1.1rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+        }
+
+        #barreTemps {
+            height: 100%;
+            background: var(--jeu);
+            transform-origin: left;
+            transition: transform 0.2s linear, background-color 0.3s;
+        }
+
+        #barreTemps.urgent { background: var(--tomate); }
+
+        /* ---------- La scène : à gauche l'indice, à droite la jauge ---------- */
+
+        .scene {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: minmax(16rem, 0.75fr) 1.6fr;
+            gap: clamp(1.5rem, 3vw, 3.5rem);
+            align-items: center;
+        }
+
+        .colonne {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1rem, 2.4vh, 1.8rem);
+            min-width: 0;
+        }
+
+        .qui-devine {
+            display: flex;
+            align-items: center;
+            gap: 0.6em;
+            font-weight: 900;
+            font-size: clamp(1.2rem, 2vw, 2.2rem);
+        }
+
+        .qui-devine .pastille { width: 1em; height: 1em; }
+
+        .carte-indice {
+            position: relative;
+            background: var(--papier);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre-forte);
+            padding: clamp(1rem, 2.5vh, 2rem) clamp(1.2rem, 2vw, 2.2rem) clamp(1.2rem, 3vh, 2.4rem);
+            transform: rotate(-1deg);
+            animation: apparait 0.45s cubic-bezier(.3, 1.4, .5, 1) both;
+        }
+
+        .carte-indice::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -1.1rem;
+            width: 7rem;
+            height: 2rem;
+            margin-left: -3.5rem;
+            background: rgba(227, 162, 26, 0.75);
+            border: 2px solid var(--encre);
+            transform: rotate(3deg);
+        }
+
+        .carte-indice .surtitre { display: block; margin-bottom: 0.4rem; }
+
+        #texteIndice {
+            font-family: var(--police-titre);
+            font-size: clamp(2.2rem, 4.6vw, 5.2rem);
+            line-height: 1.05;
+            overflow-wrap: anywhere;
+        }
+
+        .cherche {
+            font-weight: 900;
+            font-size: clamp(1.2rem, 2.2vw, 2.4rem);
+            line-height: 1.25;
+        }
+
+        .cherche .points-attente::after {
+            content: '…';
+            animation: clignote 1.4s steps(2) infinite;
+        }
+
+        @keyframes clignote { 50% { opacity: 0.2; } }
+
+        @keyframes apparait {
+            from { transform: translateY(0.6em) rotate(-1deg); opacity: 0; }
+        }
+
+        .consigne-tv {
+            font-weight: 900;
+            font-size: clamp(0.95rem, 1.4vw, 1.5rem);
+            color: var(--encre-douce);
+        }
+
+        #statuts {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        #statuts li {
+            display: flex;
+            align-items: center;
+            gap: 0.6em;
+            font-weight: 900;
+            font-size: clamp(1rem, 1.7vw, 1.8rem);
+            background: var(--carton);
+            border: var(--trait-fin) dashed var(--encre-douce);
+            padding: 0.3em 0.7em;
+            opacity: 0.55;
+            transition: opacity 0.3s;
+        }
+
+        #statuts li .nom { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        #statuts li .etat-curseur { font-size: 0.7em; color: var(--encre-douce); }
+
+        #statuts li.a-place {
+            opacity: 1;
+            border-style: solid;
+            border-color: var(--encre);
+            box-shadow: 4px 4px 0 var(--encre);
+            animation: pose 0.4s cubic-bezier(.3, 1.6, .5, 1) both;
+        }
+
+        #statuts li.a-place .etat-curseur { color: var(--sapin); }
+        #statuts .pastille { width: 1em; height: 1em; }
+
+        .zone-cadran {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.6rem, 1.5vh, 1.2rem);
+            min-width: 0;
+        }
+
+        .zone-cadran .cadran {
+            display: block;
+            width: 100%;
+            max-height: 62vh;
+        }
+
+        .poles {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .pole {
+            max-width: 48%;
+            font-weight: 900;
+            font-size: clamp(1rem, 1.8vw, 2rem);
+            line-height: 1.15;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            padding: 0.3em 0.7em;
+        }
+
+        .pole.gauche { color: var(--carton); background: var(--encre); box-shadow: 6px 6px 0 var(--encre-douce); }
+        .pole.droite { color: var(--encre); background: var(--ocre); text-align: right; }
+
+        .barre-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 1.5rem;
+            padding-left: 7rem;
+        }
+
+        .barre-actions .btn { white-space: nowrap; }
+
+        /* ---------- Révélation ---------- */
+
+        .indice-rappel {
+            display: flex;
+            align-items: baseline;
+            gap: 0.7em;
+            margin-left: auto;
+            background: var(--papier);
+            border: var(--trait-fin) solid var(--encre);
+            box-shadow: 4px 4px 0 var(--encre);
+            padding: 0.2em 0.8em;
+            max-width: 55%;
+        }
+
+        .indice-rappel .surtitre { font-size: 0.6em; }
+
+        #indiceRevele {
+            font-family: var(--police-titre);
+            font-size: clamp(1.4rem, 2.6vw, 2.8rem);
+            overflow-wrap: anywhere;
+        }
+
+        .scene-revelation {
+            grid-template-columns: 1.55fr minmax(18rem, 0.85fr);
+        }
+
+        .cadran .aiguille {
+            transform-origin: 380px 384px;
+        }
+
+        .revele .cadran .aiguille {
+            animation: aiguille 0.45s cubic-bezier(.3, 1.4, .5, 1) both;
+            animation-delay: calc(var(--i) * 0.3s);
+        }
+
+        @keyframes aiguille {
+            from { opacity: 0; transform: scale(0.4); }
+        }
+
+        .cadran .zones {
+            transform-origin: 380px 384px;
+        }
+
+        .revele .cadran .zones {
+            animation: ouvre 0.7s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation-delay: var(--delai-zones, 1s);
+        }
+
+        @keyframes ouvre {
+            from { opacity: 0; transform: scale(0.1); }
+        }
+
+        #listeResultats {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .ligne-res {
+            display: grid;
+            grid-template-columns: 1em 1fr auto;
+            align-items: center;
+            gap: 0.6em;
+            font-size: clamp(1rem, 1.6vw, 1.75rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            padding: 0.35em 0.7em;
+        }
+
+        .revele .ligne-res {
+            animation: glisse 0.4s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation-delay: calc(var(--delai-zones, 1s) + 0.5s + var(--i) * 0.12s);
+        }
+
+        .ligne-res .pastille { width: 1em; height: 1em; }
+        .ligne-res .nom { font-weight: 900; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ligne-res .detail-res { display: block; font-size: 0.68em; font-weight: 700; color: var(--encre-douce); }
+        .ligne-res .pts { font-family: var(--police-titre); font-size: 1.3em; color: var(--sapin); }
+        .ligne-res .pts.zero { color: var(--encre-douce); }
+
+        .ligne-res .pile {
+            font-size: 0.6em;
+            font-weight: 900;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--carton);
+            background: var(--tomate);
+            padding: 0.1em 0.45em;
+            margin-left: 0.4em;
+            vertical-align: middle;
+        }
+
+        /* Beaucoup de joueurs : lignes plus serrées pour que tout tienne à l'écran */
+        #listeResultats.serre { gap: 0.3rem; }
+        #listeResultats.serre .ligne-res { font-size: clamp(0.85rem, 1.2vw, 1.3rem); padding: 0.2em 0.6em; }
+        #statuts.serre { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem; }
+        #statuts.serre li { font-size: clamp(0.85rem, 1.25vw, 1.35rem); }
+
+        .ligne-res.eclaireur {
+            color: var(--carton);
+            background: var(--encre);
+            box-shadow: 6px 6px 0 var(--jeu);
+            margin-top: 0.4rem;
+        }
+
+        .ligne-res.eclaireur .detail-res { color: var(--filet); }
+        .ligne-res.eclaireur .pts { color: var(--jeu); }
+        .ligne-res.eclaireur .pastille { border-color: var(--carton); }
+
+        .manche-passee {
+            text-align: center;
+            font-weight: 900;
+            font-size: clamp(1.2rem, 2.2vw, 2.4rem);
+        }
+
+        .btn.decompte {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn.decompte::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 0.3em;
+            background: var(--encre);
+            transform-origin: left;
+            animation: decompte var(--delai, 3s) linear both;
+        }
+
+        @keyframes decompte {
+            from { transform: scaleX(0); }
+        }
+
+        /* ---------- Pause ---------- */
+
+        .bouton-pause {
+            position: fixed;
+            left: clamp(1rem, 2.5vw, 2.5rem);
+            bottom: clamp(1rem, 2.5vw, 2rem);
+            z-index: 50;
+            font-family: var(--police-texte);
+            font-weight: 900;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--encre-douce);
+            background: transparent;
+            border: var(--trait-fin) solid currentColor;
+            padding: 0.45em 0.9em;
+            opacity: 0.55;
+            cursor: pointer;
+        }
+
+        .bouton-pause:hover { opacity: 1; }
+
+        .voile-pause {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            background: rgba(34, 28, 21, 0.88);
+        }
+
+        .voile-pause .tampon { font-size: clamp(3rem, 8vw, 7rem); }
+        .voile-pause .surtitre { color: var(--carton); }
+
+        body.en-pause *,
+        body.en-pause *::after {
+            animation-play-state: paused !important;
+        }
+
+        .actions-tv {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* ---------- Classement et podium ---------- */
+
+        .ecran h2.grand {
+            font-size: clamp(2.2rem, 4.5vw, 4.5rem);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #listeClassement,
+        #autresFin {
+            list-style: none;
+            width: min(52rem, 100%);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .ligne-score {
+            animation: glisse 0.4s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation-delay: calc(var(--i, 0) * 0.1s);
+            display: grid;
+            grid-template-columns: 2.5em 1.1em 1fr auto auto;
+            align-items: center;
+            gap: 0.7em;
+            font-weight: 900;
+            font-size: clamp(1.3rem, 2.2vw, 2.4rem);
+            background: var(--carton);
+            border: var(--trait-fin) solid var(--encre);
+            padding: 0.35em 0.7em;
+        }
+
+        .ligne-score .pastille { width: 1em; height: 1em; }
+        .ligne-score .gain { font-size: 0.75em; color: var(--sapin); }
+        .ligne-score .rang { font-family: var(--police-titre); font-weight: 400; }
+        .ligne-score.premier { background: var(--ocre); box-shadow: var(--ombre); }
+
+        @keyframes glisse {
+            from { transform: translateX(-3em); opacity: 0; }
+        }
+
+        .autres {
+            text-align: center;
+            font-weight: 700;
+            font-size: clamp(1rem, 1.6vw, 1.6rem);
+            margin-top: 1rem;
+            color: var(--encre-douce);
+        }
+
+        .aveugle-bloc {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .aveugle-bloc .tampon {
+            font-size: clamp(2.5rem, 6vw, 6rem);
+            color: var(--carton);
+            background: var(--encre);
+        }
+
+        .aveugle-bloc p {
+            max-width: 46rem;
+            font-weight: 900;
+            font-size: clamp(1.1rem, 2vw, 2.1rem);
+            line-height: 1.35;
+        }
+
+        .podium {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: clamp(1rem, 2vw, 2rem);
+            margin-bottom: 2rem;
+        }
+
+        .marche {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            width: clamp(9rem, 18vw, 18rem);
+            font-weight: 900;
+            font-size: clamp(1.2rem, 2vw, 2.2rem);
+            text-align: center;
+        }
+
+        .marche .socle {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            font-family: var(--police-titre);
+            font-weight: 400;
+            font-size: 1.8em;
+            padding-top: 0.2em;
+            background: var(--carton);
+            border: var(--trait) solid var(--encre);
+            box-shadow: var(--ombre);
+            transform-origin: bottom;
+            animation: monte 0.5s cubic-bezier(.3, 1.3, .5, 1) both;
+            animation-delay: var(--delai);
+        }
+
+        .marche-1 .socle { height: 14rem; background: var(--ocre); }
+        .marche-2 .socle { height: 10rem; }
+        .marche-3 .socle { height: 7rem; background: var(--kraft-fonce); }
+
+        .marche .nom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            animation: tombe 0.5s cubic-bezier(.3, 1.6, .5, 1) both;
+            animation-delay: calc(var(--delai) + 0.4s);
+        }
+
+        .marche .nom .pastille { width: 1.6em; height: 1.6em; }
+        .marche-1 .nom { font-size: 1.35em; }
+        .marche .vainqueur { font-size: 0.6em; margin-bottom: 0.4rem; }
+        .marche .gain-soiree { font-size: 0.7em; color: var(--sapin); }
+
+        @keyframes monte { from { transform: scaleY(0); } }
+        @keyframes tombe { from { transform: translateY(-2em); opacity: 0; } }
+
+        #autresFin { animation: apparaitBas 0.5s 1.8s both; }
+
+        @keyframes apparaitBas {
+            from { transform: translateY(0.4em); opacity: 0; }
+        }
+
+        .confettis {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .confettis i {
+            position: absolute;
+            top: -2rem;
+            width: 0.8rem;
+            height: 1.2rem;
+            border: 2px solid var(--encre);
+            animation: confetti linear both;
+        }
+
+        @keyframes confetti {
+            to { transform: translateY(110vh) rotate(var(--tour)); }
+        }
+
+        @media (max-width: 800px) {
+            .salle { grid-template-columns: 1fr; }
+            .config-ligne { grid-template-columns: 1fr; }
+            .scene, .scene-revelation { grid-template-columns: 1fr; }
+            #ecranQuestion.actif, #ecranRevelation.actif { height: auto; }
+        }
+    </style>
+</head>
+<body>
+    <section id="ecranChargement" class="ecran actif">
+        <div class="centre">
+            <p id="messageChargement" class="surtitre">Connexion…</p>
+        </div>
+    </section>
+
+    <section id="ecranConfig" class="ecran">
+        <header class="barre-jeu">
+            <a class="retour-hub" id="retourConfig" href="../index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square" aria-hidden="true"><path d="M15 4l-8 8 8 8"/></svg>
+                Hub
+            </a>
+            <h1 class="titre-jeu">La Jauge</h1>
+            <span class="mention" id="badgeSoiree" hidden></span>
+        </header>
+        <div class="config carte">
+            <div class="config-gauche">
+                <div class="champ">
+                    <span class="etiquette-champ">Paquet d'échelles</span>
+                    <ul class="themes" id="listeThemes"></ul>
+                </div>
+                <div class="champ">
+                    <label for="fichierLocal">Ou un fichier de l'ordinateur</label>
+                    <input type="file" id="fichierLocal" accept=".json,application/json">
+                </div>
+            </div>
+            <div class="config-droite">
+                <p id="etatFichier">Chargement des échelles…</p>
+                <button type="button" class="btn-lien" id="btnRemiseAZero" hidden>Tout remettre en jeu</button>
+                <p id="alerteFichier" class="alerte" role="alert" hidden></p>
+                <p class="regle-jeu">À tour de rôle, un joueur voit en secret une cible sur la jauge et donne un indice. Les autres placent leur curseur : 3, 2 ou 1 point selon qu'ils tombent dans la zone rouge, ocre ou jaune. Celui qui fait deviner marque la moyenne des autres, +1 si tout le monde a marqué. Le dernier tour se joue à l'aveugle, classement caché.</p>
+                <div class="config-ligne">
+                    <div class="champ">
+                        <label for="tours">Tours</label>
+                        <select id="tours">
+                            <option value="1">1 tour</option>
+                            <option value="2" selected>2 tours</option>
+                            <option value="3">3 tours</option>
+                        </select>
+                    </div>
+                    <div class="champ">
+                        <label for="dureeIndice">Temps pour l'indice</label>
+                        <select id="dureeIndice">
+                            <option value="60">60 secondes</option>
+                            <option value="90" selected>90 secondes</option>
+                            <option value="120">2 minutes</option>
+                        </select>
+                    </div>
+                    <div class="champ">
+                        <label for="dureeCurseur">Temps pour viser</label>
+                        <select id="dureeCurseur">
+                            <option value="20">20 secondes</option>
+                            <option value="30" selected>30 secondes</option>
+                            <option value="45">45 secondes</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="regle-jeu" id="aideTours">Un tour : chaque joueur fait deviner une fois.</p>
+                <button id="btnCreer" class="btn btn-geant" disabled>Créer la partie</button>
+                <p id="erreurConfig" class="erreur" hidden></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="ecranSalle" class="ecran">
+        <h1 class="tampon logo">La Jauge</h1>
+        <div class="salle">
+            <div class="invitation carte">
+                <p class="surtitre">Scanne pour jouer</p>
+                <div id="qr"></div>
+                <p class="adresse">ou va sur <strong id="lienJoueur"></strong><br>et entre le code</p>
+                <div id="code"></div>
+            </div>
+            <div class="arrivees">
+                <h2 id="nbJoueurs">Personne pour l'instant</h2>
+                <p class="mode-annonce" id="annonceMode"></p>
+                <ul id="listeJoueurs"></ul>
+                <button class="btn btn-geant" data-action="suivant" id="btnLancer" disabled>Lancer la partie</button>
+                <p class="erreur" id="erreurSalle" hidden>Impossible de lancer la manche. As-tu bien publié les nouvelles règles de sécurité (regles.json) ?</p>
+            </div>
+        </div>
+        <div class="actions-tv">
+            <button class="btn-lien" data-action="son"></button>
+            <button class="btn-lien" data-action="abandonner" id="btnAbandonSalle">Abandonner la partie</button>
+        </div>
+    </section>
+
+    <section id="ecranQuestion" class="ecran">
+        <div class="entete">
+            <span class="mention" id="numManche"></span>
+            <span class="mention tag-aveugle" id="tagAveugle" hidden>Tour final à l'aveugle</span>
+            <span class="droite" id="compteur"></span>
+            <span id="chrono"></span>
+        </div>
+        <div class="barre-temps"><div id="barreTemps"></div></div>
+        <div class="scene">
+            <div class="colonne">
+                <div class="qui-devine" id="quiDevine"></div>
+                <div id="blocCherche">
+                    <p class="cherche"><span id="nomCherche"></span> choisit son échelle et cherche un indice<span class="points-attente"></span></p>
+                    <p class="consigne-tv">Pas un mot, pas un geste : la cible est sur son téléphone.</p>
+                </div>
+                <div id="blocIndice" hidden>
+                    <div class="carte-indice" id="carteIndice"><span class="surtitre">Indice</span><h2 id="texteIndice"></h2></div>
+                </div>
+                <div id="blocStatuts" hidden>
+                    <p class="consigne-tv">Placez votre curseur sur votre téléphone.</p>
+                    <ul id="statuts"></ul>
+                </div>
+            </div>
+            <div class="zone-cadran">
+                <div id="cadranQuestion"></div>
+                <div class="poles" id="polesQuestion" hidden>
+                    <span class="pole gauche" id="poleGaucheQ"></span>
+                    <span class="pole droite" id="poleDroiteQ"></span>
+                </div>
+            </div>
+        </div>
+        <div class="barre-actions">
+            <button class="btn-lien" data-action="passer" id="btnPasser">Passer la manche</button>
+            <button class="btn btn-small" data-action="suivant" id="btnReveler" hidden>Révéler maintenant</button>
+        </div>
+    </section>
+
+    <section id="ecranRevelation" class="ecran">
+        <div class="entete">
+            <span class="mention" id="numRevelation"></span>
+            <span class="mention tag-aveugle" id="tagAveugleR" hidden>Tour final à l'aveugle</span>
+            <span class="indice-rappel" id="blocIndiceRevele"><span class="surtitre">Indice</span><span id="indiceRevele"></span></span>
+        </div>
+        <div class="scene scene-revelation" id="sceneRevelation">
+            <div class="zone-cadran">
+                <div id="cadranRevelation"></div>
+                <div class="poles" id="polesRevelation">
+                    <span class="pole gauche" id="poleGaucheR"></span>
+                    <span class="pole droite" id="poleDroiteR"></span>
+                </div>
+            </div>
+            <div class="colonne">
+                <ol id="listeResultats"></ol>
+            </div>
+        </div>
+        <p class="manche-passee" id="manchePassee" hidden></p>
+        <div class="barre-actions">
+            <button class="btn btn-geant decompte" data-action="suivant" id="btnResultat">Classement</button>
+        </div>
+    </section>
+
+    <section id="ecranClassement" class="ecran">
+        <div id="blocClassement">
+            <h2 class="grand">Classement</h2>
+            <ol id="listeClassement"></ol>
+            <p id="autresClassement" class="autres"></p>
+        </div>
+        <div class="aveugle-bloc" id="blocAveugle" hidden>
+            <span class="tampon">À l'aveugle</span>
+            <p id="texteAveugle"></p>
+        </div>
+        <div class="actions-tv">
+            <button class="btn-lien" data-action="abandonner">Abandonner la partie</button>
+            <button class="btn btn-geant" data-action="suivant" id="btnClassement"></button>
+        </div>
+    </section>
+
+    <section id="ecranFin" class="ecran">
+        <div class="confettis" id="confettis" aria-hidden="true"></div>
+        <h2 class="grand">Le podium</h2>
+        <div class="podium" id="podium"></div>
+        <ol id="autresFin"></ol>
+        <div class="actions-tv">
+            <button class="btn btn-geant" data-action="abandonner" id="btnFin">Nouvelle partie</button>
+        </div>
+    </section>
+
+    <button id="btnPause" class="bouton-pause" data-action="pause" hidden>Pause</button>
+    <div id="voilePause" class="voile-pause" hidden>
+        <span class="tampon">Pause</span>
+        <button class="btn btn-geant" data-action="pause">Reprendre</button>
+        <p class="surtitre">ou touche P</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module">
+        import { db, connexion, heureServeur, genererCode, classementAvecRangs, echapper, melanger, lireStockage, ecrireStockage,
+            dossierAttendu, urlPage, gainsDeSoiree, retourAuSalon } from '../hub.js';
+        import { ref, set, update, get, remove, onValue, serverTimestamp, query, orderByChild, endAt } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+        import { cadran, pointsDevineur, pointsEclaireur, tirerCibles } from './regles.js';
+
+        const $ = id => document.getElementById(id);
+        const MON_JEU = 'jauge';
+        const CLE_HOTE = 'jauge.hote';
+
+        let uid = null;
+        let code = null;
+        let enSoiree = false;
+        let soiree = {};
+        let banque = [];        // échelles du paquet : [[gauche, droite]…]
+        let secret = {};        // { banque, fichier, ordre, echelles, manches }
+        let etat = null;
+        let joueurs = {};
+        let scores = {};
+        let resultats = {};
+        let reponses = {};
+        let horsLigneDepuis = {};
+        let qEcoutee = null;
+        let arreterReponses = null;
+        let derniereAction = null;
+        let qrAffiche = null;
+        let cleEcran = null;
+        let joueursVus = null;
+        let dernierTic = null;
+
+        function afficher(id) {
+            document.querySelectorAll('.ecran').forEach(e => e.classList.toggle('actif', e.id === id));
+        }
+
+        // ---------- Sons : synthétisés avec WebAudio ----------
+
+        const son = {
+            actif: lireStockage('carreDAs.son') !== 'non',
+            ctx: null,
+            debloquer() {
+                if (!this.ctx) {
+                    try { this.ctx = new AudioContext(); } catch { return; }
+                }
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            },
+            note(freq, debut, duree, type = 'triangle', volume = 0.12) {
+                if (!this.actif || !this.ctx) return;
+                const t = this.ctx.currentTime + debut;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(volume, t);
+                gain.gain.exponentialRampToValueAtTime(0.0001, t + duree);
+                osc.connect(gain).connect(this.ctx.destination);
+                osc.start(t);
+                osc.stop(t + duree);
+            },
+            arrivee() { this.note(660, 0, 0.12); this.note(990, 0.08, 0.18); },
+            manche() { [392, 523].forEach((f, k) => this.note(f, k * 0.1, 0.2)); },
+            indice() { [523, 659, 784].forEach((f, k) => this.note(f, k * 0.08, 0.2)); },
+            reponse() { this.note(880, 0, 0.08, 'square', 0.04); },
+            tic(dernier) { this.note(dernier ? 880 : 1320, 0, 0.06, 'square', 0.05); },
+            aiguilles(nb) { for (let k = 0; k < nb; k++) this.note(440 + k * 60, k * 0.3, 0.1, 'square', 0.04); },
+            zones() { this.note(330, 0, 0.12, 'sawtooth', 0.04); this.note(660, 0.1, 0.12, 'sawtooth', 0.04); [784, 1047].forEach((f, k) => this.note(f, 0.25 + k * 0.1, 0.25)); },
+            rate() { this.note(311, 0, 0.3, 'sawtooth', 0.05); },
+            classement() { [392, 494, 587].forEach((f, k) => this.note(f, k * 0.06, 0.15, 'triangle', 0.08)); },
+            podium(place) { this.note([0, 784, 587, 494][place], 0, 0.35); },
+            fanfare() { [523, 659, 784, 1047, 784, 1047].forEach((f, k) => this.note(f, k * 0.13, k === 5 ? 0.8 : 0.16)); }
+        };
+
+        function majBoutonSon() {
+            document.querySelectorAll('[data-action="son"]').forEach(b => { b.textContent = son.actif ? 'Son : activé' : 'Son : coupé'; });
+        }
+
+        majBoutonSon();
+
+        function erreurFatale(message) {
+            afficher('ecranChargement');
+            $('messageChargement').textContent = message;
+        }
+
+        // ---------- Démarrage ----------
+
+        async function demarrer() {
+            try {
+                uid = await connexion();
+            } catch {
+                erreurFatale('Connexion à Firebase impossible. Vérifie internet puis recharge la page.');
+                return;
+            }
+            const codeSoiree = new URLSearchParams(location.search).get('soiree');
+            if (codeSoiree) return ouvrirSoiree(codeSoiree.toUpperCase());
+            const enCours = lireStockage(CLE_HOTE);
+            if (enCours && await reprendre(enCours)) return;
+            ecrireStockage(CLE_HOTE, null);
+            preparerConfig();
+        }
+
+        async function lireSecret(c) {
+            secret = (await get(ref(db, `parties/${c}/secret`))).val() || {};
+            cleBanque = secret.fichier || null;
+            banque = secret.banque || [];
+        }
+
+        async function reprendre(c) {
+            try {
+                const meta = (await get(ref(db, `parties/${c}/meta`))).val();
+                if (!meta || meta.hote !== uid || meta.soiree) return false;
+                await lireSecret(c);
+                code = c;
+                ecouter();
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        async function ouvrirSoiree(c) {
+            try {
+                const meta = (await get(ref(db, `parties/${c}/meta`))).val();
+                if (!meta || meta.hote !== uid || !meta.soiree) throw new Error();
+                const etatSoiree = (await get(ref(db, `parties/${c}/etat`))).val();
+                code = c;
+                enSoiree = true;
+                const dossier = dossierAttendu(etatSoiree);
+                if (dossier === MON_JEU) {
+                    await lireSecret(c);
+                    ecouter();
+                } else if (dossier === 'soiree') {
+                    $('retourConfig').href = urlPage('soiree', 'tv', c);
+                    $('retourConfig').lastChild.textContent = ' Salon';
+                    $('btnCreer').textContent = 'Lancer la partie';
+                    $('badgeSoiree').textContent = `Soirée ${c}`;
+                    $('badgeSoiree').hidden = false;
+                    preparerConfig();
+                } else {
+                    location.replace(urlPage(dossier, 'tv', c));
+                }
+            } catch {
+                erreurFatale('Cette soirée est introuvable. Relance-la depuis le hub.');
+            }
+        }
+
+        // ---------- Réglages ----------
+
+        let paquets = [];
+        let paquetChoisi = null;
+        let cleBanque = null;
+
+        async function preparerConfig() {
+            afficher('ecranConfig');
+            majAideTours();
+            try {
+                const liste = await (await fetch('echelles/index.json')).json();
+                const aCharger = liste.flatMap(e => e.sujets
+                    ? e.sujets.map(s => ({ ...s, groupe: e.theme }))
+                    : [{ ...e, groupe: 'Autres' }]);
+                paquets = await Promise.all(aCharger.map(async s => {
+                    const url = new URL('echelles/' + s.fichier, location.href);
+                    const paquet = { groupe: s.groupe, titre: s.titre, cle: 'liste:' + s.fichier, banque: [] };
+                    try {
+                        paquet.banque = validerEchelles(await (await fetch(url)).json());
+                    } catch (e) {
+                        paquet.erreur = e instanceof SyntaxError || !e.message ? 'Fichier illisible.' : e.message;
+                    }
+                    return paquet;
+                }));
+                choisirPaquet(paquets.find(s => !s.erreur) || null);
+            } catch {
+                $('etatFichier').textContent = 'Impossible de lire la liste des échelles (echelles/index.json).';
+            }
+        }
+
+        function majAideTours() {
+            const t = Number($('tours').value);
+            $('aideTours').textContent = t === 1
+                ? 'Un tour : chaque joueur fait deviner une fois. Pas de tour à l\'aveugle.'
+                : `${t} tours : chaque joueur fait deviner ${t} fois. À 5 joueurs, ${5 * t} manches. Le dernier tour se joue classement caché.`;
+        }
+
+        function choisirPaquet(paquet) {
+            paquetChoisi = paquet;
+            banque = paquet && !paquet.erreur ? paquet.banque : [];
+            cleBanque = paquet ? paquet.cle : null;
+            rendrePaquets();
+            $('btnCreer').disabled = banque.length < 2;
+        }
+
+        // Échelles déjà jouées sur cette TV : on les garde pour la fin
+        const clePosees = cle => `jauge.posees.${cle}`;
+        const idEchelle = e => `${e[0]}|${e[1]}`.trim().toLowerCase();
+
+        function lirePosees(cle) {
+            try { return new Set(JSON.parse(lireStockage(clePosees(cle)) || '[]')); } catch { return new Set(); }
+        }
+
+        function ecrirePosees(cle, posees) {
+            ecrireStockage(clePosees(cle), posees.size ? JSON.stringify([...posees]) : null);
+        }
+
+        const neufsDe = s => { const p = lirePosees(s.cle); return s.banque.filter(e => !p.has(idEchelle(e))); };
+        const SEUIL_ALERTE = 12;
+        const aCompleter = s => !s.erreur && neufsDe(s).length < SEUIL_ALERTE;
+
+        function rendrePaquets() {
+            const groupes = [...new Set(paquets.map(s => s.groupe))];
+            $('listeThemes').innerHTML = groupes.map(groupe => {
+                const siens = paquets.filter(s => s.groupe === groupe);
+                return `<li>
+                    <div class="titre-theme">${echapper(groupe)}</div>
+                    <ul class="sujets">${siens.map(s => boutonPaquet(s, paquets.indexOf(s))).join('')}</ul>
+                </li>`;
+            }).join('');
+            majEtatFichier();
+        }
+
+        function boutonPaquet(s, i) {
+            if (s.erreur) {
+                return `<li><button type="button" class="theme" disabled>
+                    <span class="theme-titre">${echapper(s.titre)}</span><span class="theme-compte">${echapper(s.erreur)}</span>
+                </button></li>`;
+            }
+            const choisi = s === paquetChoisi;
+            return `<li><button type="button" class="theme ${choisi ? 'choisi' : ''}" data-paquet="${i}" aria-pressed="${choisi}">
+                <span class="theme-titre">${echapper(s.titre)}</span>
+                ${aCompleter(s) ? '<span class="a-completer">À compléter</span>' : ''}
+                <span class="theme-compte">${neufsDe(s).length} / ${s.banque.length}</span>
+            </button></li>`;
+        }
+
+        function majEtatFichier() {
+            $('btnRemiseAZero').hidden = true;
+            $('alerteFichier').hidden = true;
+            if (!paquetChoisi) return;
+            if (paquetChoisi.erreur) {
+                $('etatFichier').textContent = paquetChoisi.erreur;
+                return;
+            }
+            const neufs = neufsDe(paquetChoisi).length;
+            $('etatFichier').textContent = (neufs === banque.length
+                ? `${banque.length} échelles dans ce paquet, aucune encore jouée.`
+                : `${banque.length} échelles dans ce paquet, dont ${neufs} jamais jouées.`) + ' Celui qui fait deviner choisit entre 2 échelles à chaque manche.';
+            $('btnRemiseAZero').hidden = neufs === banque.length;
+            if (neufs < SEUIL_ALERTE) {
+                $('alerteFichier').textContent = neufs === 0
+                    ? `Toutes les échelles « ${paquetChoisi.titre} » ont été jouées : la prochaine partie les remettra en jeu. Pense à en ajouter.`
+                    : `Plus que ${neufs} ${neufs > 1 ? 'échelles neuves' : 'échelle neuve'} en « ${paquetChoisi.titre} » : pense à en ajouter.`;
+                $('alerteFichier').hidden = false;
+            }
+        }
+
+        function marquerPosee(echelle) {
+            if (!cleBanque || !echelle) return;
+            const posees = lirePosees(cleBanque);
+            posees.add(idEchelle(echelle));
+            ecrirePosees(cleBanque, posees);
+        }
+
+        // nb échelles, les neuves d'abord ; s'il n'y en a pas assez, on remet tout en jeu, puis on recycle
+        function choisirEchelles(nb) {
+            const neufs = melanger(neufsDe({ cle: cleBanque, banque }));
+            let liste = neufs.slice(0, nb);
+            if (liste.length < nb) {
+                if (cleBanque) ecrirePosees(cleBanque, new Set());
+                const pris = new Set(liste.map(idEchelle));
+                liste = liste.concat(melanger(banque.filter(e => !pris.has(idEchelle(e)))));
+                while (liste.length < nb) liste = liste.concat(melanger(banque.slice()));
+            }
+            return liste.slice(0, nb);
+        }
+
+        // Un paquet : une liste d'échelles, chacune [« extrémité gauche », « extrémité droite »]
+        function validerEchelles(donnees) {
+            if (!Array.isArray(donnees) || !donnees.length) throw new Error('Le fichier doit contenir une liste d\'échelles.');
+            const vus = new Set();
+            return donnees.map((e, i) => {
+                const paire = Array.isArray(e) ? e : [e?.gauche, e?.droite];
+                if (paire.length !== 2 || paire.some(t => typeof t !== 'string' || !t.trim())) {
+                    throw new Error(`Échelle ${i + 1} mal formée : il faut deux extrémités, comme ["Froid", "Chaud"].`);
+                }
+                return [paire[0].trim(), paire[1].trim()];
+            }).filter(e => !vus.has(idEchelle(e)) && vus.add(idEchelle(e)));
+        }
+
+        async function creerPartie() {
+            $('btnCreer').disabled = true;
+            $('erreurConfig').hidden = true;
+            const tours = Number($('tours').value);
+            const dureeIndice = Number($('dureeIndice').value);
+            const dureeCurseur = Number($('dureeCurseur').value);
+            const nouveauSecret = cleBanque ? { banque, fichier: cleBanque } : { banque };
+            const etatInitial = { jeu: MON_JEU, sujet: paquetChoisi?.titre || '', phase: 'salle', tours, dureeIndice, dureeCurseur };
+            if (enSoiree) {
+                try {
+                    await update(ref(db, `parties/${code}`), { secret: nouveauSecret, prive: null, scores: null, resultats: null, reponses: null, etat: etatInitial });
+                    secret = nouveauSecret;
+                    ecouter();
+                } catch {
+                    $('erreurConfig').textContent = 'Impossible de lancer la partie. As-tu bien publié les nouvelles règles de sécurité ?';
+                    $('erreurConfig').hidden = false;
+                    $('btnCreer').disabled = false;
+                }
+                return;
+            }
+            nettoyerVieillesParties();
+            for (let essai = 0; essai < 10; essai++) {
+                const c = genererCode();
+                try {
+                    await set(ref(db, `parties/${c}`), {
+                        meta: { hote: uid, creeLe: serverTimestamp(), duree: dureeCurseur },
+                        secret: nouveauSecret,
+                        etat: etatInitial
+                    });
+                    code = c;
+                    secret = nouveauSecret;
+                    ecouter();
+                    return;
+                } catch { /* code occupé, on en tire un autre */ }
+            }
+            $('erreurConfig').textContent = 'Impossible de créer la partie. As-tu bien publié les règles de sécurité ?';
+            $('erreurConfig').hidden = false;
+            $('btnCreer').disabled = false;
+        }
+
+        async function nettoyerVieillesParties() {
+            try {
+                const limite = heureServeur() - 86400000 - 120000;
+                const vieilles = await get(query(ref(db, 'parties'), orderByChild('meta/creeLe'), endAt(limite)));
+                const suppressions = {};
+                vieilles.forEach(p => { suppressions[p.key] = null; });
+                if (Object.keys(suppressions).length) await update(ref(db, 'parties'), suppressions);
+            } catch { /* on réessaiera */ }
+        }
+
+        // ---------- Écoute de la partie ----------
+
+        function ecouter() {
+            if (!enSoiree) ecrireStockage(CLE_HOTE, code);
+            const base = `parties/${code}`;
+            onValue(ref(db, `${base}/etat`), s => {
+                etat = s.val();
+                if (!etat) { ecrireStockage(CLE_HOTE, null); location.reload(); return; }
+                if (dossierAttendu(etat) !== MON_JEU) { location.replace(urlPage(dossierAttendu(etat), 'tv', code)); return; }
+                suivreReponses();
+                rendre();
+            });
+            onValue(ref(db, `${base}/joueurs`), s => {
+                joueurs = s.val() || {};
+                Object.entries(joueurs).forEach(([id, j]) => {
+                    if (j.enLigne !== false) delete horsLigneDepuis[id];
+                    else if (!horsLigneDepuis[id]) horsLigneDepuis[id] = Date.now();
+                });
+                rendre();
+            });
+            onValue(ref(db, `${base}/scores`), s => { scores = s.val() || {}; rendre(); });
+            onValue(ref(db, `${base}/resultats`), s => { resultats = s.val() || {}; rendre(); });
+            if (enSoiree) {
+                onValue(ref(db, `${base}/soiree`), s => { soiree = s.val() || {}; rendre(); });
+                $('btnAbandonSalle').textContent = 'Retour au salon';
+            }
+        }
+
+        function suivreReponses() {
+            const q = etat.phase === 'question' ? etat.q : null;
+            if (q === qEcoutee) return;
+            if (arreterReponses) arreterReponses();
+            arreterReponses = null;
+            reponses = {};
+            qEcoutee = q;
+            if (q !== null) {
+                arreterReponses = onValue(ref(db, `parties/${code}/reponses/${q}`), s => {
+                    const avant = Object.keys(reponses).length;
+                    reponses = s.val() || {};
+                    if (etat?.etape === 'curseur' && Object.keys(reponses).length > avant) son.reponse();
+                    rendre();
+                });
+            }
+        }
+
+        function rendre() {
+            if (!etat) return;
+            if (etat.phase === 'salle') rendreSalle();
+            else if (etat.phase === 'question') rendreQuestion();
+            else if (etat.phase === 'revelation') rendreRevelation();
+            else if (etat.phase === 'classement') rendreClassement();
+            else if (etat.phase === 'fin') rendreFin();
+            rendrePause();
+        }
+
+        function pastille(couleur) {
+            return `<span class="pastille" style="background:${echapper(couleur)}"></span>`;
+        }
+
+        const joueur = id => joueurs[id] || { pseudo: '?', couleur: '#CDBB94' };
+        const initiale = id => (Array.from(joueur(id).pseudo.trim())[0] || '?').toUpperCase();
+        const parArrivee = ids => ids.slice().sort((a, b) => (joueurs[a]?.arrive || 0) - (joueurs[b]?.arrive || 0));
+        const present = id => !!joueurs[id] && (!horsLigneDepuis[id] || Date.now() - horsLigneDepuis[id] < 10000);
+        // Celui qui fait deviner a le droit de chercher son indice ailleurs un moment (téléphone en veille, autre appli) :
+        // on ne passe sa manche qu'après 30 s de déconnexion, ou s'il a quitté la partie
+        const absentDepuis = (id, ms) => !joueurs[id] || (!!horsLigneDepuis[id] && Date.now() - horsLigneDepuis[id] >= ms);
+        const pts = n => `${n} ${n > 1 ? 'pts' : 'pt'}`;
+
+        function rendreSalle() {
+            afficher('ecranSalle');
+            $('code').textContent = code;
+            const url = enSoiree ? urlPage('soiree', 'joueur', code) : new URL(`joueur.html?code=${code}`, location.href).href;
+            if (qrAffiche !== url) {
+                $('qr').innerHTML = '';
+                new QRCode($('qr'), { text: url, width: 512, height: 512, colorDark: '#221C15', colorLight: '#F1E7D0', correctLevel: QRCode.CorrectLevel.M });
+                $('lienJoueur').textContent = url.replace(/^https?:\/\//, '').replace(/\?.*$/, '');
+                qrAffiche = url;
+            }
+            const liste = Object.entries(joueurs).sort(([, a], [, b]) => (a.arrive || 0) - (b.arrive || 0));
+            const n = liste.length;
+            $('annonceMode').textContent = `${etat.tours} ${etat.tours > 1 ? 'tours' : 'tour'} : chacun fait deviner ${etat.tours > 1 ? `${etat.tours} fois` : 'une fois'}`
+                + (n >= 2 ? ` · ${etat.tours * n} manches` : '');
+            const premiers = joueursVus === null;
+            if (premiers) joueursVus = new Set();
+            let nouveaux = 0;
+            $('listeJoueurs').innerHTML = liste.map(([id, j], k) => {
+                const nouveau = !joueursVus.has(id);
+                if (nouveau && !premiers) nouveaux++;
+                joueursVus.add(id);
+                const classes = [j.enLigne === false ? 'hors-ligne' : '', nouveau && !premiers ? 'nouveau' : ''].join(' ');
+                return `<li class="${classes}" style="--penche:${[-2, 1.5, -1, 2, 0.5][k % 5]}deg">${pastille(j.couleur)}${echapper(j.pseudo)}</li>`;
+            }).join('');
+            if (nouveaux) son.arrivee();
+            $('nbJoueurs').textContent = n === 0 ? "Personne pour l'instant"
+                : n === 1 ? '1 joueur dans la place' : `${n} joueurs dans la place`;
+            $('btnLancer').disabled = n < 2;
+            $('btnLancer').textContent = n < 2 ? 'Il faut au moins 2 joueurs' : n === 2 ? 'Lancer (plus drôle dès 3)' : 'Lancer la partie';
+        }
+
+        function nouvelleEtape(cle) {
+            if (cle === cleEcran) return false;
+            cleEcran = cle;
+            return true;
+        }
+
+        const numero = () => `Manche ${etat.m + 1} / ${etat.total}`;
+
+        // ---------- Une manche : l'indice, puis les curseurs ----------
+
+        function rendreQuestion() {
+            afficher('ecranQuestion');
+            const ecl = etat.eclaireur;
+            const curseurs = etat.etape === 'curseur';
+            const devineurs = parArrivee(Object.keys(joueurs).filter(id => id !== ecl));
+            if (curseurs) {
+                const nb = devineurs.filter(id => reponses[id]).length;
+                $('compteur').textContent = `${nb} / ${devineurs.length} ${nb > 1 ? 'curseurs' : 'curseur'}`;
+                $('statuts').classList.toggle('serre', devineurs.length > 5);
+                $('statuts').innerHTML = devineurs.map(id => {
+                    const place = !!reponses[id];
+                    return `<li class="${place ? 'a-place' : ''}">${pastille(joueur(id).couleur)}<span class="nom">${echapper(joueur(id).pseudo)}</span>
+                        <span class="etat-curseur">${place ? 'placé' : 'vise…'}</span></li>`;
+                }).join('');
+            } else {
+                $('compteur').textContent = '';
+            }
+            if (!nouvelleEtape(`${etat.etape}:${etat.m}`)) return;
+            $('numManche').textContent = numero();
+            $('tagAveugle').hidden = !etat.aveugle;
+            $('quiDevine').innerHTML = `${pastille(joueur(ecl).couleur)}<span>${echapper(joueur(ecl).pseudo)} fait deviner</span>`;
+            $('nomCherche').textContent = joueur(ecl).pseudo;
+            $('blocCherche').hidden = curseurs;
+            $('blocIndice').hidden = !curseurs;
+            $('blocStatuts').hidden = !curseurs;
+            $('polesQuestion').hidden = !curseurs;
+            $('btnPasser').hidden = curseurs;
+            $('btnReveler').hidden = !curseurs;
+            $('cadranQuestion').innerHTML = cadran({ etiquette: 'Jauge vide' });
+            if (curseurs) {
+                $('texteIndice').textContent = etat.indice || '';
+                $('poleGaucheQ').textContent = `← ${etat.echelle?.gauche || ''}`;
+                $('poleDroiteQ').textContent = `${etat.echelle?.droite || ''} →`;
+                const carte = $('carteIndice');
+                carte.style.animation = 'none';
+                carte.offsetWidth;
+                carte.style.animation = '';
+                son.indice();
+            } else {
+                son.manche();
+            }
+            dernierTic = null;
+            tic();
+        }
+
+        // ---------- Révélation ----------
+
+        function rendreRevelation() {
+            afficher('ecranRevelation');
+            const res = resultats[etat.m];
+            if (!res) return;
+            if (!res.passe && Object.keys(joueurs).length && !Object.values(scores).some(s => s.dernier?.m === etat.m)) return;
+            if (!nouvelleEtape(`r:${etat.m}`)) return;
+            $('numRevelation').textContent = numero();
+            $('tagAveugleR').hidden = !etat.aveugle;
+            if (res.passe) {
+                $('sceneRevelation').hidden = true;
+                $('blocIndiceRevele').hidden = true;
+                $('manchePassee').hidden = false;
+                const nom = joueur(res.eclaireur).pseudo;
+                $('manchePassee').textContent = res.raison === 'temps'
+                    ? `${nom} n'a pas trouvé d'indice à temps : manche passée, personne ne marque.`
+                    : res.raison === 'absent'
+                        ? `Plus de connexion pour ${nom} : manche passée, personne ne marque.`
+                        : `Manche passée : personne ne marque.`;
+                $('btnResultat').textContent = 'Suite';
+                relancerDecompte($('btnResultat'), 5000);
+                son.rate();
+                return;
+            }
+            $('sceneRevelation').hidden = false;
+            $('blocIndiceRevele').hidden = false;
+            $('manchePassee').hidden = true;
+            $('indiceRevele').textContent = res.indice || '';
+            $('poleGaucheR').textContent = `← ${res.echelle?.[0] || ''}`;
+            $('poleDroiteR').textContent = `${res.echelle?.[1] || ''} →`;
+            const devineurs = parArrivee(Object.keys(res.curseurs || {}));
+            const delaiZones = 0.4 + devineurs.length * 0.3;
+            const scene = $('sceneRevelation');
+            scene.style.setProperty('--delai-zones', `${delaiZones}s`);
+            scene.classList.remove('revele');
+            scene.offsetWidth;
+            scene.classList.add('revele');
+            $('cadranRevelation').innerHTML = cadran({
+                cible: res.cible,
+                aiguilles: devineurs.map(id => ({ valeur: res.curseurs[id], couleur: joueur(id).couleur, initiale: initiale(id) })),
+                etiquette: 'Jauge avec la cible et les curseurs'
+            });
+            // Les plus proches d'abord
+            const lignes = devineurs.slice().sort((a, b) => Math.abs(res.curseurs[a] - res.cible) - Math.abs(res.curseurs[b] - res.cible));
+            const sansCurseur = parArrivee(Object.keys(joueurs).filter(id => id !== res.eclaireur && !(id in (res.curseurs || {}))));
+            let html = lignes.map((id, k) => {
+                const p = res.points?.[id] || 0;
+                const mention = res.mentions?.[id] || '';
+                return `<li class="ligne-res" style="--i:${k}">${pastille(joueur(id).couleur)}
+                    <span class="nom">${echapper(joueur(id).pseudo)}${p === 3 ? '<span class="pile">Pile !</span>' : ''}<span class="detail-res">${p === 3 ? 'En plein dans le rouge' : echapper(mention)}</span></span>
+                    <span class="pts ${p ? '' : 'zero'}">${p ? `+${p}` : '0'}</span></li>`;
+            }).join('');
+            html += sansCurseur.map((id, k) => `<li class="ligne-res" style="--i:${lignes.length + k}">${pastille(joueur(id).couleur)}
+                <span class="nom">${echapper(joueur(id).pseudo)}<span class="detail-res">Pas de curseur</span></span><span class="pts zero">0</span></li>`).join('');
+            const moyenne = res.moyenne === null || res.moyenne === undefined ? null : res.moyenne;
+            const detailEcl = moyenne === null ? 'Personne n\'a visé'
+                : `Moyenne ${String(Math.round(moyenne * 100) / 100).replace('.', ',')} → ${Math.round(moyenne)}${res.bonus ? ' · +1 : tout le monde a marqué' : ''}`;
+            html += `<li class="ligne-res eclaireur" style="--i:${lignes.length + sansCurseur.length}">${pastille(joueur(res.eclaireur).couleur)}
+                <span class="nom">${echapper(joueur(res.eclaireur).pseudo)} a fait deviner<span class="detail-res">${detailEcl}</span></span>
+                <span class="pts">${res.pointsEclaireur ? `+${res.pointsEclaireur}` : '0'}</span></li>`;
+            $('listeResultats').innerHTML = html;
+            $('listeResultats').classList.toggle('serre', lignes.length + sansCurseur.length + 1 > 6);
+            $('btnResultat').textContent = 'Classement';
+            relancerDecompte($('btnResultat'), DELAI_CLASSEMENT + delaiZones * 1000);
+            son.aiguilles(devineurs.length);
+            setTimeout(() => { if (lignes.some(id => res.points?.[id])) son.zones(); else son.rate(); }, delaiZones * 1000);
+        }
+
+        function relancerDecompte(bouton, delai) {
+            bouton.classList.remove('decompte');
+            bouton.offsetWidth;
+            bouton.classList.add('decompte');
+            programmerSuite(delai);
+        }
+
+        // ---------- Enchaînements automatiques ----------
+
+        const DELAI_CLASSEMENT = 8000;
+        const DELAI_SUIVANT = 5000;
+        const DELAI_AVEUGLE = 4000;
+        const DELAI_SALON = 20000;
+        let echeanceSuite = null;
+        let dernierTicSuite = Date.now();
+
+        function programmerSuite(delai) {
+            echeanceSuite = delai ? Date.now() + delai : null;
+            document.querySelectorAll('.decompte').forEach(b => b.style.setProperty('--delai', `${delai}ms`));
+        }
+
+        function ticSuite() {
+            const maintenant = Date.now();
+            if (etat && etat.pauseDepuis && echeanceSuite) echeanceSuite += maintenant - dernierTicSuite;
+            dernierTicSuite = maintenant;
+            if (echeanceSuite && maintenant >= echeanceSuite && etat && !etat.pauseDepuis) {
+                echeanceSuite = null;
+                suivant();
+            }
+        }
+
+        setInterval(ticSuite, 200);
+
+        // ---------- Classement et podium ----------
+
+        function gainSoiree(id) {
+            if (!enSoiree || etat.phase !== 'fin') return null;
+            return soiree.parties?.[etat.partieSoiree]?.gains?.[id] ?? null;
+        }
+
+        function lignesScore(liste) {
+            return liste.map((s, k) => {
+                const j = joueur(s.id);
+                const soir = gainSoiree(s.id);
+                let gain = '';
+                if (soir !== null) gain = `+${soir} soirée`;
+                else if (etat.phase !== 'fin' && s.dernier?.points) gain = `+${s.dernier.points}`;
+                return `<li class="ligne-score ${s.rang === 1 ? 'premier' : ''}" style="--i:${k}">
+                    <span class="rang">${s.rang}</span>${pastille(j.couleur)}<span>${echapper(j.pseudo)}</span><span class="gain">${gain}</span><span>${s.total}</span>
+                </li>`;
+            }).join('');
+        }
+
+        function rendreClassement() {
+            afficher('ecranClassement');
+            if (!nouvelleEtape(`classement:${etat.m}`)) return;
+            const derniere = etat.m + 1 >= etat.total;
+            $('btnClassement').textContent = derniere ? 'Voir le podium' : 'Manche suivante';
+            // Prochaine manche à l'aveugle (ou déjà dedans) : le classement reste caché jusqu'au podium
+            const prochaineAveugle = !derniere && estAveugle(etat.m + 1);
+            if (etat.aveugle || prochaineAveugle) {
+                $('blocClassement').hidden = true;
+                $('blocAveugle').hidden = false;
+                const restantes = etat.total - etat.m - 1;
+                $('texteAveugle').textContent = derniere
+                    ? 'Le tour final est terminé. Place au podium !'
+                    : etat.aveugle
+                        ? `Classement caché jusqu'au podium. Encore ${restantes} ${restantes > 1 ? 'manches' : 'manche'}.`
+                        : `Dernier tour : le classement est caché jusqu'au podium. Personne ne sait qui est en tête, alors chaque indice compte pour tout le monde.`;
+                relancerDecompte($('btnClassement'), etat.aveugle ? DELAI_AVEUGLE : DELAI_SUIVANT + 2000);
+                son.classement();
+                return;
+            }
+            $('blocClassement').hidden = false;
+            $('blocAveugle').hidden = true;
+            const liste = classementAvecRangs(scores);
+            $('listeClassement').innerHTML = lignesScore(liste.slice(0, 6));
+            const autres = liste.length - 6;
+            $('autresClassement').textContent = autres > 0 ? `et ${autres} ${autres > 1 ? 'autres joueurs' : 'autre joueur'} en embuscade` : '';
+            relancerDecompte($('btnClassement'), DELAI_SUIVANT);
+            son.classement();
+        }
+
+        function rendreFin() {
+            afficher('ecranFin');
+            if (enSoiree && !soiree.parties?.[etat.partieSoiree]) return;
+            if (!nouvelleEtape('fin')) return;
+            const btnFin = $('btnFin');
+            btnFin.textContent = enSoiree ? 'Retour au salon' : 'Nouvelle partie';
+            btnFin.classList.remove('decompte');
+            if (enSoiree) { btnFin.offsetWidth; btnFin.classList.add('decompte'); }
+            programmerSuite(enSoiree ? DELAI_SALON : null);
+            const liste = classementAvecRangs(scores);
+            const delais = { 3: 0, 2: 0.5, 1: 1 };
+            const marche = (s, place) => {
+                if (!s) return '';
+                const j = joueur(s.id);
+                const soir = gainSoiree(s.id);
+                return `<div class="marche marche-${place}" style="--delai:${delais[place]}s">
+                    <div class="nom">${place === 1 ? '<span class="tampon vainqueur">Victoire</span>' : ''}${pastille(j.couleur)}<span>${echapper(j.pseudo)}</span><span>${pts(s.total)}</span>${soir !== null ? `<span class="gain-soiree">+${soir} soirée</span>` : ''}</div>
+                    <div class="socle">${s.rang}</div>
+                </div>`;
+            };
+            $('podium').innerHTML = marche(liste[1], 2) + marche(liste[0], 1) + marche(liste[2], 3);
+            $('autresFin').innerHTML = lignesScore(liste.slice(3));
+            [3, 2].forEach(p => { if (liste[p - 1]) setTimeout(() => son.podium(p), (delais[p] + 0.4) * 1000); });
+            setTimeout(() => { son.fanfare(); lancerConfettis(); }, (delais[1] + 0.4) * 1000);
+        }
+
+        function lancerConfettis() {
+            const couleurs = ['#C8401F', '#E3A21A', '#2A4A7A', '#7E3A58', '#1F6A5C', '#F1E7D0'];
+            $('confettis').innerHTML = Array.from({ length: 70 }, () => {
+                const duree = 2.5 + Math.random() * 2.5;
+                return `<i style="left:${Math.random() * 100}%;background:${couleurs[Math.floor(Math.random() * couleurs.length)]};
+                    animation-duration:${duree}s;animation-delay:${Math.random() * 1.5}s;--tour:${Math.round(Math.random() * 1440 - 720)}deg"></i>`;
+            }).join('');
+        }
+
+        // ---------- Déroulé ----------
+
+        // Le dernier tour se joue à l'aveugle (à partir de 2 tours). Même calcul sur les téléphones.
+        function estAveugle(m) {
+            const tours = etat.tours || 1;
+            return tours >= 2 && m >= etat.total - etat.total / tours;
+        }
+
+        // Lancement : l'ordre de passage est fixé (ordre d'arrivée) et les échelles tirées, 2 par manche
+        async function lancerPartie() {
+            const ordre = parArrivee(Object.keys(joueurs));
+            const total = (etat.tours || 1) * ordre.length;
+            const echelles = choisirEchelles(2 * total);
+            await update(ref(db, `parties/${code}`), { 'secret/ordre': ordre, 'secret/echelles': echelles, 'secret/manches': null, 'etat/total': total });
+            secret = { ...secret, ordre, echelles, manches: {} };
+            etat = { ...etat, total };
+            await lancerManche(0);
+        }
+
+        // Celui qui fait deviner : le suivant dans l'ordre, en sautant les absents
+        function eclaireurDe(m) {
+            const ordre = secret.ordre || [];
+            for (let k = 0; k < ordre.length; k++) {
+                const id = ordre[(m + k) % ordre.length];
+                if (present(id)) return id;
+            }
+            return parArrivee(Object.keys(joueurs).filter(present))[0] || Object.keys(joueurs)[0];
+        }
+
+        function lancerManche(m) {
+            const eclaireur = eclaireurDe(m);
+            const echelles = [secret.echelles[2 * m], secret.echelles[2 * m + 1]].filter(Boolean);
+            const cibles = tirerCibles();
+            const manche = { echelles, cibles, eclaireur };
+            secret.manches = { ...(secret.manches || {}), [m]: manche };
+            return update(ref(db, `parties/${code}`), {
+                etat: {
+                    jeu: MON_JEU, sujet: etat.sujet || '', tours: etat.tours, total: etat.total,
+                    dureeIndice: etat.dureeIndice, dureeCurseur: etat.dureeCurseur,
+                    phase: 'question', etape: 'indice', m, q: `i${m}`, eclaireur, aveugle: estAveugle(m),
+                    debut: serverTimestamp(), duree: etat.dureeIndice
+                },
+                [`secret/manches/${m}`]: manche,
+                // Seul celui qui fait deviner lit ses deux échelles et ses deux cibles
+                prive: { [eclaireur]: { m, echelles, cibles } }
+            });
+        }
+
+        async function mancheEnCours() {
+            if (!secret.manches?.[etat.m]) await lireSecret(code);
+            return secret.manches?.[etat.m];
+        }
+
+        // L'indice est arrivé : on fixe l'échelle et la cible choisies, et les autres visent
+        async function passerAuxCurseurs() {
+            const r = reponses[etat.eclaireur];
+            const manche = await mancheEnCours();
+            // Une erreur (et non un simple retour) : l'action pourra être retentée au tic suivant
+            if (!r || !manche) throw new Error('Indice ou manche introuvable');
+            const choix = r.choix === 1 && manche.echelles[1] ? 1 : 0;
+            const echelle = manche.echelles[choix];
+            const cible = manche.cibles[r.valeur === 1 ? 1 : 0];
+            const indice = String(r.mot || '').trim().slice(0, 30);
+            secret.manches[etat.m] = { ...manche, echelle, cible, indice };
+            marquerPosee(echelle);
+            await update(ref(db, `parties/${code}`), {
+                [`secret/manches/${etat.m}/echelle`]: echelle,
+                [`secret/manches/${etat.m}/cible`]: cible,
+                'etat/etape': 'curseur',
+                'etat/q': `c${etat.m}`,
+                'etat/debut': serverTimestamp(),
+                'etat/duree': etat.dureeCurseur,
+                'etat/indice': indice,
+                'etat/echelle': { gauche: echelle[0], droite: echelle[1] },
+                prive: null
+            });
+        }
+
+        // Pas d'indice (temps écoulé, absent, ou la TV passe la main) : personne ne marque
+        function passerManche(raison) {
+            return update(ref(db, `parties/${code}`), {
+                [`resultats/${etat.m}`]: { passe: true, raison, eclaireur: etat.eclaireur },
+                'etat/phase': 'revelation',
+                prive: null
+            });
+        }
+
+        // Compte les points et les écrit avec les résultats en une seule écriture : si la TV recharge, rien n'est compté deux fois
+        async function compterPoints() {
+            const manche = await mancheEnCours();
+            if (!manche || manche.cible === undefined) throw new Error('Cible de la manche introuvable');
+            const m = etat.m;
+            const ecl = etat.eclaireur;
+            const reps = (await get(ref(db, `parties/${code}/reponses/c${m}`))).val() || {};
+            const curseurs = {}, points = {}, mentions = {};
+            Object.entries(reps).forEach(([id, r]) => {
+                if (!joueurs[id] || id === ecl || typeof r.valeur !== 'number') return;
+                const v = Math.min(100, Math.max(0, r.valeur));
+                const z = pointsDevineur(v, manche.cible);
+                curseurs[id] = v;
+                points[id] = z.points;
+                mentions[id] = z.mention;
+            });
+            const e = pointsEclaireur(Object.values(points));
+            const maj = {};
+            Object.keys(joueurs).forEach(id => {
+                const avant = scores[id]?.total || 0;
+                const gain = id === ecl ? e.points : (points[id] || 0);
+                maj[`scores/${id}`] = {
+                    total: avant + gain,
+                    dernier: { m, points: gain, role: id === ecl ? 'eclaireur' : 'devineur', mention: mentions[id] || null, vise: id in curseurs }
+                };
+            });
+            maj[`resultats/${m}`] = {
+                cible: manche.cible, eclaireur: ecl, indice: manche.indice || etat.indice || '', echelle: manche.echelle,
+                curseurs, points, mentions, moyenne: e.moyenne, bonus: e.bonus, pointsEclaireur: e.points
+            };
+            maj['etat/phase'] = 'revelation';
+            await update(ref(db, `parties/${code}`), maj);
+        }
+
+        // Une action par étape : la clé « phase:q » empêche de la lancer deux fois (clic + enchaînement automatique)
+        async function suivant() {
+            if (!etat || etat.pauseDepuis || (etat.phase === 'salle' && Object.keys(joueurs).length < 2)) return;
+            if (etat.phase === 'question' && etat.etape === 'indice') return;
+            const cle = `${etat.phase}:${etat.q}`;
+            if (derniereAction === cle) return;
+            derniereAction = cle;
+            try {
+                if (etat.phase === 'salle') await lancerPartie();
+                else if (etat.phase === 'question') await compterPoints();
+                else if (etat.phase === 'revelation') await update(ref(db, `parties/${code}/etat`), { phase: 'classement' });
+                else if (etat.phase === 'classement') {
+                    if (etat.m + 1 < etat.total) await lancerManche(etat.m + 1);
+                    else {
+                        const maj = enSoiree ? await gainsDeSoiree(code, scores, MON_JEU, etat.sujet) : {};
+                        maj['etat/phase'] = 'fin';
+                        await update(ref(db, `parties/${code}`), maj);
+                    }
+                }
+                else if (etat.phase === 'fin' && enSoiree) await retourAuSalon(code);
+            } catch (err) {
+                console.error('La Jauge : action impossible', err);
+                derniereAction = null;
+                if (etat.phase === 'salle') $('erreurSalle').hidden = false;
+            }
+        }
+
+        // Actions de la phase « indice » : arrivée de l'indice, temps écoulé, manche passée
+        async function actionIndice(type) {
+            if (!etat || etat.phase !== 'question' || etat.etape !== 'indice') return;
+            const cle = `indice:${etat.q}`;
+            if (derniereAction === cle) return;
+            derniereAction = cle;
+            try {
+                if (type === 'indice') await passerAuxCurseurs();
+                else await passerManche(type);
+            } catch (err) {
+                console.error('La Jauge : action impossible', err);
+                derniereAction = null;
+            }
+        }
+
+        async function abandonner() {
+            if (enSoiree) {
+                if (etat.phase === 'fin') return suivant();
+                if (etat.phase !== 'salle' && !confirm('Abandonner la partie et revenir au salon ? Personne ne marquera de points de soirée.')) return;
+                try { await retourAuSalon(code); } catch { /* réessayer */ }
+                return;
+            }
+            if (etat.phase !== 'fin' && !confirm('Abandonner la partie en cours ?')) return;
+            ecrireStockage(CLE_HOTE, null);
+            try { await remove(ref(db, `parties/${code}`)); } catch { /* elle sera supprimée au bout de 24 h */ }
+            location.reload();
+        }
+
+        // Chrono : l'indice arrive (ou le temps est écoulé), puis tout le monde a visé (ou le temps est écoulé).
+        // Un joueur déconnecté depuis plus de 10 s n'est plus attendu.
+        function tic() {
+            if (!etat || etat.phase !== 'question') return;
+            const reste = etat.debut + etat.duree * 1000 - (etat.pauseDepuis || heureServeur());
+            const secondes = Math.max(0, Math.ceil(reste / 1000));
+            const urgent = secondes <= (etat.etape === 'indice' ? 10 : 5);
+            $('chrono').textContent = secondes;
+            $('chrono').classList.toggle('urgent', urgent);
+            $('barreTemps').classList.toggle('urgent', urgent);
+            $('barreTemps').style.transform = `scaleX(${Math.min(Math.max(reste / (etat.duree * 1000), 0), 1)})`;
+            if (urgent && secondes > 0 && secondes !== dernierTic && secondes <= 5) son.tic(secondes === 1);
+            dernierTic = secondes;
+            if (etat.pauseDepuis) return;
+            if (etat.etape === 'indice') {
+                if (reponses[etat.eclaireur]) actionIndice('indice');
+                else if (reste <= -1500) actionIndice('temps');
+                else if (absentDepuis(etat.eclaireur, 30000)) actionIndice('absent');
+                return;
+            }
+            const devineurs = Object.keys(joueurs).filter(id => id !== etat.eclaireur && present(id));
+            const tousOntVise = devineurs.length > 0 && devineurs.every(id => reponses[id]);
+            // 1,5 s de marge après le chrono : les derniers curseurs ont le temps d'arriver
+            if (reste <= -1500 || tousOntVise) suivant();
+        }
+
+        setInterval(tic, 200);
+
+        // ---------- Pause ----------
+
+        const PHASES_PAUSABLES = ['question', 'revelation', 'classement'];
+
+        async function basculerPause() {
+            if (!etat || !PHASES_PAUSABLES.includes(etat.phase)) return;
+            const refEtat = ref(db, `parties/${code}/etat`);
+            if (!etat.pauseDepuis) {
+                await update(refEtat, { pauseDepuis: serverTimestamp() });
+                return;
+            }
+            const duree = Math.max(0, heureServeur() - etat.pauseDepuis);
+            const maj = { pauseDepuis: null };
+            if (etat.phase === 'question') maj.debut = etat.debut + duree;
+            await update(refEtat, maj);
+        }
+
+        function rendrePause() {
+            const enPause = !!(etat && etat.pauseDepuis && PHASES_PAUSABLES.includes(etat.phase));
+            document.body.classList.toggle('en-pause', enPause);
+            $('voilePause').hidden = !enPause;
+            $('btnPause').hidden = !etat || !PHASES_PAUSABLES.includes(etat.phase);
+        }
+
+        // ---------- Commandes ----------
+
+        document.addEventListener('click', e => {
+            const action = e.target.closest('[data-action]')?.dataset.action;
+            if (action === 'suivant') suivant();
+            if (action === 'abandonner') abandonner();
+            if (action === 'pause') basculerPause();
+            if (action === 'passer' && confirm('Passer cette manche ? Personne ne marquera.')) actionIndice('passe');
+            if (action === 'son') {
+                son.actif = !son.actif;
+                ecrireStockage('carreDAs.son', son.actif ? null : 'non');
+                majBoutonSon();
+            }
+        });
+
+        document.addEventListener('pointerdown', () => son.debloquer());
+
+        document.addEventListener('keydown', e => {
+            son.debloquer();
+            if (!etat || e.target.closest('input, select')) return;
+            if (e.key === 'p' || e.key === 'P') {
+                e.preventDefault();
+                basculerPause();
+                return;
+            }
+            if (e.target.closest('button')) return;
+            if (etat.pauseDepuis && e.key === 'Enter') {
+                e.preventDefault();
+                basculerPause();
+            } else if (['Enter', ' ', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+                suivant();
+            }
+        });
+
+        $('tours').addEventListener('change', majAideTours);
+        $('listeThemes').addEventListener('click', e => {
+            const bouton = e.target.closest('[data-paquet]');
+            if (bouton) choisirPaquet(paquets[Number(bouton.dataset.paquet)]);
+        });
+        $('fichierLocal').addEventListener('change', async e => {
+            const fichier = e.target.files[0];
+            if (!fichier) return;
+            const paquet = { groupe: "Fichiers de l'ordinateur", titre: fichier.name.replace(/\.json$/i, ''), cle: 'local:' + fichier.name, banque: [] };
+            try {
+                paquet.banque = validerEchelles(JSON.parse(await fichier.text()));
+            } catch (err) {
+                paquet.erreur = err instanceof SyntaxError ? `« ${fichier.name} » n'est pas un fichier JSON valide.` : err.message;
+            }
+            paquets = paquets.filter(s => s.cle !== paquet.cle).concat(paquet);
+            choisirPaquet(paquet);
+        });
+        $('btnCreer').addEventListener('click', creerPartie);
+        $('btnRemiseAZero').addEventListener('click', () => {
+            if (!confirm(`Remettre toutes les échelles « ${paquetChoisi.titre} » en jeu ?`)) return;
+            ecrirePosees(cleBanque, new Set());
+            rendrePaquets();
+        });
+
+        demarrer();
+    </script>
+</body>
+</html>

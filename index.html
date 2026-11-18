@@ -294,7 +294,7 @@
 
         <a class="soiree" href="soiree/index.html">
             <span class="tampon soiree-tampon">Mode soirée</span>
-            <span class="soiree-texte">Un seul QR code pour toute la soirée : on enchaîne Carré d'As, Le Juste Chiffre et Le Mot commun sans rescanner, avec un classement de la soirée.</span>
+            <span class="soiree-texte">Un seul QR code pour toute la soirée : on enchaîne Carré d'As, Le Juste Chiffre, Le Mot commun et La Jauge sans rescanner, avec un classement de la soirée.</span>
             <span class="soiree-lancer" id="soireeLancer">Ouvrir le salon</span>
         </a>
 
@@ -318,6 +318,7 @@
             camera: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="5" y="15" width="38" height="25"/><path d="M17 15l3-6h8l3 6"/><rect x="17" y="21" width="14" height="13"/></svg>',
             bars: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="7" y="28" width="9" height="13"/><rect x="20" y="18" width="9" height="23"/><rect x="33" y="7" width="9" height="34"/></svg>',
             papiers: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 30l26-8 4 14-26 8z"/><rect x="10" y="6" width="28" height="16"/><path d="M16 14h16"/></svg>',
+            jauge: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M5 36a19 19 0 0 1 38 0z"/><path d="M24 36l9-13"/><path d="M14 22l3 3M24 17v4M34 22l-3 3"/></svg>',
             ruler: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><rect x="4" y="16" width="40" height="16"/><path d="M11 16v7M18 16v4M25 16v7M32 16v4M39 16v7"/></svg>',
             coins: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><circle cx="14" cy="14" r="7"/><rect x="27" y="7" width="14" height="14"/><path d="M14 27l7.5 13h-15z"/><path d="M28 28l12 12M40 28L28 40"/></svg>'
         };
@@ -370,6 +371,17 @@
                 rules: [
                     'Mode « Tous ensemble » : 1 point par joueur qui a écrit comme toi.',
                     'Mode « Le troupeau » : seule la plus grosse pile marque, gare au mouton noir.'
+                ]
+            },
+            {
+                folder: 'jauge',
+                title: 'La Jauge',
+                icon: 'jauge',
+                color: '#E3A21A',
+                description: 'Un joueur voit une cible cachée sur la jauge et donne un indice. Les autres visent au curseur.',
+                rules: [
+                    '3, 2 ou 1 point selon la zone où tombe ton curseur.',
+                    'Celui qui fait deviner marque la moyenne des autres.'
                 ]
             }
         ];

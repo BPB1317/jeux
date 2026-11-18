@@ -1,5 +1,5 @@
 {
-  // Règles de sécurité du Game Hub (Carré d'As, Le Juste Chiffre, Le Mot commun, soirées).
+  // Règles de sécurité du Game Hub (Carré d'As, Le Juste Chiffre, Le Mot commun, La Jauge, soirées).
   // À coller dans la console Firebase : Realtime Database > Règles > Publier.
   "rules": {
     "parties": {
@@ -21,6 +21,15 @@
         "secret": {
           ".read": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val()",
           ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val()"
+        },
+
+        // Une information secrète destinée à un seul joueur (La Jauge : la cible de celui qui fait deviner).
+        // L'hôte l'écrit, et seul ce joueur la lit.
+        "prive": {
+          ".write": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val()",
+          "$uid": {
+            ".read": "auth != null && auth.uid === $uid && root.child('parties/' + $code + '/meta/creeLe').val() > now - 86400000"
+          }
         },
 
         // État, résultats, scores et points de la soirée : lus par tous les participants, écrits par l'hôte seul
@@ -66,7 +75,8 @@
         },
 
         // Une seule réponse par joueur et par question, pendant le chrono (1,5 s de marge réseau),
-        // horodatée par le serveur : un coin (Carré d'As), un nombre (Le Juste Chiffre) ou un mot (Le Mot commun).
+        // horodatée par le serveur : un coin (Carré d'As), un nombre (Le Juste Chiffre, le curseur de La Jauge)
+        // ou un mot (Le Mot commun, l'indice de La Jauge, avec l'échelle choisie et la cible gardée).
         // L'hôte les lit, et les efface entre deux jeux d'une soirée.
         "reponses": {
           ".read": "auth != null && auth.uid === root.child('parties/' + $code + '/meta/hote').val()",

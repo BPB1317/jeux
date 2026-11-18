@@ -1,0 +1,15 @@
+[
+    {
+        "theme": "Tout public",
+        "sujets": [
+            { "fichier": "classiques.json", "titre": "Les classiques" },
+            { "fichier": "entre-amis.json", "titre": "Entre amis" }
+        ]
+    },
+    {
+        "theme": "Génération 90",
+        "sujets": [
+            { "fichier": "generation-90.json", "titre": "Génération 90" }
+        ]
+    }
+]
