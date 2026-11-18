@@ -25,6 +25,15 @@
         ]
     },
     {
+        "theme": "Génération 90",
+        "sujets": [
+            { "fichier": "generation-90/dessins-animes.json", "titre": "Dessins animés de notre enfance" },
+            { "fichier": "generation-90/jeux-video.json", "titre": "Jeux vidéo de notre enfance" },
+            { "fichier": "generation-90/series.json", "titre": "Séries cultes" },
+            { "fichier": "generation-90/films.json", "titre": "Films de notre jeunesse" }
+        ]
+    },
+    {
         "theme": "Autres",
         "sujets": [
             { "fichier": "autres/matthieu-morel.json", "titre": "Matthieu Morel" }

@@ -134,7 +134,7 @@
     },
     {
         "question": "En quelle année « Jeune Demoiselle » de Diam's est-il sorti ?",
-        "reponses": ["2002", "2004", "2006", "2009"],
+        "reponses": ["2008", "2009", "2006", "2011"],
         "bonne": 2, "theme": "Chansons", "difficulte": 3,
         "itunes": 696155473
     },

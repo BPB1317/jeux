@@ -33,7 +33,7 @@
     },
     {
         "question": "Combien d'étoiles compte le drapeau actuel des États-Unis ?",
-        "reponses": ["48", "50", "52", "13"],
+        "reponses": ["51", "50", "52", "56"],
         "bonne": 1, "theme": "Drapeaux", "difficulte": 1,
         "explication": "Une par État. Les 13 bandes représentent les colonies d'origine.",
         "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_the_United_States.svg?width=960", "masque": [0, 0, 0.4, 0.54]

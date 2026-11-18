@@ -86,7 +86,7 @@
     },
     {
         "question": "En quelle année cet incendie a-t-il ravagé Notre-Dame de Paris ?",
-        "reponses": ["2017", "2018", "2019", "2020"],
+        "reponses": ["2016", "2017", "2019", "2018"],
         "bonne": 2, "theme": "XXIe siècle", "difficulte": 1,
         "explication": "Le 15 avril 2019.",
         "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Incendie_Notre_Dame_de_Paris.jpg?width=960"
@@ -140,7 +140,7 @@
     },
     {
         "question": "En quelle année les pièces et billets en euros ont-ils été mis en circulation ?",
-        "reponses": ["1999", "2000", "2002", "2004"],
+        "reponses": ["1998", "1999", "2002", "2000"],
         "bonne": 2, "theme": "XXIe siècle", "difficulte": 1
     },
     {
